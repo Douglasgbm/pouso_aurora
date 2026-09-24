@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Google Drive / Windows
+desktop.ini
+Thumbs.db
+*.tmp.driveupload
+*.tmp.drivedownload
