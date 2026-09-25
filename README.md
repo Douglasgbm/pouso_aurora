@@ -1,5 +1,56 @@
 github do projeto https://github.com/Douglasgbm/pouso_aurora
 
+# MGPEB — Módulo de Gerenciamento de Pouso e Estabilização de Base
+
+Simulação do pouso autônomo de seis módulos na base Aurora Siger, em Marte.
+Atividade Integradora da Fase 2 (PBL).
+
+## Como rodar
+
+    python3 scripts/mgpeb.py          # a missão completa
+    python3 scripts/mgpeb.py teste    # a bateria de testes
+
+Sem dependências externas: só a biblioteca padrão do Python 3.
+
+## O que o programa faz, em cinco camadas
+
+Cada camada roda sozinha e só foi construída depois que a de baixo estava provada.
+
+| Camada | O que faz | O que ela responde |
+| :---: | :--- | :--- |
+| 1 | **Cadastro** dos 6 módulos, com validação | "os dados são coerentes?" |
+| 2 | **Dez portas lógicas** (o AND gigante) | "este módulo PODE pousar?" |
+| 3 | **Fila dinâmica**, com o relógio andando | "entre os que podem, quem vai AGORA?" |
+| 4 | **A descida**, em três estágios de freio | "o pouso deu certo? gastou quanto?" |
+| 5 | **Estabilização da base**, sol a sol | "a base fica de pé? quando a tripulação parte?" |
+
+A Camada 1 valida o próprio cadastro antes de qualquer coisa ser construída em cima. As
+Camadas 2 e 3 separam as duas perguntas que o combustível responde (segurança *elimina*,
+urgência *enfileira*). A Camada 4 traz a física real do pouso — e foi ela que provou que a
+regra fixa dos 20% da Camada 2 é insegura para módulos pesados. A Camada 5 fecha a segunda
+metade do nome do projeto, que até 25/09/2026 não existia em lugar nenhum.
+
+## Três funções matemáticas, uma por fase
+
+| Fase | Fenômeno | Forma |
+| :--- | :--- | :--- |
+| espera em órbita | combustível × tempo de espera | **linear** |
+| frenagem (7 min) | altura × tempo de descida | **quadrática** |
+| já no solo | geração solar × hora do dia | **periódica** |
+
+São fases diferentes da missão, e por isso formas matemáticas diferentes. A quadrática tem a
+leitura gráfica mais útil do projeto: **projetar o pouso é fazer o vértice da parábola
+coincidir com o solo.** Vértice acima, o módulo para no ar e desperdiça combustível; vértice
+abaixo, ele chega ao solo ainda em movimento.
+
+## O documento técnico
+
+O raciocínio completo, com todas as decisões datadas e as tabelas de valores, está no
+[ROADMAP.md](ROADMAP.md). O texto abaixo é o registro de como o projeto foi pensado, na ordem
+em que foi pensado — inclusive os pontos que depois mudaram de ideia.
+
+---
+
 
 1. Prioridade de Pouso
 É o "quem passa na frente". Não é necessariamente quem chega primeiro, mas quem é mais importante. 
@@ -25,6 +76,11 @@ Resumindo:
 Essas métricas são os "dados" que você vai colocar dentro de uma lista ou classe no Python. Depois, você vai criar a lógica: "Se a criticidade for ALTA e o combustível for BAIXO, mova esse módulo para o topo da fila de pouso".
 
 
+
+⚠️ ATENÇÃO AO LER A LISTA ABAIXO: as PRIORIDADES desta lista são as ORIGINAIS, de antes da
+decisão de 24/09/2026 que separou prioridade de criticidade. Elas estão mantidas aqui como
+registro de como o projeto começou. As prioridades VALENDO são as da seção "PRIORIDADE NÃO É
+CRITICIDADE", mais abaixo, e a tabela completa e atual está no ROADMAP, seção 1.
 
 1. Módulo: Habitação (Hab)
 *   Prioridade de Pouso: 1 (Máxima). Sem casa, a missão não começa. Ele tem que ser um dos primeiros a tocar o solo.
@@ -71,9 +127,16 @@ Essas métricas são os "dados" que você vai colocar dentro de uma lista ou cla
     antes de os tanques estarem cheios e confirmados. Ele trava tudo que vem depois.
 *   Detalhe a justificar: a planta precisa de energia elétrica, e o módulo de Energia pousa
     depois dele. Não é problema — a fila inteira dura uma tarde, o enchimento leva meses.
-*   Demais valores (combustível de descida, massa, criticidade, ETA): A DEFINIR.
-*   Pergunta em aberto: qual a criticidade dele? Se for destruído ANTES de a tripulação descer,
-    a missão é adiada, não morre ninguém. Isso é 5/5 ou menos?
+*   Combustível de descida: 75%. Energia (bateria): 90%. Massa: 18.000 kg — o mais pesado de
+    todos, porque é um foguete inteiro mais a planta química, ainda que com os tanques de
+    subida vazios.
+*   Criticidade: 4/5 — RESOLVIDO EM 25/09/2026. A pergunta em aberto era se ele valia 5/5.
+    Resposta: não. Perdê-lo ANTES de a tripulação sair da Terra adia a missão em uma janela de
+    lançamento (~26 meses) — custo enorme, mas SEM MORTES. Ele não é 5/5 justamente porque
+    existe a regra de só lançar a tripulação com os tanques confirmados cheios; essa regra
+    existe PARA rebaixar o risco dele. Energia e Habitação são 5/5 porque a falha delas mata
+    gente com a base já ocupada.
+*   ETA: T+0 — chega junto com a Habitação, e é o primeiro da fila de projeto.
 
 PREMISSA DA MISSÃO (decidida em 24/09/2026)
 
@@ -186,11 +249,31 @@ Para o pouso ser autorizado, TODAS essas condições precisam ser verdadeiras ao
 Em linguagem de lógica, isso é um AND gigante:
 Autorização = C AND A AND D AND S
 
-ATUALIZAÇÃO: essa lista cresceu para SEIS sinais. Entraram T (terreno validado, sem cratera
-na coordenada) e θ (ângulo de entrada dentro da janela de segurança), que já estavam sendo
-testados no código antes de estarem escritos aqui. A expressão oficial está no ROADMAP:
+ATUALIZAÇÃO (25/09/2026): essa lista cresceu para DEZ sinais. Entraram:
 
-Autorização = C AND A AND D AND S AND T AND θ
+    T    terreno validado, sem cratera na coordenada
+    θ    ângulo de entrada dentro da janela de segurança (12° a 15°)
+    E    energia elétrica suficiente (a bateria é que ACIONA o paraquedas e as válvulas —
+         tanque cheio não serve de nada se o computador desligar no meio da descida)
+    P    paraquedas operacional
+    I    integridade estrutural (a entrada atmosférica castiga o casco)
+    ETA  o módulo já chegou à órbita
+
+A expressão oficial:
+
+Autorização = ETA AND C AND E AND A AND D AND S AND T AND θ AND P AND I
+
+E CADA PORTA DEVOLVE DUAS COISAS, NÃO UMA: se passou, e — caso não tenha passado — se a causa
+é RECUPERÁVEL ou DEFINITIVA.
+
+    recuperável -> EM ESPERA : tempestade passa, ETA chega, alvo pode ser deslocado.
+                               O módulo volta a disputar no próximo ciclo.
+    definitiva  -> EM ALERTA : combustível só diminui, e não há quem conserte um radar em
+                               Marte. O módulo sai da fila.
+
+Basta UMA causa definitiva para mandar o módulo ao alerta, mesmo que todas as outras falhas
+sejam temporárias. Sem isso, as duas listas que o enunciado pede seriam a mesma coisa com dois
+nomes. Detalhamento no ROADMAP, seção 2.
 
 - SUGESTAO DE DIFICULDADE
 
@@ -209,5 +292,9 @@ Autorização = (C AND A AND D AND S) OR (Combustível_Crítico AND A AND S)
    como código.
 2. A regra de emergência com OR acima (ignorar a área disponível quando o combustível é
    crítico). Decidir se entra: ela AFROUXA a segurança, então precisa de justificativa escrita.
-3. Usar a MASSA em alguma decisão — hoje ela está cadastrada e não é usada por nenhum
-   algoritmo (ver "Pontos em aberto" no ROADMAP).
+3. ~~Usar a MASSA em alguma decisão~~ — RESOLVIDO EM 25/09/2026, e não por decreto: saiu da
+   física. Os retrofoguetes precisam PRIMEIRO anular o peso do módulo, e só o que sobra freia
+   de fato: a = (empuxo / massa) − gravidade. Daí sai a cadeia inteira — mais pesado desacelera
+   menos, precisa acionar mais alto, queima por mais tempo e gasta mais combustível. O MAV
+   (18 t) aciona a 1.691 m e gasta 40,6%; o Suporte Médico (5 t) aciona a 246 m e gasta 5,9%.
+   Ver ROADMAP, seção 6.1.
