@@ -35,8 +35,15 @@ final, onde é caro de achar. Base sólida primeiro.
 # Escolhemos minutos porque é a MENOR unidade em uso (a descida dura 7 min),
 # e converter para baixo nunca perde informação.
 #
-# Conversão aplicada no cadastro:  T+0h = 0 | T+0.5h = 30 | T+2h = 120
-#                                  T+4h = 240 | T+6h = 360
+# SOBRE OS VALORES DE ETA DO CADASTRO:
+# A primeira versão espalhava as chegadas por 6 horas (0, 30, 120, 240, 360).
+# Simulando a fila com aqueles números, em 5 dos 6 pousos havia um único
+# candidato disponível - não havia o que decidir, e o ciclo ficava ocioso por
+# até 95 minutos seguidos. Um cenário que não exercita as próprias regras não
+# prova nada.
+# Os ETAs foram apertados para a escala do ciclo (25 min), de modo que vários
+# módulos disputem a mesma vaga. É desenho de cenário de teste, e está
+# declarado aqui de propósito - não é um dado observado.
 
 MINUTOS_POR_HORA = 60
 
@@ -115,7 +122,7 @@ modulos = [
         "combustivel_descida": 75,
         "energia": 90,
         "massa": 18000,
-        "eta": 0,                   # T+0h
+        "eta": 0,                   # chega junto com a Habitação
         "angulo_entrada": 13.0,
         "coord_pouso": (103, 97),
         "tanque_subida": 0,         # pousa VAZIO por projeto - não é defeito
@@ -129,7 +136,7 @@ modulos = [
         "combustivel_descida": 70,
         "energia": 85,
         "massa": 10000,
-        "eta": 30,                  # T+0.5h
+        "eta": 10,                  # min
         "angulo_entrada": 14.0,
         "coord_pouso": (98, 102),
         "tanque_subida": None,
@@ -143,7 +150,9 @@ modulos = [
         "combustivel_descida": 40,  # <-- de propósito: testa a faixa URGENTE
         "energia": 70,
         "massa": 12000,
-        "eta": 240,                 # T+4h
+        "eta": 5,                   # <-- chega ANTES da Energia, de propósito:
+                                    #     é o que faz a regra de emergência
+                                    #     furar uma prioridade MELHOR que a dela
         "angulo_entrada": 14.2,
         "coord_pouso": (95, 95),
         "tanque_subida": None,
@@ -157,7 +166,7 @@ modulos = [
         "combustivel_descida": 80,
         "energia": 95,
         "massa": 15000,
-        "eta": 0,                   # T+0h
+        "eta": 0,                   # chega junto com o MAV
         "angulo_entrada": 13.5,
         "coord_pouso": (101, 99),
         "tanque_subida": None,
@@ -171,7 +180,7 @@ modulos = [
         "combustivel_descida": 60,
         "energia": 80,
         "massa": 5000,
-        "eta": 120,                 # T+2h
+        "eta": 20,                  # min
         "angulo_entrada": 12.8,
         "coord_pouso": (105, 105),  # <-- de propósito: cai em cima de cratera
         "tanque_subida": None,
@@ -185,7 +194,7 @@ modulos = [
         "combustivel_descida": 90,
         "energia": 60,
         "massa": 7000,
-        "eta": 360,                 # T+6h
+        "eta": 50,                  # min
         "angulo_entrada": 15.5,     # <-- de propósito: fora da janela (>15.0)
         "coord_pouso": (100, 100),
         "tanque_subida": None,
@@ -308,18 +317,17 @@ def mostrar_cadastro(lista):
     print("CADASTRO DOS MÓDULOS  (ordem = prioridade de projeto)")
     print("=" * 74)
     print(f"{'Pri':>3} {'Módulo':<15} {'Tipo':<16} {'Comb':>5} {'Ener':>5} "
-          f"{'Massa':>7} {'Crit':>4} {'ETA':>6}")
+          f"{'Massa':>7} {'Crit':>4} {'ETA':>7}")
     print("-" * 74)
 
     # ordena por prioridade de projeto SÓ para exibir.
     # ATENÇÃO: isto NÃO é a fila de pouso. A fila é calculada na Camada 3,
     # com o estado real de cada módulo. Esta aqui é a ordem do "manual".
     for m in sorted(lista, key=lambda x: x["prioridade_projeto"]):
-        eta_h = m["eta"] / MINUTOS_POR_HORA
         print(f"{m['prioridade_projeto']:>3} {m['nome']:<15} {m['tipo_carga']:<16} "
               f"{m['combustivel_descida']:>4}% {m['energia']:>4}% "
               f"{m['massa']:>7} {m['criticidade']:>3}/5 "
-              f"{'T+' + str(eta_h) + 'h':>6}")
+              f"{'T+' + str(m['eta']) + 'min':>7}")
 
     print("-" * 74)
     print(f"massa total a pousar: {sum(m['massa'] for m in lista):,} kg".replace(",", "."))
