@@ -365,6 +365,7 @@ import random
 import copy
 import sys
 import math
+import io
 
 
 # =============================================================================
@@ -1387,6 +1388,347 @@ def mostrar_descida(r):
 
 
 # =============================================================================
+# =============================================================================
+# CAMADA 5 - ESTABILIZAÇÃO DA BASE
+# =============================================================================
+# =============================================================================
+#
+# O projeto se chama "Módulo de Gerenciamento de Pouso E ESTABILIZAÇÃO DE
+# BASE". As Camadas 1 a 4 cobriram o pouso. Esta cobre a segunda metade do
+# nome, que até agora não existia em lugar nenhum - nem no README, nem no
+# ROADMAP, nem no código.
+#
+# É aqui que a CADEIA DE DEPENDÊNCIA finalmente paga. O projeto sempre
+# afirmou que a Energia vem antes da Habitação "porque sem energia o habitat
+# não liga o oxigênio". Durante o pouso isso era só uma afirmação - a ordem
+# de pouso podia ser furada sem custo nenhum, e foi (a Logística passou na
+# frente de todo mundo). Agora a afirmação vira DEMONSTRAÇÃO: a Habitação
+# fica descarregando a bateria até a rede elétrica existir.
+#
+# E é aqui que o TANQUE DE SUBIDA do MAV sai do papel. Era o último campo
+# morto do cadastro (a massa era o outro, e a Camada 4 resolveu).
+
+
+# =============================================================================
+# 19. TEMPO MARCIANO - conversão de exibição, não de armazenamento
+# =============================================================================
+#
+# A convenção da Camada 1 continua valendo: TUDO é guardado em MINUTOS.
+# O "sol" não é uma unidade nova no programa - é só o nome do DIA de Marte,
+# que dura 24h39min em vez de 24h. A NASA conta sols desde o pouso porque o
+# dia marciano não bate com o nosso.
+#
+# Guardar numa unidade só e converter na hora de EXIBIR é o que evita o bug
+# clássico de somar 4 (horas) com 25 (minutos).
+
+SOL_EM_MINUTOS = 1479.6      # 24h 39min 35s
+
+
+def em_sols(minutos):
+    """Converte para exibição. O programa continua contando em minutos."""
+    return minutos / SOL_EM_MINUTOS
+
+
+# =============================================================================
+# 20. FUNÇÃO MATEMÁTICA 3 - geração solar ao longo do sol
+# =============================================================================
+#
+# FENÔMENO: potência elétrica gerada pelos painéis em função da hora do dia.
+# (É um dos exemplos que o próprio enunciado sugere no item 04.)
+#
+# FORMA A - SENOIDAL (a fisicamente correta):
+#     P(h) = Pmax * sen(pi * h / T)      para 0 <= h <= T (dia)
+#     P(h) = 0                           à noite
+#
+#   O painel gera em função do ângulo do Sol sobre o horizonte. Ao nascer e
+#   ao pôr do sol o ângulo é zero e a geração é zero; ao meio-dia é máxima.
+#   Seno é a forma natural de um ângulo que sobe e desce.
+#
+# FORMA B - PARÁBOLA (aproximação sem trigonometria):
+#     P(h) = Pmax * 4*h*(T - h) / T^2
+#
+#   Mesma ideia sem usar seno: uma parábola com concavidade para baixo, que
+#   vale 0 no nascer, 0 no pôr, e exatamente Pmax no meio-dia.
+#   As duas curvas são quase iguais - ver comparar_curvas_solares().
+#   A parábola entrega ~4,7% mais energia no total do dia.
+#
+# ANÁLISE QUALITATIVA (vale para as duas): curva que sobe do zero, atinge o
+# máximo no meio do dia e volta a zero. Metade do sol é noite, com geração
+# NULA - e é por isso que a bateria existe: ela atravessa a noite.
+#
+# RELAÇÃO COM A ENGENHARIA: define se um módulo SOBREVIVE sozinho até a rede
+# elétrica ser ligada. Se o consumo diário passar da geração diária, a bateria
+# cai todo sol e existe um prazo - o mesmo raciocínio da função linear da
+# Camada 3, agora com a energia no lugar do combustível.
+
+FRACAO_DIURNA = 0.5          # metade do sol é dia, metade é noite
+
+
+def potencia_solar_seno(fracao_do_sol):
+    """FORMA A. Recebe a posição no sol (0 a 1), devolve a fração de Pmax."""
+    if fracao_do_sol < 0 or fracao_do_sol > FRACAO_DIURNA:
+        return 0.0                                  # noite
+    return math.sin(math.pi * fracao_do_sol / FRACAO_DIURNA)
+
+
+def potencia_solar_parabola(fracao_do_sol):
+    """FORMA B. Mesma curva, sem trigonometria."""
+    if fracao_do_sol < 0 or fracao_do_sol > FRACAO_DIURNA:
+        return 0.0                                  # noite
+    h, T = fracao_do_sol, FRACAO_DIURNA
+    return 4.0 * h * (T - h) / (T ** 2)
+
+
+def comparar_curvas_solares():
+    """Imprime as duas formas lado a lado, para escolher qual usar."""
+    print("\nFUNÇÃO 3 - geração solar: seno x parábola")
+    print("   %-12s %10s %10s %9s" % ("hora do sol", "seno", "parábola", "difer."))
+    passos = 11
+    soma_s = soma_p = 0.0
+    for i in range(passos):
+        f = FRACAO_DIURNA * i / (passos - 1.0)
+        a, b = potencia_solar_seno(f), potencia_solar_parabola(f)
+        soma_s += a
+        soma_p += b
+        rotulo = {0: "nascer", (passos - 1) // 2: "meio-dia",
+                  passos - 1: "pôr do sol"}.get(i, "")
+        print("   %-12s %9.3f %9.3f %8.1f%%   %s"
+              % ("%.0f%% do dia" % (100.0 * i / (passos - 1.0)), a, b,
+                 100.0 * (b - a), rotulo))
+    print("   energia total do dia: seno %.2f | parábola %.2f (%.1f%% a mais)"
+          % (soma_s, soma_p, 100.0 * (soma_p - soma_s) / soma_s))
+
+
+# =============================================================================
+# 21. ESTADO PÓS-POUSO - danos
+# =============================================================================
+#
+# De onde vem o dano: da DESACELERAÇÃO da frenagem, não da sobra de
+# combustível. O que castiga a estrutura é a força G, e ela é a = empuxo/massa
+# menos a gravidade - número que a Camada 4 já calcula.
+#
+# INVERSÃO INTERESSANTE PARA O RELATÓRIO: os módulos LEVES freiam muito mais
+# forte (o Suporte Médico a 20,3 m/s2 contra o MAV a 2,96 m/s2), porque o
+# mesmo empuxo empurra menos massa. Ou seja, quem GASTA MENOS COMBUSTÍVEL
+# SOFRE MAIS ESTRESSE. É um trade-off real de engenharia, e ele sai da conta,
+# não de uma opinião.
+
+DESACEL_DANO_LEVE = 8.0       # m/s2
+DESACEL_DANO_MODERADO = 15.0  # m/s2
+
+
+def avaliar_dano(m):
+    """Classifica o dano estrutural sofrido na frenagem."""
+    a = desaceleracao_retro(m)
+    g_terra = a / 9.81
+    if a >= DESACEL_DANO_MODERADO:
+        nivel, efeito = "MODERADO", 2
+    elif a >= DESACEL_DANO_LEVE:
+        nivel, efeito = "leve", 1
+    else:
+        nivel, efeito = "nenhum", 0
+    return {"nivel": nivel, "desaceleracao": a, "g": g_terra,
+            "sols_extras_comissionamento": efeito}
+
+
+# =============================================================================
+# 22. ENERGIA NO SOLO - geração, consumo e autonomia
+# =============================================================================
+#
+# Geração diária: proporcional à massa - módulo maior carrega painel maior.
+# Consumo diário: depende da FUNÇÃO do módulo, não do tamanho. Um habitat com
+# suporte à vida em espera gasta muito mais que um contêiner de carga.
+
+def geracao_diaria(m):
+    """% de bateria recarregada por sol. Integral da curva solar do dia."""
+    return m["massa"] / 1200.0
+
+
+CONSUMO_DIARIO = {
+    "MAV": 6.0,              # eletrônica da planta de ISRU em espera
+    "Energia": 5.0,
+    "Logística": 3.0,        # praticamente só um contêiner
+    "Habitação": 15.0,       # suporte à vida em espera: o maior consumidor
+    "Suporte Médico": 9.0,   # refrigeração de insumos
+    "Laboratório": 8.0,
+}
+
+
+def saldo_diario(m):
+    """Positivo = a bateria carrega. Negativo = tem prazo de validade."""
+    return geracao_diaria(m) - CONSUMO_DIARIO[m["nome"]]
+
+
+def autonomia_em_sols(m):
+    """Quantos sols este módulo sobrevive SEM a rede elétrica.
+
+    Mesmo raciocínio da função linear da Camada 3, com energia no lugar do
+    combustível: se o saldo é negativo, existe um prazo.
+    """
+    saldo = saldo_diario(m)
+    if saldo >= 0:
+        return float("inf")          # se sustenta sozinho, indefinidamente
+    return m["energia"] / abs(saldo)
+
+
+# =============================================================================
+# 23. COMISSIONAMENTO - onde a cadeia de dependência finalmente importa
+# =============================================================================
+#
+# Comissionar = ligar, conectar e colocar em operação. É ISTO que a
+# "prioridade de projeto" sempre quis ordenar - e não a ordem de pouso.
+#
+# Durante o pouso, furar a ordem não custava nada: os módulos ficam parados no
+# solo esperando. Aqui custa, porque um módulo não pode ser comissionado antes
+# das suas dependências.
+
+DEPENDENCIAS = {
+    "Energia": [],                              # traz os próprios painéis
+    "Logística": [],                            # é só abrir
+    "MAV": ["Energia"],                         # a planta de ISRU puxa da rede
+    "Habitação": ["Energia", "Logística"],      # rede ligada + ferramenta
+    "Laboratório": ["Energia"],
+    "Suporte Médico": ["Habitação"],            # fica acoplado ao habitat
+}
+
+SOLS_COMISSIONAMENTO = {
+    "Energia": 3, "Logística": 1, "MAV": 2,
+    "Habitação": 5, "Laboratório": 4, "Suporte Médico": 3,
+}
+
+
+# =============================================================================
+# 24. O TANQUE DE SUBIDA (ISRU) - o último campo morto do cadastro
+# =============================================================================
+#
+# O MAV pousou com o tanque de subida VAZIO, por projeto. A planta de ISRU
+# fabrica o propelente de retorno a partir do CO2 da atmosfera marciana - mas
+# ela precisa de energia elétrica, então só começa depois que a rede existe.
+#
+# É ESTE tanque que libera a PARTIDA DA TRIPULAÇÃO DA TERRA. Ninguém sai de
+# casa antes de o transporte de volta estar confirmado cheio. E é por isso que
+# o MAV é prioridade 1: não por valer mais, mas por ter o MAIOR PRAZO.
+
+TAXA_ISRU = 0.25             # % do tanque por sol (enche em ~400 sols)
+
+
+# =============================================================================
+# 25. O CICLO DE ESTABILIZAÇÃO
+# =============================================================================
+
+def estabilizar(pousados, max_sols=60):
+    """Roda a base sol a sol, até tudo comissionado ou o limite."""
+    print()
+    print("=" * 74)
+    print("CAMADA 5 - ESTABILIZAÇÃO DA BASE")
+    print("=" * 74)
+    print("1 sol = %.1f min (24h39min). O programa conta em minutos; sol é rótulo.\n"
+          % SOL_EM_MINUTOS)
+
+    # --- danos do pouso ------------------------------------------------
+    print("DANOS DA FRENAGEM (vêm da desaceleração, não da sobra de combustível):")
+    print("   %-16s %10s %8s %10s %s" % ("módulo", "desacel.", "g", "dano", "atraso"))
+    for m in pousados:
+        d = avaliar_dano(m)
+        m["dano"] = d
+        print("   %-16s %8.2f m/s2 %6.2fg %10s %+d sol(s)"
+              % (m["nome"], d["desaceleracao"], d["g"], d["nivel"],
+                 d["sols_extras_comissionamento"]))
+
+    # --- autonomia sem rede --------------------------------------------
+    print("\nAUTONOMIA SEM A REDE ELÉTRICA (geração solar - consumo):")
+    print("   %-16s %9s %9s %9s %s" % ("módulo", "gera", "consome", "saldo", "autonomia"))
+    for m in pousados:
+        s_ = saldo_diario(m)
+        aut = autonomia_em_sols(m)
+        txt = "indefinida" if aut == float("inf") else "%.0f sols" % aut
+        print("   %-16s %8.1f%% %8.1f%% %+8.1f%% %s"
+              % (m["nome"], geracao_diaria(m), CONSUMO_DIARIO[m["nome"]], s_, txt))
+
+    # --- o ciclo sol a sol ---------------------------------------------
+    print("\nCOMISSIONAMENTO (a cadeia de dependência, finalmente valendo):")
+    comissionados = []
+    progresso = dict((m["nome"], 0) for m in pousados)
+    mortos = []
+    sol = 0
+    isru_comecou = None
+
+    while sol < max_sols and len(comissionados) < len(pousados):
+        sol += 1
+
+        # ------------------------------------------------------------------
+        # [DEFEITO CORRIGIDO] ATUALIZAÇÃO SIMULTÂNEA, NÃO SEQUENCIAL.
+        #
+        # A primeira versão consultava a lista `comissionados` VIVA dentro do
+        # laço. Resultado: um módulo processado DEPOIS no mesmo sol enxergava
+        # uma dependência que tinha acabado de ser comissionada NAQUELE sol, e
+        # já começava a contar. Um módulo processado ANTES não enxergava.
+        #
+        # Ou seja: o resultado mudava conforme a ORDEM DA LISTA. Medido: com a
+        # lista invertida, o MAV ficava pronto no sol 5 em vez do 6, e a
+        # Habitação no 9 em vez do 8. Mesmo cenário, duas respostas.
+        #
+        # Um sol é um instante de decisão: TODOS os módulos precisam ver o
+        # MESMO estado. Por isso a foto abaixo, tirada antes do laço.
+        # Ver teste_comissionamento_independe_da_ordem().
+        # ------------------------------------------------------------------
+        estado_do_sol = list(comissionados)
+
+        for m in pousados:
+            nome = m["nome"]
+            if nome in comissionados or nome in mortos:
+                continue
+
+            # -- energia do sol: gera de dia, consome o sol inteiro ------
+            if "Energia" in estado_do_sol and nome != "Energia":
+                m["energia"] = min(100.0, m["energia"] + 10.0)   # na rede
+            else:
+                m["energia"] = max(0.0, m["energia"] + saldo_diario(m))
+
+            if m["energia"] <= 0:
+                mortos.append(nome)
+                print("   sol %2d  %s MORREU: bateria esgotada antes da rede"
+                      % (sol, nome))
+                continue
+
+            # -- só avança se as dependências já estiverem comissionadas -
+            faltam = [d for d in DEPENDENCIAS[nome] if d not in estado_do_sol]
+            if faltam:
+                continue
+
+            progresso[nome] += 1
+            necessario = (SOLS_COMISSIONAMENTO[nome]
+                          + m["dano"]["sols_extras_comissionamento"])
+            if progresso[nome] >= necessario:
+                comissionados.append(nome)
+                extra = ""
+                if m["dano"]["sols_extras_comissionamento"]:
+                    extra = (" (+%d sol por dano %s)"
+                             % (m["dano"]["sols_extras_comissionamento"],
+                                m["dano"]["nivel"]))
+                print("   sol %2d  %s COMISSIONADO%s" % (sol, nome, extra))
+                if nome == "MAV":
+                    isru_comecou = sol
+
+    # --- o tanque de subida --------------------------------------------
+    print("\nTANQUE DE SUBIDA DO MAV (planta de ISRU):")
+    if isru_comecou is None:
+        print("   a planta nunca entrou em operação - a tripulação não pode partir")
+    else:
+        sols_para_encher = 100.0 / TAXA_ISRU
+        fim = isru_comecou + sols_para_encher
+        print("   começa a encher no sol %d (após o MAV ser comissionado)" % isru_comecou)
+        print("   taxa: %.2f%% por sol  ->  %.0f sols para encher" % (TAXA_ISRU, sols_para_encher))
+        print("   tanque cheio no sol %.0f (~%.1f meses terrestres)"
+              % (fim, fim * SOL_EM_MINUTOS / (60 * 24 * 30.4)))
+        print("   >>> É ESTA data que libera a PARTIDA DA TRIPULAÇÃO DA TERRA.")
+        print("   >>> E é por isso que o MAV é prioridade 1: não por valer mais,")
+        print("       mas por ter o maior PRAZO. Ele trava tudo que vem depois.")
+
+    return comissionados, mortos, sol
+
+
+# =============================================================================
 # 15. TESTES DO QUE O CENÁRIO NORMAL NÃO ALCANÇA
 # =============================================================================
 #
@@ -1571,6 +1913,92 @@ def teste_segunda_porta_pega_o_que_a_primeira_deixou_passar():
     return ok
 
 
+def _rodar_estabilizacao(ordem_nomes):
+    """Auxiliar dos testes: roda a estabilização numa ordem de lista dada."""
+    lista = []
+    for nome in ordem_nomes:
+        m = copy.deepcopy([x for x in modulos if x["nome"] == nome][0])
+        m["dano"] = avaliar_dano(m)
+        lista.append(m)
+    buf = io.StringIO()
+    saida = sys.stdout
+    sys.stdout = buf
+    try:
+        comissionados, mortos, sol = estabilizar(lista)
+    finally:
+        sys.stdout = saida
+    sols = {}
+    for linha in buf.getvalue().split("\n"):
+        if "COMISSIONADO" in linha:
+            partes = linha.split()
+            sols[" ".join(partes[3:partes.index("COMISSIONADO")])] = int(partes[1])
+    return sols
+
+
+def teste_comissionamento_independe_da_ordem():
+    """O mesmo cenário tem que dar o mesmo resultado, escreva-se a lista como
+    se escrever. Se depender da ordem, é atualização sequencial onde deveria
+    ser simultânea - e foi exatamente esse o defeito encontrado na Camada 5."""
+    base = ["Logística", "MAV", "Energia", "Habitação", "Laboratório"]
+    a = _rodar_estabilizacao(base)
+    b = _rodar_estabilizacao(list(reversed(base)))
+    ok = a == b
+    print("teste_comissionamento_independe_da_ordem: %s" % ("PASSOU" if ok else "FALHOU"))
+    if not ok:
+        for nome in sorted(set(list(a.keys()) + list(b.keys()))):
+            marca = "" if a.get(nome) == b.get(nome) else "   <<< DIVERGE"
+            print("     %-14s %s x %s%s" % (nome, a.get(nome), b.get(nome), marca))
+    return ok
+
+
+def teste_dependencia_nunca_e_furada():
+    """Nenhum módulo pode ser comissionado antes das suas dependências.
+
+    É a prova de que a cadeia de dependência, que durante o POUSO podia ser
+    furada sem custo, aqui na estabilização NÃO pode.
+    """
+    base = ["Logística", "MAV", "Energia", "Habitação", "Laboratório"]
+    sols = _rodar_estabilizacao(base)
+    erros = []
+    for nome, quando in sols.items():
+        for dep in DEPENDENCIAS.get(nome, []):
+            if dep not in sols:
+                erros.append("%s depende de %s, que nunca foi comissionado" % (nome, dep))
+            elif sols[dep] >= quando:
+                erros.append("%s (sol %d) antes/junto de %s (sol %d)"
+                             % (nome, quando, dep, sols[dep]))
+    ok = not erros
+    print("teste_dependencia_nunca_e_furada: %s" % ("PASSOU" if ok else "FALHOU"))
+    for e in erros:
+        print("     %s" % e)
+    return ok
+
+
+def teste_curvas_solares_batem_no_meio_dia():
+    """Seno e parábola têm que dar 1,0 no meio-dia e 0 nas pontas.
+
+    Se a parábola vai ser oferecida como alternativa a quem não viu
+    trigonometria, ela precisa coincidir onde importa.
+    """
+    casos = [(0.0, 0.0), (FRACAO_DIURNA / 2.0, 1.0), (FRACAO_DIURNA, 0.0)]
+    erros = []
+    for h, esperado in casos:
+        for nome, fn in (("seno", potencia_solar_seno),
+                         ("parábola", potencia_solar_parabola)):
+            if abs(fn(h) - esperado) > 1e-9:
+                erros.append("%s em h=%.2f deu %.4f, esperado %.1f"
+                             % (nome, h, fn(h), esperado))
+    # e a noite tem que ser zero nas duas
+    for fn in (potencia_solar_seno, potencia_solar_parabola):
+        if fn(0.9) != 0.0:
+            erros.append("geração à noite não é zero")
+    ok = not erros
+    print("teste_curvas_solares_batem_no_meio_dia: %s" % ("PASSOU" if ok else "FALHOU"))
+    for e in erros:
+        print("     %s" % e)
+    return ok
+
+
 def rodar_testes():
     print()
     print("=" * 74)
@@ -1585,6 +2013,9 @@ def rodar_testes():
         teste_massa_define_altura_de_ignicao(),
         teste_regra_fixa_de_20_por_cento_e_insegura(),
         teste_segunda_porta_pega_o_que_a_primeira_deixou_passar(),
+        teste_curvas_solares_batem_no_meio_dia(),
+        teste_dependencia_nunca_e_furada(),
+        teste_comissionamento_independe_da_ordem(),
     ]
     print("\n%d de %d testes passaram." % (sum(resultados), len(resultados)))
     return all(resultados)
@@ -1600,7 +2031,7 @@ if __name__ == "__main__":
 
     print()
     print("MGPEB - Base Aurora Siger")
-    print("Camadas 1, 2 e 3\n")
+    print("Camadas 1 a 5\n")
 
     if not validar_cadastro(modulos):
         print("\nCadastro reprovado. Nada é construído em cima de dado inválido.")
@@ -1618,3 +2049,6 @@ if __name__ == "__main__":
 
     pousados, alerta, perdidos, registro, t_final = operar(modulos, mundo)
     mostrar_resultado(modulos, pousados, alerta, perdidos, registro, t_final)
+
+    comparar_curvas_solares()
+    estabilizar(pousados)
