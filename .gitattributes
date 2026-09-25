@@ -1,0 +1,17 @@
+# Normalizacao de final de linha.
+#
+# Por que este arquivo existe: o projeto e aberto ora no macOS (final de linha
+# LF) ora no Windows (CRLF), e o Google Drive sincroniza os arquivos entre os
+# dois. Sem esta regra, abrir o projeto no outro sistema marca TODOS os
+# arquivos como modificados sem que uma unica linha de conteudo tenha mudado.
+#
+# Aconteceu em 25/09/2026: o git acusou 662 linhas alteradas em README.md,
+# ROADMAP.md e scripts/main.py. Os hashes de blob eram identicos aos do HEAD -
+# a diferenca era so o caractere \r. Ruido puro, que polui o historico e
+# esconde as mudancas de verdade.
+#
+# text=auto -> o git detecta arquivos de texto e guarda tudo com LF no
+#              repositorio; eol=lf entrega LF tambem no disco, em qualquer
+#              sistema. Binarios sao detectados e deixados intactos.
+
+* text=auto eol=lf
