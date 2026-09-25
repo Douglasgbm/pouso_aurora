@@ -339,16 +339,318 @@ def mostrar_cadastro(lista):
 
 
 # =============================================================================
-# 6. EXECUÇÃO
+# =============================================================================
+# CAMADA 2 - PORTAS LÓGICAS
+# =============================================================================
+# =============================================================================
+#
+# O programa tem duas metades, e elas NÃO se misturam:
+#
+#   O MUNDO (Marte)                    O MGPEB (computador de bordo)
+#   ---------------                    -----------------------------
+#   decide se tem tempestade    --->   lê "tempestade: sim"
+#   decide se o sensor falhou   --->   lê "sensor: falha"
+#   decide onde há cratera      --->   lê o mapa de terreno
+#                                      E ENTÃO DECIDE: pousa ou não.
+#
+# Um sistema embarcado NÃO escolhe o clima. Ele sofre o clima e lê o sensor.
+# Se as duas metades se misturarem, o programa passa a "decidir" que está
+# ventando - o que não faz sentido nenhum, e pior: fica impossível forçar um
+# cenário para testar, porque o programa seria juiz e réu ao mesmo tempo.
+#
+# O "não existe fator humano" do projeto vale para a DECISÃO (ninguém autoriza
+# o pouso), não para os DADOS (o módulo não inventa o que o sensor mede).
+
+import random
+
+
+# =============================================================================
+# 6. O MUNDO - o que o MGPEB não controla
+# =============================================================================
+
+# Semente fixa do sorteio.
+# Sem ela, cada execução dá um resultado diferente, e a saída colada no
+# relatório não pode ser reproduzida por quem for corrigir. Com ela, continua
+# sendo sorteio - mas sempre O MESMO sorteio. É prática padrão de simulação.
+#
+# POR QUE 23, E NÃO QUALQUER UMA: a semente ESCOLHE O CENÁRIO, e isso está
+# declarado aqui de propósito em vez de escondido.
+# O gerador foi aferido em 20.000 mundos e respeita as probabilidades
+# declaradas (medido 5,01% / 3,03% / 4,08% contra 5% / 3% / 4%), com média de
+# 0,73 falha de hardware por missão. Mas a distribuição tem cauda: a semente
+# 42, testada antes, caiu nos 2,88% de missões com TRÊS falhas e matou o MAV
+# e a Habitação - resultado legítimo, porém inútil para demonstrar a fila,
+# porque sobrava zero módulo para ordenar.
+# A semente 23 produz UMA falha, no Suporte Médico, que já estava fora da fila
+# pela cratera. Preserva os quatro concorrentes e ainda povoa as três listas.
+#
+# [SUGESTÃO PARA O RELATÓRIO] rodar N missões com sementes diferentes e
+# reportar a taxa de sucesso é uma análise de Monte Carlo, e responde a uma
+# pergunta que uma execução única não responde: "com que frequência esta
+# missão falha?"
+SEMENTE = 23
+
+# Probabilidades de falha. São premissas do cenário, não medições.
+PROB_TEMPESTADE = 0.20        # por ciclo (o clima muda)
+PROB_FALHA_SENSOR = 0.05      # por módulo (hardware, sorteado uma vez só)
+PROB_FALHA_PARAQUEDAS = 0.03  # por módulo
+PROB_DANO_ESTRUTURAL = 0.04   # por módulo
+
+
+def criar_mundo(lista, semente=SEMENTE):
+    """Sorteia o estado físico que o MGPEB vai LER (e não escolher).
+
+    O hardware é sorteado UMA VEZ, no início: um sensor ou funciona ou não
+    funciona. Não existe ninguém em Marte para consertar, então a falha é
+    permanente. O clima, ao contrário, é sorteado a cada ciclo - tempestade
+    passa.
+    """
+    random.seed(semente)
+    mundo = {"hardware": {}, "zonas_ocupadas": [], "tempestade": False}
+    for m in lista:
+        mundo["hardware"][m["nome"]] = {
+            "sensores_ok": random.random() >= PROB_FALHA_SENSOR,
+            "paraquedas_ok": random.random() >= PROB_FALHA_PARAQUEDAS,
+            "estrutura_ok": random.random() >= PROB_DANO_ESTRUTURAL,
+        }
+    return mundo
+
+
+def sortear_clima(mundo):
+    """Roda uma vez por ciclo. Tempestade de areia é temporária."""
+    mundo["tempestade"] = random.random() < PROB_TEMPESTADE
+    return mundo["tempestade"]
+
+
+# =============================================================================
+# 7. AS PORTAS LÓGICAS
+# =============================================================================
+#
+# EXPRESSÃO BOOLEANA DO PROJETO:
+#
+#   Autorização = ETA AND C AND E AND A AND D AND S AND T AND θ AND P AND I
+#
+# São dez sinais, todos ligados por AND: uma única falha bloqueia o pouso.
+# (O ROADMAP tinha seis; entraram ETA, E, P e I ao longo do projeto.)
+#
+# -----------------------------------------------------------------------------
+# CADA PORTA DEVOLVE DUAS COISAS, NÃO UMA:
+#
+#   1) passou ou não passou
+#   2) se NÃO passou, a causa é RECUPERÁVEL ou DEFINITIVA
+#
+# É a segunda que decide para qual lista o módulo vai:
+#
+#   recuperável -> EM ESPERA : falhou agora, mas a causa se resolve sozinha
+#                              ou pode ser corrigida. Volta a disputar no
+#                              próximo ciclo.
+#   definitiva  -> EM ALERTA : a causa não se resolve. Sai da fila e fica
+#                              monitorado.
+#
+# Sem essa distinção, as duas listas que o enunciado pede seriam a mesma coisa
+# com nomes diferentes - e a fila não teria motivo para ser recalculada.
+# -----------------------------------------------------------------------------
+
+RECUPERAVEL = True
+DEFINITIVA = False
+
+
+def avaliar_portas(m, mundo, t=0):
+    """Avalia as dez portas de UM módulo, no instante t.
+
+    Devolve uma lista de tuplas:
+        (sigla, descrição, passou, recuperável_se_falhar, detalhe)
+    """
+    hw = mundo["hardware"][m["nome"]]
+    portas = []
+
+    # --- ETA: o módulo já chegou à órbita? -----------------------------
+    # Restrição FÍSICA, não preferência: não dá para pousar o que não chegou.
+    # Recuperável pela razão mais simples do mundo: é só esperar.
+    portas.append(("ETA", "chegada à órbita",
+                   m["eta"] <= t, RECUPERAVEL,
+                   "chega em t=%dmin (agora t=%dmin)" % (m["eta"], t)))
+
+    # --- C: combustível de descida -------------------------------------
+    # É o estágio 3 do freio (retrofoguetes). Abaixo de 20% não há margem
+    # para frear. DEFINITIVA porque combustível só diminui - esperar piora.
+    portas.append(("C", "combustível de descida",
+                   m["combustivel_descida"] >= COMBUSTIVEL_ABORTO, DEFINITIVA,
+                   "%d%% (mínimo %d%%)" % (m["combustivel_descida"], COMBUSTIVEL_ABORTO)))
+
+    # --- E: energia elétrica -------------------------------------------
+    # Combustível cheio não adianta se a bateria morrer: é ela que ABRE o
+    # paraquedas e ACIONA as válvulas. DEFINITIVA pelo mesmo motivo que C.
+    portas.append(("E", "energia elétrica",
+                   m["energia"] >= ENERGIA_MINIMA, DEFINITIVA,
+                   "%d%% (mínimo %d%%)" % (m["energia"], ENERGIA_MINIMA)))
+
+    # --- A: atmosfera ---------------------------------------------------
+    # Tempestade de areia cega o radar e desvia a descida.
+    # RECUPERÁVEL: tempestade passa.
+    portas.append(("A", "atmosfera estável",
+                   not mundo["tempestade"], RECUPERAVEL,
+                   "tempestade de areia" if mundo["tempestade"] else "céu limpo"))
+
+    # --- D: área de pouso disponível ------------------------------------
+    # Outro módulo já parado na coordenada. RECUPERÁVEL: a zona é liberada
+    # depois dos 18 min de limpeza do ciclo de operação.
+    ocupada = m["coord_pouso"] in mundo["zonas_ocupadas"]
+    portas.append(("D", "área de pouso livre",
+                   not ocupada, RECUPERAVEL,
+                   "ocupada" if ocupada else "livre"))
+
+    # --- S: integridade dos sensores ------------------------------------
+    # Sem radar o módulo não sabe a que altura está, e não tem como decidir
+    # quando acionar nada. DEFINITIVA: não há quem conserte em Marte.
+    portas.append(("S", "sensores íntegros",
+                   hw["sensores_ok"], DEFINITIVA,
+                   "ok" if hw["sensores_ok"] else "radar em falha"))
+
+    # --- T: terreno validado --------------------------------------------
+    # Cruza a coordenada alvo com o mapa de crateras e pedras.
+    # RECUPERÁVEL: o alvo pode ser deslocado para outra coordenada.
+    # (Quem faz esse deslocamento é a Camada 3 - aqui só classificamos.)
+    em_cratera = m["coord_pouso"] in OBSTACULOS
+    portas.append(("T", "terreno sem obstáculo",
+                   not em_cratera, RECUPERAVEL,
+                   "obstáculo em %s" % (m["coord_pouso"],) if em_cratera
+                   else "coordenada %s limpa" % (m["coord_pouso"],)))
+
+    # --- θ: ângulo de entrada -------------------------------------------
+    # Fechado demais: o calor e a força G destroem o módulo.
+    # Aberto demais: ele quica na atmosfera e volta pro espaço.
+    # RECUPERÁVEL: dá para corrigir com uma queima de ajuste na próxima
+    # órbita - mas a queima CONSOME COMBUSTÍVEL, ou seja, recuperar esta
+    # porta empurra a porta C para baixo. (Acoplamento tratado na Camada 4.)
+    angulo_ok = ANGULO_MIN <= m["angulo_entrada"] <= ANGULO_MAX
+    portas.append(("θ", "ângulo de entrada",
+                   angulo_ok, RECUPERAVEL,
+                   "%.1f° (janela %.1f°-%.1f°)" % (m["angulo_entrada"], ANGULO_MIN, ANGULO_MAX)))
+
+    # --- P: paraquedas ---------------------------------------------------
+    # Estágio 2 do freio. DEFINITIVA: é mecânico, não se conserta em voo.
+    portas.append(("P", "paraquedas operacional",
+                   hw["paraquedas_ok"], DEFINITIVA,
+                   "ok" if hw["paraquedas_ok"] else "mecanismo travado"))
+
+    # --- I: integridade estrutural ---------------------------------------
+    # Estágio 1 do freio é a própria atmosfera, e ela castiga a estrutura.
+    # Casco trincado não aguenta a desaceleração. DEFINITIVA.
+    portas.append(("I", "integridade estrutural",
+                   hw["estrutura_ok"], DEFINITIVA,
+                   "ok" if hw["estrutura_ok"] else "dano no casco"))
+
+    return portas
+
+
+def autorizar(m, mundo, t=0):
+    """Aplica o AND das dez portas e decide o destino do módulo.
+
+    Devolve (autorizado, destino, portas), com destino em
+    'pouso' | 'espera' | 'alerta'.
+    """
+    portas = avaliar_portas(m, mundo, t)
+
+    # ESTA LINHA É A EXPRESSÃO BOOLEANA DO PROJETO.
+    # all() sobre os dez sinais é literalmente o AND gigante do diagrama.
+    autorizacao = all(porta[2] for porta in portas)
+
+    if autorizacao:
+        return True, "pouso", portas
+
+    falhas = [porta for porta in portas if not porta[2]]
+
+    # Basta UMA causa definitiva para mandar o módulo ao alerta, mesmo que
+    # todas as outras falhas sejam temporárias: esperar não resolve aquela.
+    if any(porta[3] == DEFINITIVA for porta in falhas):
+        return False, "alerta", portas
+    return False, "espera", portas
+
+
+def triagem(lista, mundo, t=0):
+    """Separa os módulos nas listas que o enunciado exige."""
+    prontos, espera, alerta = [], [], []
+    for m in lista:
+        ok, destino, portas = autorizar(m, mundo, t)
+        if destino == "pouso":
+            prontos.append(m)
+        elif destino == "espera":
+            espera.append((m, portas))
+        else:
+            alerta.append((m, portas))
+    return prontos, espera, alerta
+
+
+def mostrar_portas(lista, mundo, t=0):
+    """Imprime o resultado porta a porta. É o diagrama lógico em texto."""
+    print()
+    print("=" * 74)
+    print("CAMADA 2 - AVALIAÇÃO DAS PORTAS LÓGICAS  (t = %d min)" % t)
+    print("=" * 74)
+    print("Autorização = ETA AND C AND E AND A AND D AND S AND T AND θ AND P AND I")
+    print("Estado do mundo: %s | zonas ocupadas: %s"
+          % ("TEMPESTADE DE AREIA" if mundo["tempestade"] else "céu limpo",
+             mundo["zonas_ocupadas"] or "nenhuma"))
+    print()
+
+    for m in lista:
+        ok, destino, portas = autorizar(m, mundo, t)
+        rotulo = {"pouso": "AUTORIZADO", "espera": "EM ESPERA", "alerta": "EM ALERTA"}[destino]
+        print("%-16s [%s]" % (m["nome"], rotulo))
+        for sigla, desc, passou, recup, detalhe in portas:
+            if passou:
+                print("     %-4s %-24s OK      %s" % (sigla, desc, detalhe))
+            else:
+                tipo = "recuperável" if recup == RECUPERAVEL else "DEFINITIVA"
+                print("     %-4s %-24s FALHA   %s  <- causa %s"
+                      % (sigla, desc, detalhe, tipo))
+        print()
+
+
+def mostrar_listas(prontos, espera, alerta):
+    """As três listas auxiliares que o enunciado pede."""
+    print("=" * 74)
+    print("TRIAGEM")
+    print("=" * 74)
+    print("PRONTOS PARA POUSO (%d) - vão disputar a fila na Camada 3" % len(prontos))
+    for m in prontos:
+        print("     %s" % m["nome"])
+
+    print("\nEM ESPERA (%d) - causa recuperável, voltam a disputar" % len(espera))
+    for m, portas in espera:
+        motivos = ", ".join("%s: %s" % (p[0], p[4]) for p in portas if not p[2])
+        print("     %-16s %s" % (m["nome"], motivos))
+
+    print("\nEM ALERTA (%d) - causa definitiva, saem da fila" % len(alerta))
+    for m, portas in alerta:
+        motivos = ", ".join("%s: %s" % (p[0], p[4])
+                            for p in portas if not p[2] and p[3] == DEFINITIVA)
+        print("     %-16s %s" % (m["nome"], motivos))
+    print()
+
+
+# =============================================================================
+# 8. EXECUÇÃO
 # =============================================================================
 
 if __name__ == "__main__":
     print()
     print("MGPEB - Base Aurora Siger")
-    print("Camada 1: cadastro\n")
+    print("Camadas 1 e 2\n")
 
-    if validar_cadastro(modulos):
-        mostrar_cadastro(modulos)
-        print("\nBase sólida. Pronto para a Camada 2 (portas lógicas).")
-    else:
+    if not validar_cadastro(modulos):
         print("\nCadastro reprovado. Nada é construído em cima de dado inválido.")
+        raise SystemExit(1)
+
+    mostrar_cadastro(modulos)
+
+    # --- o mundo é criado UMA vez, e o MGPEB apenas o lê ---------------
+    mundo = criar_mundo(modulos)
+    sortear_clima(mundo)
+
+    mostrar_portas(modulos, mundo, t=0)
+    prontos, espera, alerta = triagem(modulos, mundo, t=0)
+    mostrar_listas(prontos, espera, alerta)
+
+    print("Camada 2 concluída. Pronto para a Camada 3 (fila dinâmica).")
