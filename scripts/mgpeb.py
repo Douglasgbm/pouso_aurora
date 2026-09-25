@@ -957,7 +957,44 @@ def operar(lista, mundo):
         # --- 3. a fila é REORDENADA, não reaproveitada ------------------
         if prontos:
             fila = ordenar_fila(prontos)
-            escolhido = fila[0]
+
+            # ------------------------------------------------------------
+            # SEGUNDA PORTA: a verificação CALCULADA de combustível
+            #
+            # A porta C da Camada 2 usa um corte fixo de 20% para todos os
+            # módulos. É barata (uma comparação) e serve de triagem, mas ela
+            # ignora a massa - e a massa é justamente o que determina quanto
+            # combustível a frenagem exige (Camada 4, seção 17).
+            #
+            # Arquitetura de dois estágios, que é o que sistemas reais fazem:
+            #     1o  filtro BARATO, aplicado a todos, a cada ciclo  -> porta C
+            #     2o  checagem CARA, só no candidato escolhido       -> aqui
+            #
+            # Sem este segundo estágio, o MAV com 25% seria autorizado
+            # (25 > 20) e CAIRIA, porque frear 18 toneladas exige 40,6%.
+            # A reprovação aqui é DEFINITIVA: combustível só diminui.
+            # ------------------------------------------------------------
+            escolhido = None
+            for candidato in fila:
+                exigido = combustivel_minimo_real(candidato)
+                if candidato["combustivel_descida"] >= exigido:
+                    escolhido = candidato
+                    break
+                motivo = ("combustível calculado: frear %d kg exige %.1f%%, "
+                          "tem %.1f%% (a porta C dos %d%% deixou passar)"
+                          % (candidato["massa"], exigido,
+                             candidato["combustivel_descida"], COMBUSTIVEL_ABORTO))
+                alerta.append((candidato, motivo))
+                pendentes.remove(candidato)
+                registrar(registro, t, "%s -> ALERTA (2a porta): %s"
+                          % (candidato["nome"], motivo))
+                print("t=%3d | 2a PORTA reprova %s: %s"
+                      % (t, candidato["nome"], motivo))
+
+            if escolhido is None:
+                # todos os candidatos reprovaram na segunda porta
+                print("t=%3d | nenhum candidato passou na 2a porta\n" % t)
+                continue
 
             disputa = ", ".join("%s[%s/p%d/%.0f%%]"
                                 % (m["nome"], faixa_combustivel(m)[0],
@@ -1501,6 +1538,39 @@ def teste_vertice_da_parabola_toca_o_solo():
     return ok
 
 
+def teste_segunda_porta_pega_o_que_a_primeira_deixou_passar():
+    """O MAV com 25% passa na porta C e tem que ser barrado pela 2a porta.
+
+    É o teste que prova que a arquitetura de dois estágios funciona: a porta
+    barata deixa passar, a cara segura. Antes da 2a porta este módulo descia
+    e caía (ver teste_regra_fixa_de_20_por_cento_e_insegura).
+    """
+    lista = copy.deepcopy(modulos)
+    mav = lista[0]
+    mav["combustivel_descida"] = 25.0
+    mav["eta"] = 0
+    for outro in lista[1:]:
+        outro["eta"] = 9999          # isola o MAV: só ele disputa
+
+    mundo = criar_mundo(lista, semente=SEMENTE)
+    for nome in mundo["hardware"]:
+        mundo["hardware"][nome] = {"sensores_ok": True, "paraquedas_ok": True,
+                                   "estrutura_ok": True}
+    mundo["tempestade"] = False
+
+    pousados, alerta, perdidos, registro, t_final = operar(lista, mundo)
+
+    nomes_alerta = [m["nome"] for m, _ in alerta]
+    nomes_perdidos = [m["nome"] for m, _ in perdidos]
+    # tem que estar no ALERTA (barrado antes de descer), e NAO nos perdidos
+    ok = "MAV" in nomes_alerta and "MAV" not in nomes_perdidos
+    print("teste_segunda_porta_pega_o_que_a_primeira_deixou_passar: %s"
+          % ("PASSOU" if ok else "FALHOU"))
+    print("     MAV barrado antes de descer? %s  |  caiu na descida? %s"
+          % ("MAV" in nomes_alerta, "MAV" in nomes_perdidos))
+    return ok
+
+
 def rodar_testes():
     print()
     print("=" * 74)
@@ -1514,6 +1584,7 @@ def rodar_testes():
         teste_vertice_da_parabola_toca_o_solo(),
         teste_massa_define_altura_de_ignicao(),
         teste_regra_fixa_de_20_por_cento_e_insegura(),
+        teste_segunda_porta_pega_o_que_a_primeira_deixou_passar(),
     ]
     print("\n%d de %d testes passaram." % (sum(resultados), len(resultados)))
     return all(resultados)
