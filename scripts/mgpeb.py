@@ -362,6 +362,8 @@ def mostrar_cadastro(lista):
 # o pouso), não para os DADOS (o módulo não inventa o que o sensor mede).
 
 import random
+import copy
+import sys
 
 
 # =============================================================================
@@ -631,13 +633,551 @@ def mostrar_listas(prontos, espera, alerta):
 
 
 # =============================================================================
-# 8. EXECUÇÃO
+# =============================================================================
+# CAMADA 3 - A FILA DINÂMICA
+# =============================================================================
+# =============================================================================
+#
+# A Camada 2 responde "este módulo PODE pousar?" - uma foto, num instante.
+# A Camada 3 põe o relógio para andar e responde "entre os que podem, QUEM VAI
+# AGORA?" - e essa resposta MUDA a cada ciclo, porque:
+#
+#   - módulos novos chegam à órbita (o ETA vence)
+#   - quem espera QUEIMA combustível e energia (seção 9)
+#   - o MGPEB corrige falhas recuperáveis, e a correção CUSTA (seção 10)
+#   - a tempestade vai e volta
+#
+# É por isso que a fila é RECALCULADA, e não calculada uma vez.
+
+
+# =============================================================================
+# 9. CONSUMO EM ÓRBITA  ->  FUNÇÃO MATEMÁTICA 1 (linear)
+# =============================================================================
+#
+# FENÔMENO: combustível e energia restantes em função do tempo de espera.
+#
+#   C(t) = C0 - k * t          k = taxa de consumo, em % por minuto
+#   E(t) = E0 - j * t          j = idem, para a bateria
+#
+# FORMA ESCOLHIDA: LINEAR. Justificativa: um módulo em espera está apenas
+# mantendo atitude e mantendo os sistemas ligados - o gasto por minuto é
+# praticamente constante, não depende de quanto ainda resta no tanque. (Se
+# dependesse do que resta, a forma correta seria exponencial.)
+#
+# ANÁLISE QUALITATIVA DO GRÁFICO: reta decrescente, coeficiente angular -k.
+# Quanto maior o tempo de espera, menor o combustível - e como a reta cruza
+# o patamar dos 20% (COMBUSTIVEL_ABORTO), existe um MINUTO LIMITE a partir do
+# qual o módulo deixa de poder pousar. Esse cruzamento é o prazo da fila.
+#
+# RELAÇÃO COM A ENGENHARIA: é a resposta para "quantos módulos eu posso
+# deixar esperando, e por quanto tempo, antes de perder um?".
+#
+# [PREMISSA, NÃO MEDIÇÃO] os valores de k e j abaixo são escolhidos. Estão
+# declarados aqui para poderem ser discutidos no relatório.
+
+TAXA_CONSUMO_COMBUSTIVEL = 0.08   # % por minuto (controle de atitude)
+TAXA_CONSUMO_ENERGIA = 0.10       # % por minuto (computador e radar ligados)
+
+
+def minuto_limite(m):
+    """Em quantos minutos de espera este módulo cruza a faixa de aborto?
+
+    Resolve C0 - k*t = 20  para t.  É a pergunta de engenharia que a função
+    linear existe para responder.
+    """
+    margem = m["combustivel_descida"] - COMBUSTIVEL_ABORTO
+    if margem <= 0:
+        return 0
+    return margem / TAXA_CONSUMO_COMBUSTIVEL
+
+
+def consumir_em_orbita(m, dt):
+    """Aplica o consumo de dt minutos de espera. Só quem JÁ CHEGOU gasta:
+    antes do ETA o módulo está em trânsito, não em espera na órbita."""
+    m["combustivel_descida"] = max(0.0, m["combustivel_descida"]
+                                   - TAXA_CONSUMO_COMBUSTIVEL * dt)
+    m["energia"] = max(0.0, m["energia"] - TAXA_CONSUMO_ENERGIA * dt)
+
+
+# =============================================================================
+# 10. AÇÕES CORRETIVAS - o que o MGPEB FAZ, e não só decide
+# =============================================================================
+#
+# A Camada 2 classificou θ (ângulo) e T (terreno) como RECUPERÁVEIS. Mas nem
+# um nem outro se resolvem com o tempo: ângulo errado continua errado amanhã,
+# e a cratera não sai do lugar. Quem os resolve é o próprio MGPEB, agindo.
+#
+# E TODA CORREÇÃO CUSTA COMBUSTÍVEL. Este é o acoplamento mais interessante do
+# sistema: recuperar a porta θ EMPURRA A PORTA C PARA BAIXO. Corrigir demais
+# mata o módulo que se queria salvar.
+
+CUSTO_CORRECAO_ANGULO = 5.0    # % de combustível (queima de ajuste de órbita)
+CUSTO_DESLOCAR_ALVO = 3.0      # % de combustível (manobra lateral na descida)
+
+
+def corrigir_angulo(m):
+    """Queima de ajuste: joga o ângulo para o centro da janela de segurança."""
+    novo = (ANGULO_MIN + ANGULO_MAX) / 2.0
+    custo = CUSTO_CORRECAO_ANGULO
+    m["angulo_entrada"] = novo
+    m["combustivel_descida"] = max(0.0, m["combustivel_descida"] - custo)
+    return "ângulo corrigido para %.1f° (custou %.0f%% de combustível)" % (novo, custo)
+
+
+def deslocar_alvo(m, mundo):
+    """Procura a coordenada livre mais próxima do alvo original.
+
+    Busca em anel crescente ao redor do ponto original. Como o mapa é pequeno
+    e a resposta desejada é a MAIS PRÓXIMA, varrer em anel é o mais simples
+    que funciona - e é O(1) no caso comum, porque o primeiro anel já resolve.
+    """
+    x0, y0 = m["coord_pouso"]
+    for raio in range(1, 6):
+        for dx in range(-raio, raio + 1):
+            for dy in range(-raio, raio + 1):
+                if max(abs(dx), abs(dy)) != raio:
+                    continue                      # só a borda do anel
+                alvo = (x0 + dx, y0 + dy)
+                if alvo not in OBSTACULOS and alvo not in mundo["zonas_ocupadas"]:
+                    m["coord_pouso"] = alvo
+                    m["combustivel_descida"] = max(
+                        0.0, m["combustivel_descida"] - CUSTO_DESLOCAR_ALVO)
+                    return ("alvo deslocado de %s para %s (custou %.0f%%)"
+                            % ((x0, y0), alvo, CUSTO_DESLOCAR_ALVO))
+    return None
+
+
+def aplicar_correcoes(m, mundo, t):
+    """Tenta consertar as falhas recuperáveis que NÃO se resolvem sozinhas.
+
+    Não gasta combustível com módulo que já está em alerta: seria jogar fora
+    o recurso de um módulo que não vai descer de qualquer jeito.
+    """
+    ok, destino, portas = autorizar(m, mundo, t)
+    if destino == "alerta":
+        return []
+
+    acoes = []
+    falhou = dict((p[0], p[2]) for p in portas)
+
+    if not falhou["θ"]:
+        acoes.append(corrigir_angulo(m))
+    if not falhou["T"]:
+        msg = deslocar_alvo(m, mundo)
+        if msg:
+            acoes.append(msg)
+    return acoes
+
+
+# =============================================================================
+# 11. A FILA - faixas de combustível e ordenação
+# =============================================================================
+#
+# LEMBRETE DO PROJETO: o combustível responde a DUAS perguntas diferentes.
+#   pergunta 1 - "pode pousar?"        -> é a porta C, na Camada 2. ELIMINA.
+#   pergunta 2 - "quem vai primeiro?"  -> são as faixas abaixo. ENFILEIRA.
+# Confundir as duas foi o que gerou a contradição 20% x 50% no início do
+# projeto. São dois cortes no mesmo número, para perguntas diferentes.
+
+def faixa_combustivel(m):
+    """Em que faixa de URGÊNCIA (não de segurança) este módulo está."""
+    if m["combustivel_descida"] < COMBUSTIVEL_ABORTO:
+        return "ABORTO"
+    if m["combustivel_descida"] < COMBUSTIVEL_URGENTE:
+        return "URGENTE"
+    return "NORMAL"
+
+
+def chave_de_fila(m):
+    """A regra de ordenação de dois níveis + desempate, virada em números.
+
+    nível 1 - faixa:      urgente (0) antes de normal (1)
+    nível 2 - prioridade: menor primeiro (1 é a máxima)
+    desempate - ETA:      desce quem chegou antes
+
+    Princípio: IMPORTÂNCIA NÃO É URGÊNCIA. Adiar um módulo importante custa
+    ESPERA; adiar um módulo sem combustível custa O MÓDULO.
+    """
+    urgente = 0 if faixa_combustivel(m) == "URGENTE" else 1
+    return (urgente, m["prioridade_projeto"], m["eta"])
+
+
+def ordenar_fila(lista):
+    """Ordenação por INSERÇÃO (insertion sort).
+
+    POR QUE ESTE ALGORITMO, E NÃO OUTRO - a justificativa é do problema, não
+    do gosto:
+
+    1. A fila é REORDENADA a cada ciclo, e entre um ciclo e o seguinte quase
+       nada mudou: saiu um módulo, entrou outro. A lista chega ao ordenador
+       JÁ QUASE ORDENADA. O insertion sort é O(n) nesse caso - ele percorre e
+       não troca nada. Um merge sort faria O(n log n) sempre, ordenado ou não.
+
+    2. Ele é IN-PLACE: não aloca uma segunda lista. Num computador de bordo,
+       memória é o recurso mais escasso (ver item 05 do enunciado, limitações
+       de hardware numa missão em Marte).
+
+    3. n é 6. Para n pequeno, o insertion sort ganha de qualquer algoritmo
+       "melhor" na prática, porque não paga o custo fixo de recursão.
+
+    4. Ele é ESTÁVEL: dois módulos com a mesma chave mantêm a ordem relativa
+       anterior, então a fila não fica "tremendo" entre ciclos sem motivo.
+    """
+    fila = list(lista)
+    for i in range(1, len(fila)):
+        atual = fila[i]
+        chave_atual = chave_de_fila(atual)
+        j = i - 1
+        # empurra para a direita todo mundo que deve vir DEPOIS do atual
+        while j >= 0 and chave_de_fila(fila[j]) > chave_atual:
+            fila[j + 1] = fila[j]
+            j -= 1
+        fila[j + 1] = atual
+    return fila
+
+
+# =============================================================================
+# 12. ALGORITMOS DE BUSCA
+# =============================================================================
+#
+# Todas são BUSCAS LINEARES (varrem a lista do começo ao fim). Isso é uma
+# escolha, e tem justificativa:
+#
+#   - a busca binária exigiria manter a lista ORDENADA PELA CHAVE PROCURADA.
+#     São três chaves diferentes (combustível, prioridade, tipo de carga), o
+#     que significaria manter TRÊS cópias ordenadas na memória. Num sistema
+#     embarcado isso é caro, e o dado muda a cada ciclo (o combustível cai),
+#     o que obrigaria a reordenar as três a todo instante.
+#   - com n = 6, a busca linear faz no máximo 6 comparações. A binária faria
+#     3 - e gastaria muito mais para manter a estrutura que a viabiliza.
+#
+# É o mesmo raciocínio do insertion sort: para n pequeno e dado que muda, o
+# simples ganha.
+
+def buscar_menor_combustivel(lista):
+    """O módulo mais perto de cruzar a faixa de aborto. É o que corre risco."""
+    if not lista:
+        return None
+    menor = lista[0]
+    for m in lista[1:]:
+        if m["combustivel_descida"] < menor["combustivel_descida"]:
+            menor = m
+    return menor
+
+
+def buscar_maior_prioridade(lista):
+    """Prioridade 1 é a MÁXIMA, então "maior prioridade" é o MENOR número."""
+    if not lista:
+        return None
+    maior = lista[0]
+    for m in lista[1:]:
+        if m["prioridade_projeto"] < maior["prioridade_projeto"]:
+            maior = m
+    return maior
+
+
+def buscar_por_tipo_carga(lista, tipo):
+    """Todos os módulos de um tipo. Devolve lista, porque há tipos repetidos
+    (Infraestrutura e Suporte à Vida têm dois módulos cada)."""
+    return [m for m in lista if m["tipo_carga"] == tipo]
+
+
+# =============================================================================
+# 13. PILHA DE REGISTRO (LIFO)
+# =============================================================================
+#
+# O enunciado pede lista, FILA e PILHA. Fila já existe (a de pouso, FIFO
+# reordenada). A pilha é o registro de eventos da missão.
+#
+# POR QUE PILHA, E NÃO OUTRA LISTA: um gravador de voo é lido DE TRÁS PARA
+# FRENTE. Quando algo dá errado, a primeira pergunta é "o que aconteceu por
+# último?", não "o que aconteceu primeiro". LIFO é exatamente esse acesso:
+# o topo da pilha é o evento mais recente.
+
+def registrar(pilha, t, evento):
+    """Empilha (push). O topo é sempre o evento mais recente."""
+    pilha.append((t, evento))
+
+
+def desempilhar_ultimos(pilha, n):
+    """Desempilha (pop) os n eventos mais recentes, sem destruir a pilha."""
+    return list(reversed(pilha[-n:]))
+
+
+# =============================================================================
+# 14. O CICLO DE OPERAÇÃO
+# =============================================================================
+
+LIMITE_MISSAO = 600    # min. Além disso a espera custa mais do que salva.
+
+
+def operar(lista, mundo):
+    """Roda a missão, ciclo a ciclo, até acabarem os módulos ou o prazo.
+
+    ESTRUTURAS (o que o enunciado pede, e onde está cada uma):
+        pendentes  - LISTA  : quem ainda não resolveu a vida
+        fila       - FILA   : os autorizados, ordenados pela regra 2.2
+        pousados   - LISTA  : já no solo
+        alerta     - LISTA  : fora da fila, monitorados
+        registro   - PILHA  : eventos, lidos do mais recente para o mais antigo
+    """
+    pendentes = list(lista)
+    pousados, alerta, registro = [], [], []
+    t = 0
+
+    print()
+    print("=" * 74)
+    print("CAMADA 3 - CICLO DE OPERAÇÃO")
+    print("=" * 74)
+    print("ordenação: faixa de combustível -> prioridade -> ETA (desempate)")
+    print("ciclo: %d min por módulo  |  limite da missão: %d min\n"
+          % (CICLO_OPERACAO, LIMITE_MISSAO))
+
+    while pendentes and t <= LIMITE_MISSAO:
+        sortear_clima(mundo)
+
+        # --- 1. o MGPEB age sobre o que dá para consertar ---------------
+        for m in list(pendentes):
+            for acao in aplicar_correcoes(m, mundo, t):
+                registrar(registro, t, "%s: %s" % (m["nome"], acao))
+                print("t=%3d | AÇÃO   %s: %s" % (t, m["nome"], acao))
+
+        # --- 2. triagem: quem pode, quem espera, quem sai ---------------
+        prontos, em_espera, em_alerta = triagem(pendentes, mundo, t)
+
+        for m, portas in em_alerta:
+            motivo = ", ".join("%s (%s)" % (p[0], p[4])
+                               for p in portas if not p[2] and p[3] == DEFINITIVA)
+            alerta.append((m, motivo))
+            pendentes.remove(m)
+            registrar(registro, t, "%s -> ALERTA: %s" % (m["nome"], motivo))
+            print("t=%3d | ALERTA %s -> %s" % (t, m["nome"], motivo))
+
+        # --- 3. a fila é REORDENADA, não reaproveitada ------------------
+        if prontos:
+            fila = ordenar_fila(prontos)
+            escolhido = fila[0]
+
+            disputa = ", ".join("%s[%s/p%d/%.0f%%]"
+                                % (m["nome"], faixa_combustivel(m)[0],
+                                   m["prioridade_projeto"], m["combustivel_descida"])
+                                for m in fila)
+            print("t=%3d | FILA   %s" % (t, disputa))
+
+            # furou a fila = urgente que passou na frente de prioridade melhor
+            furou = (faixa_combustivel(escolhido) == "URGENTE" and
+                     any(m["prioridade_projeto"] < escolhido["prioridade_projeto"]
+                         for m in fila))
+            marca = "   <== FUROU A FILA (emergência de combustível)" if furou else ""
+            print("t=%3d | POUSA  %s%s\n" % (t, escolhido["nome"], marca))
+
+            escolhido["pousou_em"] = t
+            pousados.append(escolhido)
+            pendentes.remove(escolhido)
+            mundo["zonas_ocupadas"].append(escolhido["coord_pouso"])
+            registrar(registro, t, "%s POUSOU em %s"
+                      % (escolhido["nome"], escolhido["coord_pouso"]))
+            dt = CICLO_OPERACAO
+        else:
+            # Ninguém pronto. A pergunta certa é POR QUÊ, e a resposta muda
+            # o que fazer.
+            #
+            # [DEFEITO CORRIGIDO - encontrado rodando a Camada 3]
+            # A primeira versão fazia:
+            #       futuros = [etas maiores que t]
+            #       if not futuros: break
+            # ou seja: adiantava o relógio até a PRÓXIMA CHEGADA, assumindo que
+            # a única razão para ninguém estar pronto era "ainda não chegou".
+            # Mas a causa pode ser TEMPESTADE DE AREIA - e aí, se todos os
+            # módulos já tivessem chegado, a lista de futuros ficava vazia e a
+            # missão era ABANDONADA por causa de um evento que passa em
+            # minutos. O cenário padrão nunca pegou isso porque sempre havia
+            # alguém por chegar. Ver teste_tempestade_total().
+            #
+            # Correção: esperar um ciclo (ou até a próxima chegada, se ela vier
+            # antes) e tentar de novo. Quem encerra a missão é o LIMITE_MISSAO,
+            # não a falta de chegadas.
+            motivos = {}
+            for m, portas in em_espera:
+                for porta in portas:
+                    if not porta[2]:
+                        motivos[porta[0]] = porta[4]
+
+            dt = CICLO_OPERACAO
+            futuros = [m["eta"] for m in pendentes if m["eta"] > t]
+            if futuros:
+                dt = min(dt, min(futuros) - t)
+
+            print("t=%3d | OCIOSO %d min - bloqueio: %s\n"
+                  % (t, dt, "; ".join("%s (%s)" % (k, v)
+                                      for k, v in sorted(motivos.items()))))
+
+        # --- 4. quem ficou esperando PAGA pelo tempo --------------------
+        for m in pendentes:
+            if m["eta"] <= t:               # só quem já está em órbita gasta
+                consumir_em_orbita(m, dt)
+
+        t += dt
+
+    return pousados, alerta, registro, t
+
+
+def mostrar_resultado(lista, pousados, alerta, registro, t_final):
+    print("=" * 74)
+    print("RESULTADO DA MISSÃO")
+    print("=" * 74)
+
+    print("POUSADOS (%d):" % len(pousados))
+    print("   %-16s %6s %10s %10s" % ("módulo", "t", "comb.", "energia"))
+    for m in pousados:
+        print("   %-16s %5dm %9.1f%% %9.1f%%"
+              % (m["nome"], m["pousou_em"], m["combustivel_descida"], m["energia"]))
+
+    print("\nEM ALERTA (%d):" % len(alerta))
+    for m, motivo in alerta:
+        print("   %-16s %s" % (m["nome"], motivo))
+
+    print("\nduração total da operação: %d min" % t_final)
+
+    # --- a pilha lida do topo (LIFO) -----------------------------------
+    print("\nREGISTRO DE EVENTOS - últimos 5, do mais recente (topo da pilha):")
+    for t, evento in desempilhar_ultimos(registro, 5):
+        print("   t=%3d  %s" % (t, evento))
+
+    # --- os algoritmos de busca ----------------------------------------
+    print("\nBUSCAS (sobre os módulos que pousaram):")
+    menor = buscar_menor_combustivel(pousados)
+    maior = buscar_maior_prioridade(pousados)
+    print("   menor combustível ....: %s (%.1f%%)"
+          % (menor["nome"], menor["combustivel_descida"]))
+    print("   maior prioridade .....: %s (prioridade %d)"
+          % (maior["nome"], maior["prioridade_projeto"]))
+    for tipo in ("Infraestrutura", "Suporte à Vida", "Retorno", "Científica"):
+        achados = buscar_por_tipo_carga(pousados, tipo)
+        print("   tipo '%s'%s: %s"
+              % (tipo, "." * max(1, 14 - len(tipo)),
+                 ", ".join(m["nome"] for m in achados) or "(nenhum)"))
+
+    # --- o prazo que a função matemática calcula ------------------------
+    print("\nPRAZO DE FILA (função linear C(t) = C0 - %.2f*t, corte em %d%%):"
+          % (TAXA_CONSUMO_COMBUSTIVEL, COMBUSTIVEL_ABORTO))
+    for m in lista:
+        print("   %-16s aguenta %6.0f min de espera antes de abortar"
+              % (m["nome"], minuto_limite(m)))
+
+
+# =============================================================================
+# 15. TESTES DO QUE O CENÁRIO NORMAL NÃO ALCANÇA
+# =============================================================================
+#
+# O cenário padrão APROVA o programa, mas ele não passa por todos os caminhos.
+# Um teste que só percorre o caminho feliz não prova que os outros funcionam -
+# ele só prova que o caminho feliz funciona. Cada teste aqui força um caminho
+# que o cenário normal não alcança.
+#
+# Rodar com:  python3 mgpeb.py teste
+
+def teste_tempestade_total():
+    """Todos os módulos JÁ CHEGARAM e cai uma tempestade.
+
+    Este é o caminho que derrubava a missão na primeira versão: sem nenhum
+    ETA futuro, o laço encerrava e abandonava módulos perfeitamente sadios.
+    O correto é esperar a tempestade passar.
+    """
+    lista = copy.deepcopy(modulos)
+    for m in lista:
+        m["eta"] = 0                      # todos já em órbita
+        m["angulo_entrada"] = 13.5        # sem falha de ângulo
+        m["coord_pouso"] = (200 + lista.index(m), 200)   # longe de crateras
+
+    mundo = criar_mundo(lista, semente=SEMENTE)
+    for nome in mundo["hardware"]:        # hardware perfeito: isola a variável
+        mundo["hardware"][nome] = {"sensores_ok": True,
+                                   "paraquedas_ok": True,
+                                   "estrutura_ok": True}
+
+    pousados, alerta, registro, t_final = operar(lista, mundo)
+    ok = len(pousados) == len(lista) and not alerta
+    print("teste_tempestade_total: %s  (%d de %d pousaram, %d em alerta)"
+          % ("PASSOU" if ok else "FALHOU", len(pousados), len(lista), len(alerta)))
+    return ok
+
+
+def teste_faixa_de_aborto():
+    """Um módulo com combustível abaixo de 20% precisa ir para o ALERTA.
+
+    O cadastro avisa que nenhum módulo do cenário começa nessa faixa, ou seja,
+    a porta C nunca é exercitada na execução normal. Aqui ela é.
+    """
+    lista = copy.deepcopy(modulos)
+    lista[2]["combustivel_descida"] = 15.0        # Logística, abaixo do corte
+    mundo = criar_mundo(lista, semente=SEMENTE)
+    ok, destino, portas = autorizar(lista[2], mundo, t=lista[2]["eta"])
+    porta_c = [p for p in portas if p[0] == "C"][0]
+    passou = (destino == "alerta") and (not porta_c[2])
+    print("teste_faixa_de_aborto: %s  (destino=%s, porta C passou=%s)"
+          % ("PASSOU" if passou else "FALHOU", destino, porta_c[2]))
+    return passou
+
+
+def teste_correcao_custa_combustivel():
+    """Corrigir o ângulo tem que DIMINUIR o combustível.
+
+    É o acoplamento entre as portas θ e C: recuperar uma empurra a outra para
+    baixo. Se um dia alguém "otimizar" a correção para não custar nada, este
+    teste reprova.
+    """
+    m = copy.deepcopy(modulos[5])                 # Laboratório, ângulo 15.5
+    antes = m["combustivel_descida"]
+    corrigir_angulo(m)
+    depois = m["combustivel_descida"]
+    dentro = ANGULO_MIN <= m["angulo_entrada"] <= ANGULO_MAX
+    ok = depois < antes and dentro
+    print("teste_correcao_custa_combustivel: %s  (%.0f%% -> %.0f%%, ângulo %.1f°)"
+          % ("PASSOU" if ok else "FALHOU", antes, depois, m["angulo_entrada"]))
+    return ok
+
+
+def teste_insertion_sort():
+    """A ordenação por inserção tem que dar o MESMO resultado que o sorted()
+    da linguagem. Escrever o algoritmo à mão só vale se ele estiver certo."""
+    lista = copy.deepcopy(modulos)
+    meu = [m["nome"] for m in ordenar_fila(lista)]
+    referencia = [m["nome"] for m in sorted(lista, key=chave_de_fila)]
+    ok = meu == referencia
+    print("teste_insertion_sort: %s" % ("PASSOU" if ok else "FALHOU"))
+    if not ok:
+        print("     meu       : %s" % meu)
+        print("     referência: %s" % referencia)
+    return ok
+
+
+def rodar_testes():
+    print()
+    print("=" * 74)
+    print("TESTES - caminhos que o cenário normal não percorre")
+    print("=" * 74)
+    resultados = [
+        teste_insertion_sort(),
+        teste_correcao_custa_combustivel(),
+        teste_faixa_de_aborto(),
+        teste_tempestade_total(),
+    ]
+    print("\n%d de %d testes passaram." % (sum(resultados), len(resultados)))
+    return all(resultados)
+
+
+# =============================================================================
+# 16. EXECUÇÃO
 # =============================================================================
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "teste":
+        raise SystemExit(0 if rodar_testes() else 1)
+
     print()
     print("MGPEB - Base Aurora Siger")
-    print("Camadas 1 e 2\n")
+    print("Camadas 1, 2 e 3\n")
 
     if not validar_cadastro(modulos):
         print("\nCadastro reprovado. Nada é construído em cima de dado inválido.")
@@ -653,4 +1193,5 @@ if __name__ == "__main__":
     prontos, espera, alerta = triagem(modulos, mundo, t=0)
     mostrar_listas(prontos, espera, alerta)
 
-    print("Camada 2 concluída. Pronto para a Camada 3 (fila dinâmica).")
+    pousados, alerta, registro, t_final = operar(modulos, mundo)
+    mostrar_resultado(modulos, pousados, alerta, registro, t_final)
