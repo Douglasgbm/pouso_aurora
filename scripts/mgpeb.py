@@ -364,6 +364,7 @@ def mostrar_cadastro(lista):
 import random
 import copy
 import sys
+import math
 
 
 # =============================================================================
@@ -922,7 +923,7 @@ def operar(lista, mundo):
         registro   - PILHA  : eventos, lidos do mais recente para o mais antigo
     """
     pendentes = list(lista)
-    pousados, alerta, registro = [], [], []
+    pousados, alerta, perdidos, registro = [], [], [], []
     t = 0
 
     print()
@@ -971,12 +972,28 @@ def operar(lista, mundo):
             marca = "   <== FUROU A FILA (emergência de combustível)" if furou else ""
             print("t=%3d | POUSA  %s%s\n" % (t, escolhido["nome"], marca))
 
-            escolhido["pousou_em"] = t
-            pousados.append(escolhido)
+            # --- CAMADA 4: a descida acontece de verdade ---------------
+            # Até aqui "pousar" era remover da fila. Agora o módulo desce,
+            # gasta o combustível CALCULADO na frenagem, e pode falhar.
+            resultado = simular_descida(escolhido)
+            mostrar_descida(resultado)
+            print()
+
             pendentes.remove(escolhido)
+            # a zona fica ocupada nos dois casos: por um módulo de pé ou por
+            # destroços. Destroços também impedem outro pouso ali (porta D).
             mundo["zonas_ocupadas"].append(escolhido["coord_pouso"])
-            registrar(registro, t, "%s POUSOU em %s"
-                      % (escolhido["nome"], escolhido["coord_pouso"]))
+
+            if resultado["sucesso"]:
+                escolhido["pousou_em"] = t
+                escolhido["descida"] = resultado
+                pousados.append(escolhido)
+                registrar(registro, t, "%s POUSOU em %s"
+                          % (escolhido["nome"], escolhido["coord_pouso"]))
+            else:
+                perdidos.append((escolhido, resultado["motivo"]))
+                registrar(registro, t, "%s PERDIDO na descida: %s"
+                          % (escolhido["nome"], resultado["motivo"]))
             dt = CICLO_OPERACAO
         else:
             # Ninguém pronto. A pergunta certa é POR QUÊ, e a resposta muda
@@ -1019,21 +1036,28 @@ def operar(lista, mundo):
 
         t += dt
 
-    return pousados, alerta, registro, t
+    return pousados, alerta, perdidos, registro, t
 
 
-def mostrar_resultado(lista, pousados, alerta, registro, t_final):
+def mostrar_resultado(lista, pousados, alerta, perdidos, registro, t_final):
     print("=" * 74)
     print("RESULTADO DA MISSÃO")
     print("=" * 74)
 
     print("POUSADOS (%d):" % len(pousados))
-    print("   %-16s %6s %10s %10s" % ("módulo", "t", "comb.", "energia"))
+    print("   %-16s %6s %8s %8s %9s %8s"
+          % ("módulo", "t", "ignição", "queima", "comb.rest", "energia"))
     for m in pousados:
-        print("   %-16s %5dm %9.1f%% %9.1f%%"
-              % (m["nome"], m["pousou_em"], m["combustivel_descida"], m["energia"]))
+        d = m["descida"]
+        print("   %-16s %5dm %7.0fm %7.1fs %8.1f%% %7.1f%%"
+              % (m["nome"], m["pousou_em"], d["h_ignicao"], d["t_queima"],
+                 m["combustivel_descida"], m["energia"]))
 
-    print("\nEM ALERTA (%d):" % len(alerta))
+    print("\nPERDIDOS NA DESCIDA (%d):" % len(perdidos))
+    for m, motivo in perdidos:
+        print("   %-16s %s" % (m["nome"], motivo))
+
+    print("\nEM ALERTA (%d) - nem chegaram a descer:" % len(alerta))
     for m, motivo in alerta:
         print("   %-16s %s" % (m["nome"], motivo))
 
@@ -1067,6 +1091,265 @@ def mostrar_resultado(lista, pousados, alerta, registro, t_final):
 
 
 # =============================================================================
+# =============================================================================
+# CAMADA 4 - A DESCIDA (os sete minutos)
+# =============================================================================
+# =============================================================================
+#
+# Até aqui o pouso era um booleano: autorizado ou não. Agora ele ACONTECE.
+#
+# O módulo chega ao topo da atmosfera a ~5.400 m/s e precisa chegar ao solo a
+# ~0 m/s. Isso é feito em TRÊS ESTÁGIOS DE FREIO, cada um entregando ao
+# próximo:
+#
+#   ESTÁGIO 1 - a própria atmosfera (escudo térmico)
+#               faz a maior parte da frenagem, de graça, por atrito.
+#               Depende do ÂNGULO de entrada.
+#
+#   ESTÁGIO 2 - paraquedas
+#               abre a 11 km. Tem janela dos dois lados: rápido demais
+#               rasga o tecido, baixo demais não sobra altura.
+#
+#   ESTÁGIO 3 - retrofoguetes
+#               a atmosfera de Marte tem menos de 1% da densidade da Terra.
+#               Mesmo com paraquedas aberto o módulo ainda cai a ~100 m/s
+#               (360 km/h). Os últimos metros são freados A FOGUETE.
+#               >>> É PARA ISTO QUE SERVE O COMBUSTÍVEL DE DESCIDA. <<<
+#
+# A regra dos 20% da Camada 2 é, no fundo, uma aproximação grosseira desta
+# camada. Aqui o gasto é CALCULADO, não estimado.
+
+
+# =============================================================================
+# 16. PARÂMETROS FÍSICOS DA DESCIDA
+# =============================================================================
+
+GRAVIDADE_MARTE = 3.71        # m/s2  (38% da gravidade da Terra)
+ALTITUDE_PARAQUEDAS = 11000.0 # m     (altura de abertura, como a Perseverance)
+DURACAO_ENTRADA = 280.0       # s     (estágio 1, do topo da atmosfera aos 11 km)
+
+# Velocidade na abertura do paraquedas, em função do ÂNGULO de entrada.
+# Entrada mais fechada = menos tempo freando na atmosfera = chega mais rápido
+# aos 11 km. É por isso que a janela de ângulo tem um teto: acima de 15 graus
+# o módulo chega ao paraquedas rápido demais e RASGA O TECIDO.
+VELOC_PARAQUEDAS_BASE = 380.0    # m/s, com entrada no ângulo mínimo (12 graus)
+VELOC_PARAQUEDAS_POR_GRAU = 30.0 # m/s a mais por grau acima do mínimo
+VELOC_MAX_PARAQUEDAS = 470.0     # m/s - acima disso o paraquedas se rompe
+
+VELOC_TERMINAL_PARAQUEDAS = 100.0 # m/s - velocidade de queda com o paraquedas
+                                  # aberto. Ainda é 360 km/h: mortal. Daí o
+                                  # estágio 3 ser obrigatório em Marte.
+
+EMPUXO_RETROFOGUETE = 120000.0   # N - empuxo total dos retrofoguetes
+VELOC_IMPACTO_MAX = 3.0          # m/s - acima disso o trem de pouso colapsa
+
+# Consumo de propelente durante a queima.
+# [SIMPLIFICAÇÃO DECLARADA] o combustível é medido em % do tanque de cada
+# módulo, e os tanques têm tamanhos diferentes. Assume-se que cada tanque foi
+# dimensionado proporcionalmente à massa do seu módulo, de modo que um segundo
+# de queima consome a mesma FRAÇÃO em todos. Sem essa premissa seria preciso
+# modelar massa de propelente e impulso específico, o que foge do escopo.
+TAXA_CONSUMO_RETRO = 1.2         # % do tanque por segundo de queima
+
+
+# =============================================================================
+# 17. FUNÇÃO MATEMÁTICA 2 (quadrática) - a frenagem por retrofoguete
+# =============================================================================
+#
+# FENÔMENO: altura em função do tempo, durante a queima de frenagem.
+#
+#   h(t) = h0 - v0*t + (1/2)*a*t^2          <-- QUADRÁTICA em t
+#   v(t) = v0 - a*t                         <-- derivada: linear
+#
+#   h0 = altura no instante da ignição
+#   v0 = velocidade de queda ao acionar (100 m/s, saindo do paraquedas)
+#   a  = desaceleração líquida dos retrofoguetes
+#
+# FORMA ESCOLHIDA: QUADRÁTICA. Justificativa: o empuxo é constante, logo a
+# desaceleração é constante, logo a posição varia com o QUADRADO do tempo.
+# (A função linear da Camada 3 descreve o módulo PARADO esperando; esta
+#  descreve o módulo AGINDO. Fenômenos diferentes, formas diferentes.)
+#
+# ANÁLISE QUALITATIVA: parábola com concavidade para CIMA (a > 0). O módulo
+# desce cada vez mais devagar até o vértice, onde v = 0. O projeto de pouso
+# consiste em fazer o VÉRTICE DA PARÁBOLA COINCIDIR COM O SOLO.
+#   - vértice acima do solo  -> o módulo para no ar e desperdiça combustível
+#   - vértice abaixo do solo -> ele chega ao solo ainda em movimento: colisão
+#
+# ------------------------------------------------------------------------
+# AQUI A MASSA FINALMENTE DECIDE ALGUMA COISA
+#
+# A desaceleração líquida é a = (empuxo / massa) - gravidade. Os retrofoguetes
+# precisam primeiro ANULAR O PESO e só o que sobra freia de fato. Portanto:
+#
+#     módulo mais PESADO  ->  desacelera MENOS
+#                         ->  precisa acionar MAIS ALTO
+#                         ->  queima por MAIS TEMPO
+#                         ->  gasta MAIS COMBUSTÍVEL
+#
+# O MAV (18 t) e o Suporte Médico (5 t) têm exigências completamente
+# diferentes, e não é uma opinião de projeto: sai da conta.
+# (Isto resolve o item em aberto do ROADMAP: "massa não é usada por nenhum
+#  algoritmo".)
+# ------------------------------------------------------------------------
+
+def desaceleracao_retro(m):
+    """a = (empuxo / massa) - gravidade.   Em m/s2."""
+    return EMPUXO_RETROFOGUETE / float(m["massa"]) - GRAVIDADE_MARTE
+
+
+def altura_de_ignicao(m, v0=VELOC_TERMINAL_PARAQUEDAS):
+    """A que altura acionar os retrofoguetes para parar EXATAMENTE no solo.
+
+    Sai de igualar a velocidade a zero na quadrática:
+        v(t) = v0 - a*t = 0        ->  t_queima = v0 / a
+        h0   = v0*t - (1/2)*a*t^2  ->  h0 = v0^2 / (2a)
+
+    Acionar mais alto que isso = parar no ar e cair de novo (ou pairar
+    gastando combustível). Acionar mais baixo = não dá tempo de frear.
+    """
+    a = desaceleracao_retro(m)
+    if a <= 0:
+        return float("inf")     # empuxo não vence nem o peso: não desce vivo
+    return (v0 ** 2) / (2.0 * a)
+
+
+def tempo_de_queima(m, v0=VELOC_TERMINAL_PARAQUEDAS):
+    """t = v0 / a. Quanto tempo o retrofoguete fica ligado."""
+    a = desaceleracao_retro(m)
+    if a <= 0:
+        return float("inf")
+    return v0 / a
+
+
+def combustivel_minimo_real(m):
+    """Quanto combustível ESTE módulo precisa, de fato, para frear até parar.
+
+    É o gasto da queima completa: t_queima * taxa de consumo. Depende da
+    MASSA, porque a desaceleração depende dela.
+
+    ------------------------------------------------------------------
+    ATENÇÃO - ISTO CONTRADIZ A REGRA FIXA DOS 20% DA CAMADA 2.
+    A porta C usa COMBUSTIVEL_ABORTO = 20% para todo mundo. Mas o valor
+    real varia de 5,9% (Suporte Médico, 5 t) a 40,6% (MAV, 18 t). Ou seja,
+    a regra fixa erra nos DOIS sentidos:
+
+      - FROUXA para os pesados: autoriza o MAV com 20% quando ele precisa
+        de 40,6%. O módulo é liberado e cai.
+      - RIGOROSA para os leves: rejeita o Suporte Médico com 19% quando
+        ele só precisa de 5,9%. Descarta módulo que pousaria bem.
+
+    A regra dos 20% foi escrita antes de existir o modelo físico, quando
+    ela era a melhor aproximação disponível. Agora existe a conta.
+    Trocar a porta C por esta função é uma decisão de projeto em aberto -
+    ver teste_regra_fixa_de_20_por_cento_e_insegura().
+    ------------------------------------------------------------------
+    """
+    return tempo_de_queima(m) * TAXA_CONSUMO_RETRO
+
+
+def altura_na_queima(m, t, h0, v0=VELOC_TERMINAL_PARAQUEDAS):
+    """h(t) = h0 - v0*t + (1/2)*a*t^2.  A quadrática, escrita como ela é."""
+    a = desaceleracao_retro(m)
+    return h0 - v0 * t + 0.5 * a * (t ** 2)
+
+
+def velocidade_paraquedas(m):
+    """Velocidade ao chegar aos 11 km, em função do ângulo de entrada."""
+    graus_acima = m["angulo_entrada"] - ANGULO_MIN
+    return VELOC_PARAQUEDAS_BASE + VELOC_PARAQUEDAS_POR_GRAU * graus_acima
+
+
+# =============================================================================
+# 18. SIMULAÇÃO DA DESCIDA
+# =============================================================================
+
+def simular_descida(m):
+    """Roda os três estágios e devolve o que aconteceu.
+
+    Devolve um dicionário com sucesso=True/False, o motivo da falha se houver,
+    e os números de cada estágio (para o relatório).
+    """
+    r = {"modulo": m["nome"], "sucesso": False, "motivo": None, "estagios": []}
+
+    # --- ESTÁGIO 1: entrada atmosférica --------------------------------
+    v_chegada = velocidade_paraquedas(m)
+    r["estagios"].append(
+        ("1 entrada atmosférica",
+         "%.0f s | ângulo %.1f° | chega aos %.0f km a %.0f m/s"
+         % (DURACAO_ENTRADA, m["angulo_entrada"],
+            ALTITUDE_PARAQUEDAS / 1000.0, v_chegada)))
+
+    if v_chegada > VELOC_MAX_PARAQUEDAS:
+        r["motivo"] = ("paraquedas rompido: chegou a %.0f m/s, limite %.0f m/s"
+                       % (v_chegada, VELOC_MAX_PARAQUEDAS))
+        return r
+
+    # --- ESTÁGIO 2: paraquedas -----------------------------------------
+    h_ignicao = altura_de_ignicao(m)
+    if h_ignicao >= ALTITUDE_PARAQUEDAS:
+        r["motivo"] = ("massa alta demais: precisaria acionar a %.0f m, acima "
+                       "da abertura do paraquedas" % h_ignicao)
+        return r
+
+    queda_paraquedas = ALTITUDE_PARAQUEDAS - h_ignicao
+    t_paraquedas = queda_paraquedas / VELOC_TERMINAL_PARAQUEDAS
+    r["estagios"].append(
+        ("2 paraquedas",
+         "%.0f s | desce %.0f m a %.0f m/s até a ignição"
+         % (t_paraquedas, queda_paraquedas, VELOC_TERMINAL_PARAQUEDAS)))
+
+    # --- ESTÁGIO 3: retrofoguetes (a quadrática) ------------------------
+    a = desaceleracao_retro(m)
+    t_queima = tempo_de_queima(m)
+    combustivel_necessario = t_queima * TAXA_CONSUMO_RETRO
+    disponivel = m["combustivel_descida"]
+
+    if combustivel_necessario > disponivel:
+        # a queima é interrompida no meio: o resto é queda livre
+        t_possivel = disponivel / TAXA_CONSUMO_RETRO
+        v_restante = VELOC_TERMINAL_PARAQUEDAS - a * t_possivel
+        h_restante = altura_na_queima(m, t_possivel, h_ignicao)
+        v_impacto = math.sqrt(max(0.0, v_restante ** 2
+                                  + 2.0 * GRAVIDADE_MARTE * h_restante))
+        m["combustivel_descida"] = 0.0
+        r["estagios"].append(
+            ("3 retrofoguetes",
+             "INTERROMPIDO aos %.1f s de %.1f s necessários" % (t_possivel, t_queima)))
+        r["motivo"] = ("combustível insuficiente para a frenagem: precisava de "
+                       "%.1f%%, tinha %.1f%%. Impacto a %.1f m/s (máximo %.1f)"
+                       % (combustivel_necessario, disponivel, v_impacto,
+                          VELOC_IMPACTO_MAX))
+        return r
+
+    m["combustivel_descida"] = disponivel - combustivel_necessario
+    r["estagios"].append(
+        ("3 retrofoguetes",
+         "ignição a %.0f m | a = %.2f m/s2 | queima %.1f s | gasta %.1f%%"
+         % (h_ignicao, a, t_queima, combustivel_necessario)))
+
+    r["sucesso"] = True
+    r["duracao"] = DURACAO_ENTRADA + t_paraquedas + t_queima
+    r["h_ignicao"] = h_ignicao
+    r["t_queima"] = t_queima
+    r["gasto"] = combustivel_necessario
+    return r
+
+
+def mostrar_descida(r):
+    """Imprime o relatório de uma descida, estágio a estágio."""
+    if r["sucesso"]:
+        print("         | DESCIDA de %s - %.0f s (%.1f min)"
+              % (r["modulo"], r["duracao"], r["duracao"] / 60.0))
+    else:
+        print("         | DESCIDA de %s - FALHOU" % r["modulo"])
+    for nome, detalhe in r["estagios"]:
+        print("         |    estágio %s: %s" % (nome, detalhe))
+    if r["motivo"]:
+        print("         |    >>> %s" % r["motivo"])
+
+
+# =============================================================================
 # 15. TESTES DO QUE O CENÁRIO NORMAL NÃO ALCANÇA
 # =============================================================================
 #
@@ -1096,8 +1379,8 @@ def teste_tempestade_total():
                                    "paraquedas_ok": True,
                                    "estrutura_ok": True}
 
-    pousados, alerta, registro, t_final = operar(lista, mundo)
-    ok = len(pousados) == len(lista) and not alerta
+    pousados, alerta, perdidos, registro, t_final = operar(lista, mundo)
+    ok = len(pousados) == len(lista) and not alerta and not perdidos
     print("teste_tempestade_total: %s  (%d de %d pousaram, %d em alerta)"
           % ("PASSOU" if ok else "FALHOU", len(pousados), len(lista), len(alerta)))
     return ok
@@ -1152,6 +1435,72 @@ def teste_insertion_sort():
     return ok
 
 
+def teste_regra_fixa_de_20_por_cento_e_insegura():
+    """O MAV com 25% de combustível PASSA na porta C e mesmo assim CAI.
+
+    Este é o teste mais importante da Camada 4: ele prova que uma camada
+    construída depois encontrou um defeito numa regra da camada de baixo.
+    25% > 20%, então a Camada 2 autoriza. Mas o MAV precisa de 40,6% para
+    frear 18 toneladas, então a descida falha.
+    """
+    m = copy.deepcopy(modulos[0])                 # MAV
+    m["combustivel_descida"] = 25.0
+    mundo = criar_mundo([m], semente=SEMENTE)
+    mundo["hardware"][m["nome"]] = {"sensores_ok": True, "paraquedas_ok": True,
+                                    "estrutura_ok": True}
+
+    autorizado_pela_camada2 = autorizar(m, mundo, t=m["eta"])[0]
+    resultado = simular_descida(m)
+
+    ok = autorizado_pela_camada2 and not resultado["sucesso"]
+    print("teste_regra_fixa_de_20_por_cento_e_insegura: %s" % ("PASSOU" if ok else "FALHOU"))
+    print("     Camada 2 autorizou com 25%%? %s" % autorizado_pela_camada2)
+    print("     Camada 4 exige %.1f%% -> descida %s"
+          % (combustivel_minimo_real(m), "OK" if resultado["sucesso"] else "FALHOU"))
+    return ok
+
+
+def teste_massa_define_altura_de_ignicao():
+    """Mais pesado tem que acionar MAIS ALTO e queimar por MAIS TEMPO.
+
+    É a cadeia física inteira: massa -> desaceleração -> altura de ignição ->
+    tempo de queima -> combustível. Se um dia alguém inverter um sinal na
+    conta, este teste reprova.
+    """
+    ordenados = sorted(modulos, key=lambda m: m["massa"])
+    alturas = [altura_de_ignicao(m) for m in ordenados]
+    queimas = [tempo_de_queima(m) for m in ordenados]
+    gastos = [combustivel_minimo_real(m) for m in ordenados]
+
+    crescente = lambda v: all(v[i] < v[i + 1] for i in range(len(v) - 1))
+    ok = crescente(alturas) and crescente(queimas) and crescente(gastos)
+    print("teste_massa_define_altura_de_ignicao: %s" % ("PASSOU" if ok else "FALHOU"))
+    print("     %5dkg -> aciona a %5.0fm, queima %4.1fs, gasta %4.1f%%"
+          % (ordenados[0]["massa"], alturas[0], queimas[0], gastos[0]))
+    print("     %5dkg -> aciona a %5.0fm, queima %4.1fs, gasta %4.1f%%"
+          % (ordenados[-1]["massa"], alturas[-1], queimas[-1], gastos[-1]))
+    return ok
+
+
+def teste_vertice_da_parabola_toca_o_solo():
+    """h(t_queima) tem que dar ZERO: o vértice da parábola no solo.
+
+    É a condição de projeto do pouso. Se o vértice ficar acima, o módulo
+    para no ar; se ficar abaixo, ele chega ao solo em movimento.
+    """
+    erros = []
+    for m in modulos:
+        h0 = altura_de_ignicao(m)
+        h_final = altura_na_queima(m, tempo_de_queima(m), h0)
+        if abs(h_final) > 1e-6:
+            erros.append((m["nome"], h_final))
+    ok = not erros
+    print("teste_vertice_da_parabola_toca_o_solo: %s  (maior desvio: %.2e m)"
+          % ("PASSOU" if ok else "FALHOU",
+             max([abs(e[1]) for e in erros]) if erros else 0.0))
+    return ok
+
+
 def rodar_testes():
     print()
     print("=" * 74)
@@ -1162,6 +1511,9 @@ def rodar_testes():
         teste_correcao_custa_combustivel(),
         teste_faixa_de_aborto(),
         teste_tempestade_total(),
+        teste_vertice_da_parabola_toca_o_solo(),
+        teste_massa_define_altura_de_ignicao(),
+        teste_regra_fixa_de_20_por_cento_e_insegura(),
     ]
     print("\n%d de %d testes passaram." % (sum(resultados), len(resultados)))
     return all(resultados)
@@ -1193,5 +1545,5 @@ if __name__ == "__main__":
     prontos, espera, alerta = triagem(modulos, mundo, t=0)
     mostrar_listas(prontos, espera, alerta)
 
-    pousados, alerta, registro, t_final = operar(modulos, mundo)
-    mostrar_resultado(modulos, pousados, alerta, registro, t_final)
+    pousados, alerta, perdidos, registro, t_final = operar(modulos, mundo)
+    mostrar_resultado(modulos, pousados, alerta, perdidos, registro, t_final)
