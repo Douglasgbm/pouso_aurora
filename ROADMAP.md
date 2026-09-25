@@ -584,8 +584,12 @@ no sol 5 em vez do 6). Um sol é um instante de decisão: todos precisam ver o m
 - [x] ~~Algoritmo de ordenação~~ — insertion sort escrito à mão, com justificativa
 - [x] ~~Corrigir os dois defeitos do fim do arquivo antigo~~ — o arquivo foi substituído
 - [x] ~~O cenário não testa a faixa de aborto~~ — coberto por `teste_faixa_de_aborto()`
-- [ ] O `scripts/main.py` antigo ainda está no repositório. Decidir se é removido ou se fica
-      como registro da primeira versão.
+- [x] ~~O `scripts/main.py` antigo ainda está no repositório~~ — **removido em 25/09/2026.**
+      Ele era o protótipo da primeira versão (5 módulos, 3 sinais lógicos, blocos `if/elif`
+      copiados cinco vezes) e foi inteiramente superado pelo `scripts/mgpeb.py`. Nada se perdeu:
+      ele continua no histórico do git, no commit `f890467`, e volta com
+      `git show f890467:scripts/main.py > scripts/main.py`. O repositório passa a ter um único
+      código fonte, que é o que o enunciado pede.
 
 **Relatório (entregável 1, 5 a 10 páginas) — nada feito ainda:**
 - [ ] Diagrama(s) de portas lógicas — exigido explicitamente. Hoje são **dez** sinais (seção 2).
