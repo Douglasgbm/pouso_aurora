@@ -108,5 +108,16 @@ INICIO DO PROGRAMA
 
 COMBUSTIVEL PARA DESCIDA 30% POUSO OK SEM AVARIAS, 25% POUSO COM AVARIAS BAIXAS, 20% AVARIAS MEDIAS. 15% AVARIAS ALTAS E 10% PT.
 
+1 - COMBUSTIVEL 
+2 - SENSORES 
+3 - ANGULAÇAO 
+4 - COORDENADAS 
+5 - CLIMA
+
+1. Excluir módulos sem condições mínimas de pouso.
+2. Entre os autorizados, atender os com combustível urgente, mas ainda seguro.
+3. Priorizar módulos necessários para preparar os demais.
+4. Considerar ETA, clima e disponibilidade do local.
+5. Usar a prioridade e a criticidade como desempate, conforme a regra do projeto.
 
 
