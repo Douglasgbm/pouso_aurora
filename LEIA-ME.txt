@@ -6,9 +6,14 @@ Abra o terminal nesta pasta e execute:
   python mgpeb.py              (rodada padrão com cinco tipos)
   python exemplos.py           (11 cenários separados)
   python -m unittest -v        (validação externa)
-exemplos.py importa mgpeb e, por isso, também exibe a rodada padrão antes
-dos 11 cenários. Importar o arquivo principal executa seus comandos finais.
-Essa escolha dispensa infraestrutura de execução no código estudantil.
+Para gerar o PDF (opcional), use o mesmo Python nos dois comandos:
+  python -m pip install -r requirements-relatorio.txt
+  python gerar_relatorio_pdf.py
+Essa dependência é apenas para gerar o documento; o simulador não precisa dela.
+mgpeb.py é a versão atual do simulador. main.py é um experimento anterior de
+descida física, mantido para comparação; ele não usa a fila nem as regras atuais.
+Importar mgpeb.py não inicia uma rodada. Os exemplos só executam quando o arquivo
+é chamado diretamente, evitando saídas inesperadas em testes e outros programas.
 
 ORGANIZAÇÃO DAS LISTAS
 Cada módulo é uma lista com 12 campos, na ordem descrita ao fim de mgpeb.py.
@@ -47,7 +52,8 @@ função afim em tempo. Para 1000 kg e 5 min: consumo 10 kg, mínimo 12 kg.
 A autorização calcula o mínimo; a execução calcula separadamente o consumo
 com a mesma regra. A reserva permanece. Orbitar não consome combustível.
 Coeficientes, condições ambientais e ativação são escolhas hipotéticas do
-protótipo. Não se calculam altitude, velocidade ou trajetória aeroespacial.
+protótipo. A simulação cuida de autorização/agendamento e consumo estimado;
+não calcula trajetória, altitude, velocidade ou temperatura durante a descida.
 
 SEGURANÇA, PRIORIDADE E ATIVAÇÃO
 Autorizar exige todos os critérios: combustível para descida + reserva,

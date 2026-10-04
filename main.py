@@ -1,3 +1,7 @@
+# RASCUNHO ANTERIOR: experimento de descida física, não usado pelo MGPEB atual.
+# Seus parâmetros são didáticos e não representam uma trajetória validada.
+# Para estudar fila, autorização e dependências, execute mgpeb.py.
+
 # --- ESTADOS DO MÓDULO ---
 energia = 100               # Energia inicial (%)
 integridade = 100           # Integridade física inicial (%)

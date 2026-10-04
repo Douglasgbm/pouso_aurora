@@ -1,6 +1,6 @@
-# MGPEB - Aurora Siger: versão didática, sem cálculo aeroespacial real.
-# Listas e índices traduzem os vetores ensinados em C (Cap. 4, p. 36).
-# Cada módulo é uma linha com os campos abaixo, sempre na mesma ordem.
+# MGPEB - Aurora Siger: protótipo didático, sem cálculo aeroespacial real.
+# A equipe escolheu listas para praticar estruturas lineares do curso.
+# Cada módulo é uma linha; estas constantes dão nome às posições dos campos.
 ID = 0
 TIPO = 1
 PRIORIDADE = 2
@@ -15,12 +15,13 @@ ESTADO = 10
 MOTIVO = 11
 
 TIPOS = ["Energia", "Habitação", "Logística", "Médico", "Laboratório"]
-# Configuração hipotética: duração min, taxa kg/(kg*min), reserva kg,
-# margem relativa para urgência. Massa constante durante a descida.
+# CONFIG: duração (min), taxa (kg/(kg*min)), reserva (kg), margem de urgência.
+# São parâmetros didáticos; não representam dados reais de uma missão.
 CONFIG = [5.0, 0.002, 2.0, 0.25]
 
 
 def quantidade(lista):
+    # Conta com um laço para mostrar explicitamente a travessia da lista.
     total = 0
     for elemento in lista:
         total = total + 1
@@ -28,7 +29,8 @@ def quantidade(lista):
 
 
 def retirar(lista, posicao):
-    # Reconstrói a lista sem uma posição; não utiliza remove ou pop.
+    # Reconstrói a lista sem o índice escolhido, sem métodos de remoção.
+    # Assim fica visível como a fila perde seu primeiro item.
     nova = []
     for i in range(quantidade(lista)):
         if i != posicao:
@@ -37,25 +39,27 @@ def retirar(lista, posicao):
 
 
 def ultimo_evento(pilha):
+    # A pilha segue LIFO: o evento mais recente fica no último índice.
     if quantidade(pilha) == 0:
         return "Pilha de consulta vazia"
     return pilha[quantidade(pilha) - 1]
 
 
 def desfazer_consulta(pilha):
-    # Devolve a pilha sem o topo. Nunca modifica pouso ou combustível.
+    # Retorna uma nova pilha sem o topo; não desfaz uma ação da missão.
     return retirar(pilha, quantidade(pilha) - 1)
 
 
 def numero_valido(valor, minimo):
-    # Faixa de entrada didática: [mínimo, 1 bilhão), exclui NaN/inf.
-    # type() e comparações são demonstrados nos Caps. 3 e 6.
+    # Aceita somente números no intervalo didático [mínimo, 1 bilhão).
+    # As comparações também rejeitam NaN e infinito sem importar bibliotecas.
     if type(valor) != int and type(valor) != float:
         return False
     return valor >= minimo and valor < 1000000000
 
 
 def validar(modulos, eventos, ambiente, config):
+    # Confere os tamanhos das listas antes de acessar posições por índice.
     if quantidade(config) != 4 or quantidade(ambiente) != 2:
         return False
     for valor in config:
@@ -67,6 +71,7 @@ def validar(modulos, eventos, ambiente, config):
         return False
     if ambiente[1] != "livre" and ambiente[1] != "ocupada" and ambiente[1] != "obstruída":
         return False
+    # Cada módulo precisa ter os campos válidos e um identificador exclusivo.
     for i in range(quantidade(modulos)):
         m = modulos[i]
         if quantidade(m) != 12 or type(m[ID]) != str or m[ID] == "":
@@ -87,8 +92,9 @@ def validar(modulos, eventos, ambiente, config):
         for j in range(i):
             if modulos[j][ID] == m[ID]:
                 return False
+    # Eventos também são validados para não alterar um módulo inexistente.
     for e in eventos:
-        # Evento: [instante min, tipo, valor, ID (para reparação)].
+        # Formato: [instante em minutos, tipo, valor, ID quando necessário].
         if quantidade(e) != 4 or not numero_valido(e[0], 0):
             return False
         if e[1] == "area":
@@ -105,7 +111,7 @@ def validar(modulos, eventos, ambiente, config):
 
 
 def buscar(lista, campo, valor):
-    # Busca linear por ID ou tipo; -1 significa não encontrado.
+    # Busca linear: devolve o índice do primeiro valor encontrado ou -1.
     for i in range(quantidade(lista)):
         if lista[i][campo] == valor:
             return i
@@ -113,7 +119,7 @@ def buscar(lista, campo, valor):
 
 
 def buscar_extremo(lista, campo, maior):
-    # Usar COMBUSTIVEL/False para menor ou PRIORIDADE/True para maior.
+    # Guarda o índice do menor ou maior valor sem ordenar a lista inteira.
     melhor = -1
     for i in range(quantidade(lista)):
         if melhor == -1:
@@ -126,12 +132,13 @@ def buscar_extremo(lista, campo, maior):
 
 
 def minimo_seguro(m, config):
-    # Função afim em tempo: taxa * massa * duração + reserva.
+    # Limite estimado: taxa * massa * duração + reserva fixa de combustível.
+    # A fórmula afim cria um critério simples de autorização.
     return config[1] * m[MASSA] * config[0] + config[2]
 
 
 def autorizar(m, ambiente, config):
-    # Motivo vazio significa apto. TODOS os critérios são obrigatórios.
+    # Cada regra é obrigatória; o texto vazio significa que todas foram aprovadas.
     motivo = ""
     if m[COMBUSTIVEL] < minimo_seguro(m, config):
         motivo = motivo + "Combustível insuficiente; "
@@ -145,6 +152,7 @@ def autorizar(m, ambiente, config):
 
 
 def ordem_tipo(tipo):
+    # Localiza a posição do tipo na ordem padrão definida pela equipe.
     for i in range(quantidade(TIPOS)):
         if TIPOS[i] == tipo:
             return i
@@ -152,7 +160,8 @@ def ordem_tipo(tipo):
 
 
 def vem_antes(a, b, config):
-    # Chamado somente entre aptos: urgência nunca autoriza insegurança.
+    # Compara módulos já autorizados: urgência nunca libera um módulo inseguro.
+    # A margem relativa permite comparar módulos com necessidades diferentes.
     margem_a = (a[COMBUSTIVEL] - minimo_seguro(a, config)) / minimo_seguro(a, config)
     margem_b = (b[COMBUSTIVEL] - minimo_seguro(b, config)) / minimo_seguro(b, config)
     urgente_a = margem_a <= config[3]
@@ -170,7 +179,8 @@ def vem_antes(a, b, config):
 
 
 def ordenar(aptos, modulos, config):
-    # Inserção manual (Cap. 5, p. 29-30). Empates preservam entrada.
+    # Ordenação por inserção: desloca os anteriores até abrir espaço para a chave.
+    # Só muda a ordem dos índices aptos, não o cadastro dos módulos.
     for i in range(1, quantidade(aptos)):
         chave = aptos[i]
         j = i - 1
@@ -181,6 +191,7 @@ def ordenar(aptos, modulos, config):
 
 
 def existe_operacional(modulos, tipo):
+    # Verifica se um módulo daquele tipo já está operacional na base.
     for m in modulos:
         if m[TIPO] == tipo and m[ESTADO] == "operacional":
             return True
@@ -188,6 +199,7 @@ def existe_operacional(modulos, tipo):
 
 
 def ativar(modulos, historico):
+    # Resolve dependências após pousos, repetindo até não haver novas ativações.
     mudou = True
     while mudou:
         mudou = False
@@ -212,10 +224,12 @@ def ativar(modulos, historico):
 
 
 def simular(modulos, eventos, ambiente, config):
+    # Simula chegada, autorização, fila e consumo estimado.
+    # Não calcula a trajetória física da descida.
     if not validar(modulos, eventos, ambiente, config):
         print("Entrada inválida. Confira campos, unidades, faixas e IDs únicos.")
         return []
-    # Cópia manual: repetir exemplos não altera dados de entrada.
+    # Copia os dados para que a simulação não altere o cadastro original.
     dados = []
     for m in modulos:
         linha = []
@@ -229,13 +243,14 @@ def simular(modulos, eventos, ambiente, config):
     for e in eventos:
         aplicados = aplicados + [False]
     tempo = 0.0
-    fila = []       # FIFO das chegadas; índices apontam para dados.
-    espera = []     # Lista elegível; pode ser priorizada por urgência.
+    fila = []       # FIFO: chegadas entram no fim e saem pelo índice zero.
+    espera = []     # Módulos que chegaram, mas ainda aguardam autorização.
     historico = []
     alertas = []
     continuar = True
     while continuar:
-        # Eventos vencidos: processa por instante; empates seguem a entrada.
+        # 1. Aplica mudanças de clima, área, sensores e sistemas já ocorridas.
+        # Se eventos empatam no tempo, mantém a ordem em que foram cadastrados.
         while True:
             proximo = -1
             for i in range(quantidade(eventos)):
@@ -257,7 +272,7 @@ def simular(modulos, eventos, ambiente, config):
                     dados[pos][SISTEMAS] = e[2]
             aplicados[proximo] = True
             historico = historico + [f"{tempo:.1f} min: evento {e[1]}"]
-        # Enfileira chegadas por ETA; no mesmo instante mantém o cadastro.
+        # 2. Enfileira módulos cujo horário estimado de chegada já foi atingido.
         while True:
             pos = -1
             for i in range(quantidade(dados)):
@@ -269,11 +284,14 @@ def simular(modulos, eventos, ambiente, config):
             dados[pos][ESTADO] = "espera"
             fila = fila + [pos]
             historico = historico + [f"{tempo:.1f} min: {dados[pos][ID]} chegou"]
+        # 3. Move as chegadas para a lista de espera que será avaliada.
         while quantidade(fila) > 0:
             espera = espera + [fila[0]]  # Primeiro a entrar, primeiro a sair.
             fila = retirar(fila, 0)
+        # 4. Liga os módulos que já podem funcionar na base.
         historico = ativar(dados, historico)
         aptos = []
+        # 5. Separa candidatos seguros dos que continuam aguardando.
         for pos in espera:
             m = dados[pos]
             m[MOTIVO] = autorizar(m, ambiente, config)
@@ -284,8 +302,10 @@ def simular(modulos, eventos, ambiente, config):
                 if alerta not in alertas:
                     alertas = alertas + [alerta]
         if quantidade(aptos) > 0:
+            # 6. Ordena somente os autorizados e escolhe o primeiro.
             ordenar(aptos, dados, config)
             pos = aptos[0]
+            # Reserva a área para impedir outro pouso simultâneo.
             ambiente[1] = "reservada"
             for i in range(quantidade(espera)):
                 if espera[i] == pos:
@@ -294,7 +314,7 @@ def simular(modulos, eventos, ambiente, config):
             m = dados[pos]
             m[ESTADO] = "descendo"
             historico = historico + [f"{tempo:.1f} min: {m[ID]} iniciou descida"]
-            # Consumo executado separado da autorização, com mesma lei linear.
+            # Consome o combustível estimado pela mesma fórmula usada na autorização.
             consumo = m[MASSA] * config[1] * config[0]
             m[COMBUSTIVEL] = m[COMBUSTIVEL] - consumo
             tempo = tempo + config[0]
@@ -308,6 +328,8 @@ def simular(modulos, eventos, ambiente, config):
                 ambiente[1] = "livre"  # Transferência hipotética para a base.
             historico = historico + [f"{tempo:.1f} min: {m[ID]} {m[ESTADO]}"]
         else:
+            # Sem candidatos, avança até a próxima chegada ou evento conhecido.
+            # Se nada futuro puder mudar o cenário, encerra com pendências.
             futuro = -1
             for m in dados:
                 if m[ESTADO] == "órbita" and (futuro == -1 or m[ETA] < futuro):
@@ -328,6 +350,7 @@ def simular(modulos, eventos, ambiente, config):
 
 
 def relatorio(resultado):
+    # Mostra o resultado final sem alterar as listas da simulação.
     if quantidade(resultado) == 0:
         return
     print("Tempo final (min):", resultado[5], "| Área:", resultado[6][1])
@@ -354,9 +377,9 @@ def relatorio(resultado):
         print(" ", evento)
 
 
-# Dados iniciais editáveis. Execute este arquivo com: python mgpeb.py
-# ID, tipo, prioridade, combustível kg, massa kg, carga, ETA min,
-# sensores, sistemas, acidente, estado inicial, motivo inicial.
+# Dados iniciais editáveis para a demonstração executada diretamente.
+# Campos: ID, tipo, prioridade, combustível (kg), massa (kg), carga, ETA (min),
+# sensores, sistemas, acidente de exemplo, estado e motivo.
 MODULOS = [
     ["E", "Energia", 1, 30.0, 1000.0, 1, 0.0, True, True, False, "", ""],
     ["H", "Habitação", 1, 30.0, 1000.0, 1, 0.0, True, True, False, "", ""],
@@ -364,8 +387,12 @@ MODULOS = [
     ["M", "Médico", 1, 30.0, 1000.0, 1, 0.0, True, True, False, "", ""],
     ["L", "Laboratório", 1, 30.0, 1000.0, 1, 0.0, True, True, False, "", ""],
 ]
-print("Consulta: índice do menor combustível:", buscar_extremo(MODULOS, COMBUSTIVEL, False))
-print("Consulta: índice da maior prioridade:", buscar_extremo(MODULOS, PRIORIDADE, True))
-print("Consulta: índice do tipo Médico:", buscar(MODULOS, TIPO, "Médico"))
-RESULTADO = simular(MODULOS, [], [True, "livre"], CONFIG)
-relatorio(RESULTADO)
+
+# Importar o módulo disponibiliza as funções sem iniciar uma rodada.
+# A demonstração padrão só roda quando este arquivo é executado diretamente.
+if __name__ == "__main__":
+    print("Consulta: índice do menor combustível:", buscar_extremo(MODULOS, COMBUSTIVEL, False))
+    print("Consulta: índice da maior prioridade:", buscar_extremo(MODULOS, PRIORIDADE, True))
+    print("Consulta: índice do tipo Médico:", buscar(MODULOS, TIPO, "Médico"))
+    RESULTADO = simular(MODULOS, [], [True, "livre"], CONFIG)
+    relatorio(RESULTADO)

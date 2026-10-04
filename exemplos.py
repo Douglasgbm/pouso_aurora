@@ -4,11 +4,13 @@ import mgpeb as g
 
 def montar(id, tipo, fuel=30.0, massa=1000.0, carga=1, eta=0.0,
            sensores=True, sistemas=True, acidente=False, prioridade=1):
+    # Mantém a mesma ordem de 12 campos usada pelo cadastro do simulador.
     return [id, tipo, prioridade, fuel, massa, carga, eta,
             sensores, sistemas, acidente, "", ""]
 
 
 def casos():
+    # Cada cenário altera poucas entradas para isolar uma regra de decisão.
     normal = [montar("E", "Energia"), montar("H", "Habitação"),
               montar("G", "Logística"), montar("M", "Médico"),
               montar("L", "Laboratório")]
@@ -32,7 +34,7 @@ def casos():
 
 
 if __name__ == "__main__":
-    # Importar mgpeb já exibe a rodada padrão; abaixo ficam os 11 cenários.
+    # Os cenários só executam quando este arquivo é chamado diretamente.
     for caso in casos():
         print("\n===", caso[0], "===")
         g.relatorio(g.simular(caso[1], caso[2], caso[3], g.CONFIG))

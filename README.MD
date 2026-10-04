@@ -1,3 +1,34 @@
+# MGPEB — Aurora Siger
+
+Protótipo didático para organizar a autorização e a ordem de pouso dos módulos
+da base em Marte. A implementação atual está em `mgpeb.py`.
+
+## Arquivos principais
+
+- `mgpeb.py`: cadastro, validação, fila, regras lógicas, busca, ordenação e relatório da simulação.
+- `exemplos.py`: 11 cenários para estudar as decisões do programa.
+- `test_mgpeb.py`: testes automatizados externos ao código didático.
+- `RELATORIO_TECNICO.pdf`: relatório da Fase 2; `RELATORIO_TECNICO.md` é sua fonte editável.
+- `LEIA-ME.txt`: explicação direta dos campos, regras, estruturas e comandos.
+- `ROADMAP.MD`: planejamento e decisões da equipe.
+- `main.py`: experimento antigo de descida, mantido para comparação.
+
+## Executar
+
+```text
+python mgpeb.py
+python exemplos.py
+python -m unittest -v
+```
+
+O programa principal e os exemplos usam somente a biblioteca padrão do Python.
+O simulador atual trata autorização, fila e consumo estimado; não calcula uma
+trajetória ou velocidade física de pouso.
+
+---
+
+## Enunciado da atividade
+
 Atividade Integradora: Módulo de Gerenciamento de Pouso e Estabilização de Base (MGPEB)
 Requisitos da Equipe
 Cada equipe deverá:
