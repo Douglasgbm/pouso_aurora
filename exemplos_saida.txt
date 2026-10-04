@@ -1,0 +1,346 @@
+Consulta: índice do menor combustível: 0
+Consulta: índice da maior prioridade: 0
+Consulta: índice do tipo Médico: 3
+Tempo final (min): 25.0 | Área: livre
+Pousados (inclui operacionais):
+  E Energia
+  H Habitação
+  G Logística
+  M Médico
+  L Laboratório
+Operacionais:
+  E Energia
+  H Habitação
+  G Logística
+  M Médico
+  L Laboratório
+Aguardando ou com impedimento:
+Combustível restante (kg):
+  E 20.0
+  H 20.0
+  G 20.0
+  M 20.0
+  L 20.0
+Alertas históricos:
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: G chegou
+  0.0 min: M chegou
+  0.0 min: L chegou
+  0.0 min: E iniciou descida
+  5.0 min: E pousado
+  E operacional
+  5.0 min: H iniciou descida
+  10.0 min: H pousado
+  H operacional
+  10.0 min: G iniciou descida
+  15.0 min: G pousado
+  G operacional
+  15.0 min: M iniciou descida
+  20.0 min: M pousado
+  M operacional
+  20.0 min: L iniciou descida
+  25.0 min: L pousado
+  L operacional
+  25.0 min: rodada encerrada
+
+=== normal ===
+Tempo final (min): 25.0 | Área: livre
+Pousados (inclui operacionais):
+  E Energia
+  H Habitação
+  G Logística
+  M Médico
+  L Laboratório
+Operacionais:
+  E Energia
+  H Habitação
+  G Logística
+  M Médico
+  L Laboratório
+Aguardando ou com impedimento:
+Combustível restante (kg):
+  E 20.0
+  H 20.0
+  G 20.0
+  M 20.0
+  L 20.0
+Alertas históricos:
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: G chegou
+  0.0 min: M chegou
+  0.0 min: L chegou
+  0.0 min: E iniciou descida
+  5.0 min: E pousado
+  E operacional
+  5.0 min: H iniciou descida
+  10.0 min: H pousado
+  H operacional
+  10.0 min: G iniciou descida
+  15.0 min: G pousado
+  G operacional
+  15.0 min: M iniciou descida
+  20.0 min: M pousado
+  M operacional
+  20.0 min: L iniciou descida
+  25.0 min: L pousado
+  L operacional
+  25.0 min: rodada encerrada
+
+=== urgente ===
+Tempo final (min): 10.0 | Área: livre
+Pousados (inclui operacionais):
+  E Energia
+  M Médico
+Operacionais:
+  E Energia
+  M Médico
+Aguardando ou com impedimento:
+Combustível restante (kg):
+  E 20.0
+  M 3.0
+Alertas históricos:
+Eventos:
+  0.0 min: E chegou
+  0.0 min: M chegou
+  0.0 min: M iniciou descida
+  5.0 min: M pousado
+  5.0 min: E iniciou descida
+  10.0 min: E pousado
+  E operacional
+  M operacional
+  10.0 min: rodada encerrada
+
+=== insuficiente ===
+Tempo final (min): 0.0 | Área: livre
+Pousados (inclui operacionais):
+Operacionais:
+Aguardando ou com impedimento:
+  E espera Combustível insuficiente; 
+Combustível restante (kg):
+  E 11.0
+Alertas históricos:
+  E: Combustível insuficiente; 
+Eventos:
+  0.0 min: E chegou
+  0.0 min: rodada encerrada
+
+=== sensores ===
+Tempo final (min): 0.0 | Área: livre
+Pousados (inclui operacionais):
+Operacionais:
+Aguardando ou com impedimento:
+  E espera Sensores/sistemas falhos; 
+Combustível restante (kg):
+  E 30.0
+Alertas históricos:
+  E: Sensores/sistemas falhos; 
+Eventos:
+  0.0 min: E chegou
+  0.0 min: rodada encerrada
+
+=== clima ===
+Tempo final (min): 0.0 | Área: livre
+Pousados (inclui operacionais):
+Operacionais:
+Aguardando ou com impedimento:
+  E espera Atmosfera inaceitável; 
+  H espera Atmosfera inaceitável; 
+  G espera Atmosfera inaceitável; 
+  M espera Atmosfera inaceitável; 
+  L espera Atmosfera inaceitável; 
+Combustível restante (kg):
+  E 30.0
+  H 30.0
+  G 30.0
+  M 30.0
+  L 30.0
+Alertas históricos:
+  E: Atmosfera inaceitável; 
+  H: Atmosfera inaceitável; 
+  G: Atmosfera inaceitável; 
+  M: Atmosfera inaceitável; 
+  L: Atmosfera inaceitável; 
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: G chegou
+  0.0 min: M chegou
+  0.0 min: L chegou
+  0.0 min: rodada encerrada
+
+=== area ===
+Tempo final (min): 0.0 | Área: ocupada
+Pousados (inclui operacionais):
+Operacionais:
+Aguardando ou com impedimento:
+  E espera Área ocupada; 
+  H espera Área ocupada; 
+  G espera Área ocupada; 
+  M espera Área ocupada; 
+  L espera Área ocupada; 
+Combustível restante (kg):
+  E 30.0
+  H 30.0
+  G 30.0
+  M 30.0
+  L 30.0
+Alertas históricos:
+  E: Área ocupada; 
+  H: Área ocupada; 
+  G: Área ocupada; 
+  M: Área ocupada; 
+  L: Área ocupada; 
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: G chegou
+  0.0 min: M chegou
+  0.0 min: L chegou
+  0.0 min: rodada encerrada
+
+=== duas_urgencias ===
+Tempo final (min): 10.0 | Área: livre
+Pousados (inclui operacionais):
+  E Energia
+  M Médico
+Operacionais:
+  E Energia
+  M Médico
+Aguardando ou com impedimento:
+Combustível restante (kg):
+  E 3.0
+  M 3.0
+Alertas históricos:
+Eventos:
+  0.0 min: E chegou
+  0.0 min: M chegou
+  0.0 min: M iniciou descida
+  5.0 min: M pousado
+  5.0 min: E iniciou descida
+  10.0 min: E pousado
+  E operacional
+  M operacional
+  10.0 min: rodada encerrada
+
+=== chegada_futura ===
+Tempo final (min): 25.0 | Área: livre
+Pousados (inclui operacionais):
+  E Energia
+Operacionais:
+  E Energia
+Aguardando ou com impedimento:
+Combustível restante (kg):
+  E 20.0
+Alertas históricos:
+Eventos:
+  20.0 min: E chegou
+  20.0 min: E iniciou descida
+  25.0 min: E pousado
+  E operacional
+  25.0 min: rodada encerrada
+
+=== ativacao_dependente ===
+Tempo final (min): 30.0 | Área: livre
+Pousados (inclui operacionais):
+  L Laboratório
+  H Habitação
+  E Energia
+Operacionais:
+  L Laboratório
+  H Habitação
+  E Energia
+Aguardando ou com impedimento:
+Combustível restante (kg):
+  L 2.0
+  H 20.0
+  E 20.0
+Alertas históricos:
+Eventos:
+  0.0 min: L chegou
+  0.0 min: L iniciou descida
+  5.0 min: L pousado
+  20.0 min: H chegou
+  20.0 min: E chegou
+  20.0 min: E iniciou descida
+  25.0 min: E pousado
+  E operacional
+  25.0 min: H iniciou descida
+  30.0 min: H pousado
+  H operacional
+  L operacional
+  30.0 min: rodada encerrada
+
+=== evento_clima ===
+Tempo final (min): 35.0 | Área: livre
+Pousados (inclui operacionais):
+  E Energia
+  H Habitação
+  G Logística
+  M Médico
+  L Laboratório
+Operacionais:
+  E Energia
+  H Habitação
+  G Logística
+  M Médico
+  L Laboratório
+Aguardando ou com impedimento:
+Combustível restante (kg):
+  E 20.0
+  H 20.0
+  G 20.0
+  M 20.0
+  L 20.0
+Alertas históricos:
+  E: Atmosfera inaceitável; 
+  H: Atmosfera inaceitável; 
+  G: Atmosfera inaceitável; 
+  M: Atmosfera inaceitável; 
+  L: Atmosfera inaceitável; 
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: G chegou
+  0.0 min: M chegou
+  0.0 min: L chegou
+  10.0 min: evento clima
+  10.0 min: E iniciou descida
+  15.0 min: E pousado
+  E operacional
+  15.0 min: H iniciou descida
+  20.0 min: H pousado
+  H operacional
+  20.0 min: G iniciou descida
+  25.0 min: G pousado
+  G operacional
+  25.0 min: M iniciou descida
+  30.0 min: M pousado
+  M operacional
+  30.0 min: L iniciou descida
+  35.0 min: L pousado
+  L operacional
+  35.0 min: rodada encerrada
+
+=== acidente ===
+Tempo final (min): 5.0 | Área: obstruída
+Pousados (inclui operacionais):
+Operacionais:
+Aguardando ou com impedimento:
+  E acidente Acidente: área obstruída
+  H espera Área obstruída; 
+Combustível restante (kg):
+  E 20.0
+  H 30.0
+Alertas históricos:
+  E: Acidente: área obstruída
+  H: Área obstruída; 
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: E iniciou descida
+  5.0 min: E acidente
+  5.0 min: rodada encerrada

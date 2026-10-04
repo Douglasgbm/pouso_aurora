@@ -163,3 +163,83 @@ POUSO COM DANOS CRITICOS - 20KM/H
 
 MODULO DANIFICADO NA DESCIDA - 30KM/H
 
+-------------------------------------------------------------------------------------------
+
+Cadastrar os módulos e seus atributos
+Definir a ordem padrão:
+    Energia, Habitação, Logística, Médico, Laboratório
+
+Criar fila de espera
+Criar lista de módulos pousados
+Criar lista de alertas
+Criar pilha de registros de eventos
+
+ENQUANTO houver módulos ainda aguardando pouso:
+
+    Adicionar à fila os módulos que chegaram à órbita
+    Atualizar as condições do ambiente e da área
+    Criar lista vazia de candidatos aptos
+
+    PARA CADA módulo na fila:
+
+        Verificar combustível suficiente
+        Verificar sensores e sistemas
+        Verificar condições atmosféricas
+        Verificar disponibilidade da área
+
+        SE todas as condições obrigatórias forem atendidas:
+            Adicionar módulo aos candidatos aptos
+        SENÃO:
+            Manter módulo aguardando
+            Registrar o motivo do bloqueio
+            Registrar alerta, se necessário
+
+    SE não houver candidatos aptos:
+        Informar os motivos da espera
+        Aguardar uma mudança ou nova chegada
+        Voltar ao início da avaliação
+
+    PARA CADA candidato apto:
+        Avaliar se existe urgência
+        Determinar o nível da urgência
+
+    Ordenar os candidatos:
+        Primeiro: maior urgência
+        Em empate: ordem padrão
+        Sem urgência: ordem padrão
+
+    Selecionar o primeiro candidato
+    Confirmar que as condições ainda permitem o pouso
+
+    SE alguma condição obrigatória mudou:
+        Voltar à avaliação da fila
+
+    Reservar a área de pouso
+    Retirar o escolhido da fila de espera
+    Marcar módulo como “em descida”
+
+    Executar a simulação de descida
+    Avaliar o resultado do pouso
+    Empilhar um registro do resultado
+
+    SE o pouso foi seguro:
+        Adicionar módulo à lista de pousados
+        Marcar como “aguardando ativação”
+    SENÃO:
+        Registrar a ocorrência e o estado do módulo
+        Gerar alerta
+
+    Verificar se a área pode ser liberada
+    Atualizar a disponibilidade da área
+
+    PARA CADA módulo pousado ainda não operacional:
+        SE estiver íntegro e tiver os recursos necessários:
+            Ativar o módulo
+        SENÃO:
+            Manter aguardando e registrar o que falta
+
+    Repetir a verificação de ativação se novos recursos
+    ficaram disponíveis, até não haver novas ativações
+
+Mostrar o resultado final de todos os módulos
+Mostrar módulos operacionais, pendências e alertas

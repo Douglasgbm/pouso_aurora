@@ -1,0 +1,107 @@
+MGPEB - Aurora Siger - versão alinhada ao curso para estudar/revisar
+
+COMO RODAR
+Python 3, sem dependências externas, sem instalação ou interface gráfica.
+Abra o terminal nesta pasta e execute:
+  python mgpeb.py              (rodada padrão com cinco tipos)
+  python exemplos.py           (11 cenários separados)
+  python -m unittest -v        (validação externa)
+exemplos.py importa mgpeb e, por isso, também exibe a rodada padrão antes
+dos 11 cenários. Importar o arquivo principal executa seus comandos finais.
+Essa escolha dispensa infraestrutura de execução no código estudantil.
+
+ORGANIZAÇÃO DAS LISTAS
+Cada módulo é uma lista com 12 campos, na ordem descrita ao fim de mgpeb.py.
+As constantes ID, TIPO, PRIORIDADE etc. dão nomes aos índices. Exemplo:
+m[COMBUSTIVEL] lê ou altera combustível; dados[i] seleciona o módulo i.
+Estado e motivo iniciais são redefinidos pela simulação; edite os demais campos.
+As entradas são copiadas manualmente para permitir repetir os cenários.
+lista + [valor] cria uma lista com o novo valor no fim. Essa é a operação
+essencial de inclusão na tradução aprovada de vetores C para listas Python.
+quantidade() conta elementos com um laço. retirar() reconstrói a lista sem
+um índice. Não há métodos append/pop/remove, dicionários ou compreensões.
+Fila: chegadas entram no fim e saem pelo índice zero (FIFO). Depois vão à
+lista de espera. Busca e ordenação escolhem apenas entre aptos nessa lista.
+Pilha: eventos são empilhados em ordem histórica. ultimo_evento() lê o topo.
+Para retirar apenas uma consulta, use:
+  RESULTADO[4] = desfazer_consulta(RESULTADO[4])
+Isso não desfaz pouso, ativação, gasto de combustível nem histórico original.
+
+CAMPOS, UNIDADES E VALIDAÇÃO
+ID não vazio e único. Tipo: Energia, Habitação, Logística, Médico, Laboratório.
+Prioridade e criticidade da carga: inteiros 1..5; maior valor é mais importante.
+Combustível e massa: kg. ETA: instante em minutos desde o início, não prazo
+decrescente. Massa deve ser positiva; combustível e ETA não negativos.
+Sensores, sistemas e acidente: True ou False. Acidente é resultado explícito
+do cenário, não sorteio. Entradas numéricas ficam abaixo de 1 bilhão, faixa
+didática de validação declarada em numero_valido(); não é limite aeroespacial.
+Não há leitura interativa de números: altere os valores no modelo de listas.
+Dados inválidos imprimem aviso e devolvem lista vazia, sem exceções próprias.
+
+PARÂMETROS E MODELO HIPOTÉTICO
+CONFIG = [duração min, taxa kg/(kg*min), reserva kg, margem de urgência].
+Padrão: [5.0, 0.002, 2.0, 0.25]. Duração, taxa e reserva devem ser positivas.
+Massa é tratada como constante durante a descida. Consumo = taxa * massa *
+tempo: função linear em tempo. Mínimo seguro = consumo estimado + reserva:
+função afim em tempo. Para 1000 kg e 5 min: consumo 10 kg, mínimo 12 kg.
+A autorização calcula o mínimo; a execução calcula separadamente o consumo
+com a mesma regra. A reserva permanece. Orbitar não consome combustível.
+Coeficientes, condições ambientais e ativação são escolhas hipotéticas do
+protótipo. Não se calculam altitude, velocidade ou trajetória aeroespacial.
+
+SEGURANÇA, PRIORIDADE E ATIVAÇÃO
+Autorizar exige todos os critérios: combustível para descida + reserva,
+sensores/sistemas, atmosfera aceitável e área livre. Guarda todos os motivos.
+Urgência só entra depois de autorização. Margem = (combustível - mínimo) /
+mínimo; até 0.25 é urgente. Entre urgentes: menor margem, maior criticidade,
+ordem padrão e maior prioridade. Empate completo mantém entrada anterior.
+Sem urgência: Energia -> Habitação -> Logística -> Médico -> Laboratório;
+prioridade desempata no mesmo tipo. Não se ordena combustível bruto para
+comparar urgências de módulos com necessidades diferentes.
+Área é reservada antes da descida. Sucesso supõe transferência imediata para
+a base e libera a área. Acidente obstrui a área; não há liberação automática.
+Pousado não significa operacional. Energia ativa autonomamente NA BASE.
+Habitação, Logística e Médico aguardam Energia operacional; Laboratório
+aguarda Energia e Habitação. Dependências não impedem pouso. Reavaliação
+continua até nenhuma nova ativação ser possível (ponto fixo).
+
+EVENTOS E ENCERRAMENTO
+Evento: [instante min, tipo, valor, ID]. Tipos: clima (True/False), area
+(livre/ocupada/obstruída), sensores ou sistemas (True/False e ID existente).
+Clima e área usam ID vazio. Eventos são tratados por tempo, preservando
+entrada nos empates, mesmo se cadastrados fora de ordem.
+Chegadas/eventos durante uma descida são processados no fim dela: a descida
+é uma transição atômica didática, sem interrupção ou reação em tempo real.
+Sem aptos, avança ao próximo ETA/evento. Sem futuros, encerra com pendências.
+Não se fabrica melhora do clima. Alertas históricos iguais são deduplicados;
+motivos atuais são recalculados. Alertas registram a combinação de bloqueios.
+Resultado: [módulos, espera, histórico, alertas, pilha, tempo, ambiente].
+O relatório distingue pousados, operacionais, pendências, acidentes e alertas.
+
+CORRESPONDÊNCIA AOS PDFS (página física, contando a capa como 1)
+Cap 2 - A Programação Procedural Governando Cada Ajuste de Descida:
+  p. 27-33: AND e condições obrigatórias; p. 36-45: OR e NOT.
+Cap 3 - As Estruturas Lógicas que Refinam a Correção de Trajetória:
+  p. 5: if/elif/else; p. 13-18: while/contadores; p. 21: break;
+  p. 23-24: for/range; p. 27-33: menor valor por comparações manuais;
+  p. 34 afirma que listas ainda não foram estudadas NESSE capítulo.
+Cap 4 - As Estruturas Lineares Organizando o Fluxo de Dados da Aproximação:
+  p. 32-35: funções/parâmetros/retorno em C; p. 36: vetor e pilha;
+  p. 37: fila FIFO. Tradução C -> listas Python aprovada por Douglas.
+Cap 5 - Os Algoritmos que Selecionam Caminhos e Ordenam Prioridades de Voo:
+  p. 17-19: busca linear e sentinela -1; p. 29-30: inserção manual em C.
+Cap 6 - As Funções Aplicadas Interpretando as Variáveis da Atmosfera Marciana:
+  p. 8-10: aritmética, tipos/type e round; p. 15: def e parâmetros Python;
+  p. 19-21: linear/afim; p. 35-36: preferência por modelos simples.
+Os PDFs não fornecem as regras MGPEB específicas: elas vêm do pedido e
+da lógica discutida. Não se atribuem hipóteses do protótipo ao material.
+
+EXEMPLOS E TESTES
+11 cenários: normal, urgente suficiente, insuficiente, sensores falhos,
+clima adverso, área ocupada, duas urgências, ETA futuro, ativação dependente,
+melhora climática por evento explícito e acidente/obstrução.
+test_mgpeb.py é ferramenta externa de validação. Usa unittest, AST e outros
+recursos que NÃO são conteúdo do código estudantil. Verifica resultados,
+segurança, conservação/unicidade, estabilidade, desempates, consumo,
+eventos, pilha de consulta e ausência dos recursos evitados no arquivo aluno.
+Não há publicação, instalação, PDF, alteração do Drive ou projeto original.
