@@ -26,6 +26,7 @@ class TestMGPEB(unittest.TestCase):
         self.assertEqual(self.inicios(s), ["E", "H", "G", "M", "L"])
         self.assertTrue(all(m[g.ESTADO] == "operacional" for m in s[0]))
         self.assertEqual(s[5], 25.0)
+        self.assertEqual(s[7], [0, 1, 2, 3, 4])
         self.assertTrue(all(m[g.COMBUSTIVEL] == 20.0 for m in s[0]))
 
     def test_impedimentos_obrigatorios(self):
@@ -35,6 +36,7 @@ class TestMGPEB(unittest.TestCase):
                 self.assertEqual(self.inicios(s), [])
                 self.assertEqual(len(s[1]), len(s[0]))
                 self.assertEqual(s[5], 0.0)
+                self.assertEqual(s[7], [])
                 self.assertTrue(all(m[g.MOTIVO] for m in s[0]))
         m = montar("X", "Médico", fuel=1.0, sensores=False, sistemas=False)
         motivo = g.autorizar(m, [False, "ocupada"], g.CONFIG)

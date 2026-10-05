@@ -25,6 +25,16 @@ O MGPEB representa a camada de decisão entre a chegada de um módulo à órbita
 
 Os módulos têm identificador, tipo, prioridade, combustível em quilogramas, massa em quilogramas, criticidade da carga, ETA em minutos, estado de sensores, estado de sistemas, resultado de acidente e campos de estado/motivo. O ETA é contado a partir do começo da simulação. Os dados são exemplos para demonstrar o algoritmo e não descrevem hardware real.
 
+| ID | Módulo | Prioridade | Combustível (kg) | Massa (kg) | Criticidade | ETA (min) |
+|---|---|---:|---:|---:|---:|---:|
+| E | Energia | 1 | 30 | 1.000 | 1 | 0 |
+| H | Habitação | 1 | 30 | 1.000 | 1 | 0 |
+| G | Logística | 1 | 30 | 1.000 | 1 | 0 |
+| M | Médico | 1 | 30 | 1.000 | 1 | 0 |
+| L | Laboratório | 1 | 30 | 1.000 | 1 | 0 |
+
+Os valores iguais formam o cenário padrão para observar a ordem por tipo sem diferenças iniciais de massa, combustível ou criticidade. São parâmetros didáticos; os exemplos alteram dados para demonstrar outras situações. Energia sustenta a ativação dos demais módulos, e o Laboratório também depende da Habitação.
+
 O ambiente é compartilhado: o protótipo guarda se a atmosfera está aceitável e se a área está livre, ocupada ou obstruída. Eventos programados podem mudar clima, área, sensores ou sistemas. Como simplificação, uma descida inteira é tratada como uma transição: alterações previstas durante ela são aplicadas depois que termina.
 
 ### Objetivo
@@ -41,7 +51,7 @@ Cada módulo é uma lista de 12 posições. Constantes como `ID`, `MASSA` e `COM
 
 A busca é linear: `buscar` percorre os módulos até encontrar um tipo ou identificador; `buscar_extremo` conserva o índice do menor ou maior valor encontrado. Para cinco módulos, a busca linear é suficiente e simples de explicar. Em uma lista muito maior, seria possível avaliar outras estruturas, mas isso está fora do objetivo didático atual.
 
-A fila `fila` recebe os módulos quando o ETA chega. O primeiro índice é retirado e transferido para `espera`, que conserva os candidatos entre ciclos de decisão. A área é reservada antes do pouso. Um pouso bem-sucedido a libera; um cenário de acidente a deixa obstruída. As listas auxiliares de estado ficam representadas pelos campos do módulo e pela lista de espera, alertas e histórico.
+A fila `fila` recebe os módulos quando o ETA chega. O primeiro índice é retirado e transferido para `espera`, que conserva os candidatos entre ciclos de decisão. A nova lista `pousados` guarda índices dos módulos que concluíram a descida com sucesso; cada índice aponta para o cadastro original em `dados`, sem duplicar registros. `alertas` guarda o identificador e o motivo de cada bloqueio. A área é reservada antes do pouso. Um pouso bem-sucedido a libera; um cenário de acidente a deixa obstruída.
 
 A lista `aptos` reúne somente módulos aprovados. `ordenar` implementa ordenação por inserção: pega um candidato e desloca os anteriores até encontrar sua posição. O cadastro original não é reordenado. Empates completos mantêm a ordem de entrada, o que torna o resultado previsível.
 
@@ -99,8 +109,8 @@ Os cenários cobrem operação normal, combustível insuficiente, sensores falho
 A função matemática escolhida estima o combustível necessário para uma descida. Ela é deliberadamente simples e compatível com o conteúdo de funções lineares e afins da disciplina. A taxa é uma hipótese do protótipo, não um valor publicado para um veículo marciano.
 
 ```text
-consumo = taxa * massa * duração
-mínimo seguro = consumo + reserva
+C(t) = k * m * t
+F(t) = C(t) + R
 ```
 
 Onde:
@@ -110,18 +120,31 @@ Onde:
 - `duração` é o tempo estimado de descida em minutos;
 - `reserva` é uma quantidade fixa de combustível em kg.
 
+Os símbolos `C(t)` e `F(t)` representam, respectivamente, o consumo estimado e o mínimo com reserva. `k` é a taxa hipotética; `m` é a massa; `t` é a duração; e `R` é a reserva. A unidade de `k * m * t` resulta em quilogramas.
+
+| Parâmetro | Valor usado | Unidade/significado |
+|---|---:|---|
+| k | 0,002 | kg/(kg·min), taxa hipotética |
+| m | 1.000 | kg, massa do módulo padrão |
+| t | 5 | min, duração estimada |
+| R | 2 | kg, reserva fixa |
+
 Com os parâmetros do programa (`taxa = 0,002`, `duração = 5 min`, `reserva = 2 kg`) e um módulo de 1.000 kg, o consumo estimado é `0,002 × 1.000 × 5 = 10 kg`. O mínimo seguro fica em `10 + 2 = 12 kg`. Um módulo com menos de 12 kg é bloqueado; a reserva não é consumida na simulação.
 
 Para massa e taxa fixas, o consumo cresce linearmente com a duração. No gráfico de consumo por duração, a reta parte de zero e sua inclinação é `taxa × massa`. Para o mínimo seguro, a reta tem a mesma inclinação, mas começa no valor da reserva. Aumentar massa ou duração aumenta o consumo e o mínimo; aumentar a reserva desloca para cima a reta do mínimo sem alterar sua inclinação.
 
-Pontos para desenhar o gráfico do mínimo seguro com massa de 1.000 kg:
+![Gráfico do consumo e do mínimo de combustível em função da duração](docs/grafico_topico_04.svg)
 
-```text
-duração (min) | consumo (kg) | mínimo seguro (kg)
-0             | 0            | 2
-5             | 10           | 12
-10            | 20           | 22
-```
+Figura 1. Consumo estimado e mínimo com reserva para massa de 1.000 kg. Elaborado a partir da fórmula e dos parâmetros do protótipo.
+
+| Duração (min) | Consumo C(t) (kg) | Mínimo F(t) (kg) |
+|---:|---:|---:|
+| 0 | 0 | 2 |
+| 2 | 4 | 6 |
+| 5 | 10 | 12 |
+| 10 | 20 | 22 |
+
+Na configuração padrão, a urgência usa a margem `(combustível disponível - F(5)) / F(5)`. Como `F(5) = 12 kg`, a faixa urgente é de 12 a 15 kg, inclusive: abaixo de 12 kg o módulo é bloqueado; até 25% acima do mínimo ele pode ser priorizado entre os autorizados.
 
 Essa função ajuda a comparar combustível disponível com uma necessidade estimada e a justificar a fila por margem relativa, em vez de comparar apenas quilogramas brutos entre módulos diferentes. Ela não modela empuxo, gravidade, arrasto, altitude ou velocidade; portanto, não permite afirmar que o módulo tocará o solo a uma velocidade específica. Os parâmetros devem ser apresentados como hipótese didática.
 

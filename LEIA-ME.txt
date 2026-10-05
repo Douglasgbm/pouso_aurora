@@ -27,6 +27,8 @@ quantidade() conta elementos com um laço. retirar() reconstrói a lista sem
 um índice. Não há métodos append/pop/remove, dicionários ou compreensões.
 Fila: chegadas entram no fim e saem pelo índice zero (FIFO). Depois vão à
 lista de espera. Busca e ordenação escolhem apenas entre aptos nessa lista.
+Pousados: RESULTADO[7] guarda os índices dos módulos que concluíram a descida.
+Cada índice aponta para o registro correspondente em RESULTADO[0].
 Pilha: eventos são empilhados em ordem histórica. ultimo_evento() lê o topo.
 Para retirar apenas uma consulta, use:
   RESULTADO[4] = desfazer_consulta(RESULTADO[4])
@@ -81,7 +83,7 @@ Chegadas/eventos durante uma descida são processados no fim dela: a descida
 Sem aptos, avança ao próximo ETA/evento. Sem futuros, encerra com pendências.
 Não se fabrica melhora do clima. Alertas históricos iguais são deduplicados;
 motivos atuais são recalculados. Alertas registram a combinação de bloqueios.
-Resultado: [módulos, espera, histórico, alertas, pilha, tempo, ambiente].
+Resultado: [módulos, espera, histórico, alertas, pilha, tempo, ambiente, pousados].
 O relatório distingue pousados, operacionais, pendências, acidentes e alertas.
 
 CORRESPONDÊNCIA AOS PDFS (página física, contando a capa como 1)

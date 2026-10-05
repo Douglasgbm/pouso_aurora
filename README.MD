@@ -9,6 +9,8 @@ da base em Marte. A implementação atual está em `mgpeb.py`.
 - `exemplos.py`: 11 cenários para estudar as decisões do programa.
 - `test_mgpeb.py`: testes automatizados externos ao código didático.
 - `RELATORIO_TECNICO.pdf`: relatório da Fase 2; `RELATORIO_TECNICO.md` é sua fonte editável.
+- `docs/grafico_topico_04.svg`: gráfico vetorial do modelo de consumo.
+- `gerar_relatorio_pdf.py`: converte a fonte Markdown, tabelas e gráfico para PDF.
 - `LEIA-ME.txt`: explicação direta dos campos, regras, estruturas e comandos.
 - `ROADMAP.MD`: planejamento e decisões da equipe.
 - `main.py`: experimento antigo de descida, mantido para comparação.
@@ -22,6 +24,8 @@ python -m unittest -v
 ```
 
 O programa principal e os exemplos usam somente a biblioteca padrão do Python.
+Para regenerar o PDF, instale `requirements-relatorio.txt`; ReportLab e svglib
+são dependências opcionais apenas do gerador de documentos.
 O simulador atual trata autorização, fila e consumo estimado; não calcula uma
 trajetória ou velocidade física de pouso.
 

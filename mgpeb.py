@@ -247,6 +247,7 @@ def simular(modulos, eventos, ambiente, config):
     espera = []     # Módulos que chegaram, mas ainda aguardam autorização.
     historico = []
     alertas = []
+    pousados = []   # Índices dos módulos que concluíram a descida com sucesso.
     continuar = True
     while continuar:
         # 1. Aplica mudanças de clima, área, sensores e sistemas já ocorridas.
@@ -325,6 +326,7 @@ def simular(modulos, eventos, ambiente, config):
                 alertas = alertas + [m[ID] + ": " + m[MOTIVO]]
             else:
                 m[ESTADO] = "pousado"
+                pousados = pousados + [pos]
                 ambiente[1] = "livre"  # Transferência hipotética para a base.
             historico = historico + [f"{tempo:.1f} min: {m[ID]} {m[ESTADO]}"]
         else:
@@ -345,8 +347,9 @@ def simular(modulos, eventos, ambiente, config):
     pilha = []
     for evento in historico:
         pilha = pilha + [evento]  # Empilhar; última entrada é o topo.
-    # Resultado: módulos, espera, histórico, alertas, pilha, tempo, ambiente.
-    return [dados, espera, historico, alertas, pilha, tempo, ambiente]
+    # Mantém os sete campos existentes e acrescenta a lista auxiliar de pousados.
+    # Resultado: módulos, espera, histórico, alertas, pilha, tempo, ambiente, pousados.
+    return [dados, espera, historico, alertas, pilha, tempo, ambiente, pousados]
 
 
 def relatorio(resultado):
@@ -354,10 +357,9 @@ def relatorio(resultado):
     if quantidade(resultado) == 0:
         return
     print("Tempo final (min):", resultado[5], "| Área:", resultado[6][1])
-    print("Pousados (inclui operacionais):")
-    for m in resultado[0]:
-        if m[ESTADO] == "pousado" or m[ESTADO] == "operacional":
-            print(" ", m[ID], m[TIPO])
+    print("Pousados:")
+    for pos in resultado[7]:
+        print(" ", resultado[0][pos][ID], resultado[0][pos][TIPO])
     print("Operacionais:")
     for m in resultado[0]:
         if m[ESTADO] == "operacional":
