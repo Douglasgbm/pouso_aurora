@@ -1,9 +1,13 @@
 # MGPEB — Módulo de Gerenciamento de Pouso e Estabilização de Base
 ## Relatório técnico — Aurora Siger
 
-**Atividade Integradora — Fase 2**  
-**Equipe:** preencher os nomes dos integrantes  
-**Versão do protótipo:** 1.0 — outubro de 2026
+**Atividade Integradora — Fase 2**
+
+**Equipe:** preencher os nomes dos integrantes
+
+**Versão do protótipo:** 1.2 — outubro de 2026
+
+**Revisão documental:** 6 de outubro de 2026
 
 ### Resumo
 
@@ -45,9 +49,9 @@ A versão principal está em `mgpeb.py`. `exemplos.py` contém cenários de test
 
 <!-- PAGE BREAK -->
 
-## 2. Estruturas de dados e fluxo
+## 2. Estruturas de dados e fluxo (anexo integrado)
 
-Cada módulo é uma lista de 12 posições. Constantes como `ID`, `MASSA` e `COMBUSTIVEL` dão nomes a essas posições. A escolha imita vetores apresentados em aula e deixa visível como cada campo é acessado pelo índice. A função `validar` confere quantidade e tipo dos campos, faixas numéricas, tipos aceitos e identificadores únicos antes da simulação.
+Cada módulo é uma lista de 12 posições. Constantes como `ID`, `MASSA` e `COMBUSTIVEL` dão nomes a essas posições. A escolha imita vetores apresentados em aula e deixa visível como cada campo é acessado pelo índice. A função `validar` confere primeiro os tipos das listas e de suas linhas; depois verifica quantidade e tipo dos campos, faixas numéricas e identificadores únicos. Entradas malformadas são rejeitadas com aviso e retorno vazio.
 
 A busca é linear: `buscar` percorre os módulos até encontrar um tipo ou identificador; `buscar_extremo` conserva o índice do menor ou maior valor encontrado. Para cinco módulos, a busca linear é suficiente e simples de explicar. Em uma lista muito maior, seria possível avaliar outras estruturas, mas isso está fora do objetivo didático atual.
 
@@ -55,13 +59,15 @@ A fila `fila` recebe os módulos quando o ETA chega. O primeiro índice é retir
 
 A lista `aptos` reúne somente módulos aprovados. `ordenar` implementa ordenação por inserção: pega um candidato e desloca os anteriores até encontrar sua posição. O cadastro original não é reordenado. Empates completos mantêm a ordem de entrada, o que torna o resultado previsível.
 
+Um módulo já pousado fica `suspenso` se perder sensores, sistemas ou dependências. A falha de Energia pode suspender os dependentes; um reparo permite reativação, sem novo pouso ou consumo. Acidentes não são recuperados por eventos de reparo. Os estados em solo são recalculados a cada ciclo.
+
 O histórico também é copiado para `pilha`. Seu topo é o registro mais recente, seguindo LIFO. `ultimo_evento` consulta esse topo; `desfazer_consulta` devolve uma nova pilha sem ele. Essa operação demonstra a pilha, mas não desfaz pousos nem altera combustível.
 
 ### Passos de cada ciclo
 
 1. Aplicar eventos vencidos, na ordem do horário.
 2. Inserir na fila os módulos cujo ETA chegou.
-3. Mover as chegadas para a espera e atualizar dependências operacionais.
+3. Mover as chegadas para a espera e reavaliar saúde e dependências operacionais.
 4. Verificar combustível, sensores, sistemas, atmosfera e área.
 5. Se não houver candidatos, avançar o relógio ao próximo ETA ou evento; sem eventos futuros, encerrar com pendências.
 6. Ordenar os autorizados, reservar a área, simular a duração e o consumo estimados e registrar o resultado.
@@ -82,15 +88,11 @@ D = área livre
 AUTORIZAR = C AND S AND E AND A AND D
 ```
 
-Representação da regra:
+Representação da regra com símbolos de portas lógicas:
 
-```text
-[C] --\\
-[S] ---\\
-[E] ---- AND ----> [Autorização]
-[A] ---/
-[D] --/
-```
+![Portas AND e NOT para autorizar ou adiar o pouso](docs/portas_logicas.svg)
+
+Figura 1. AND autoriza quando as cinco entradas são verdadeiras; NOT representa o adiamento quando a autorização é falsa. O código registra os motivos desse bloqueio, sem precisar armazenar uma variável ADIAR.
 
 O protótipo ainda não verifica ângulo de entrada, coordenadas, integridade estrutural ou condição independente do paraquedas. Esses itens aparecem nas anotações do projeto e podem ser incluídos como novos sinais booleanos, com validação e cenários de teste próprios.
 
@@ -100,7 +102,7 @@ A urgência é calculada somente depois da autorização; combustível crítico 
 
 O código usa números de prioridade de 1 a 5, em que um número maior significa maior importância, conforme a convenção deste protótipo. É importante manter essa convenção igual no relatório, no cadastro e no diagrama de decisão.
 
-Os cenários cobrem operação normal, combustível insuficiente, sensores falhos, clima adverso, área ocupada, urgência, ETA futuro, dependência de ativação, mudança de clima e acidente. O teste automatizado confirma que bloqueios não autorizam pouso e que um acidente obstrui a área.
+Os 14 cenários incluem operação normal, bloqueios, urgência, ETA futuro, dependências, clima, acidente, falha da Energia e recuperação na base. Os 21 testes conferem esses comportamentos, entradas malformadas e as 32 combinações booleanas. Uma falha durante a descida é aplicada ao final e pode impedir a ativação na base.
 
 <!-- PAGE BREAK -->
 
@@ -135,7 +137,7 @@ Para massa e taxa fixas, o consumo cresce linearmente com a duração. No gráfi
 
 ![Gráfico do consumo e do mínimo de combustível em função da duração](docs/grafico_topico_04.svg)
 
-Figura 1. Consumo estimado e mínimo com reserva para massa de 1.000 kg. Elaborado a partir da fórmula e dos parâmetros do protótipo.
+Figura 2. Consumo estimado e mínimo com reserva para massa de 1.000 kg. Elaborado a partir da fórmula e dos parâmetros do protótipo.
 
 | Duração (min) | Consumo C(t) (kg) | Mínimo F(t) (kg) |
 |---:|---:|---:|
@@ -150,45 +152,63 @@ Essa função ajuda a comparar combustível disponível com uma necessidade esti
 
 <!-- PAGE BREAK -->
 
-## 5. Evolução da computação e sistemas embarcados
+## 5. Contextualização do MGPEB à luz da evolução da computação
 
-Os primeiros computadores eletrônicos de grande porte, como o ENIAC, foram construídos para executar cálculos em alta velocidade. Ainda ocupavam salas, usavam muitos componentes e exigiam configuração e manutenção. A evolução de componentes, memória e circuitos integrados tornou possível levar processamento para dentro de máquinas e veículos, em vez de depender apenas de um computador central.
+### Dos computadores de propósito geral aos sistemas embarcados
 
-O Apollo Guidance Computer é um marco dessa mudança: um computador embarcado participou da navegação e do controle da missão Apollo. O ponto relevante para o MGPEB não é comparar diretamente o nosso programa com software de voo real, mas perceber a mudança de ideia: o veículo precisa interpretar sinais e tomar decisões quando não há um operador fazendo cada cálculo manualmente. O Apollo Lunar Surface Journal preserva transcrições e documentação operacional que ajudam a estudar essa história.
+Os primeiros computadores eletrônicos de propósito geral demonstraram que uma mesma máquina poderia executar diferentes sequências de operações para resolver problemas. O ENIAC é um exemplo desse período: utilizava válvulas e sua programação inicial envolvia a configuração de conexões e chaves. Embora permitisse automatizar cálculos, seu porte e suas necessidades de operação estavam distantes das exigências de um equipamento instalado em uma nave. [1].
 
-Rovers atuais mostram essa integração com mais clareza. No Perseverance, computadores, sensores, câmeras, controle térmico, alimentação elétrica e telecomunicações trabalham juntos. A navegação relativa ao terreno analisa imagens durante a descida para selecionar uma região mais segura. Isso ilustra por que decisões de pouso precisam ser locais e rápidas: a comunicação com a Terra não substitui o controle embarcado em tempo real.
+A evolução das válvulas para transistores e circuitos integrados contribuiu para reduzir o tamanho dos equipamentos e ampliar as possibilidades de processamento. Essa transformação permitiu incorporar computadores a máquinas e veículos. Nesses sistemas embarcados, o processamento atende funções específicas, como interpretar sensores e comandar equipamentos. O Apollo Guidance Computer exemplifica essa aplicação espacial: participou dos cálculos de orientação, navegação e controle das missões Apollo. A confiabilidade, porém, depende também de projeto, testes e mecanismos de recuperação, e não apenas da miniaturização. [2].
 
-O MGPEB traduz essa ideia para os conteúdos da disciplina em escala reduzida. A fila organiza a missão; as condições booleanas representam regras; o laço avança o relógio; eventos atualizam o ambiente; e o histórico permite explicar por que cada decisão ocorreu. Assim, o programa serve como modelo conceitual, não como software de controle de voo.
+O MGPEB representa didaticamente essa integração entre dados e decisões. Ele recebe informações dos módulos e do ambiente, verifica condições obrigatórias, organiza os candidatos ao pouso e registra os resultados. As expressões booleanas permitem transformar critérios de segurança em decisões verificáveis. Por exemplo, um módulo com prioridade elevada continua bloqueado quando seus sensores são indicados como falhos. O programa simula essas informações; não recebe sinais de sensores reais nem controla uma nave.
 
-<!-- PAGE BREAK -->
+### Limitações de hardware em uma missão a Marte
 
-## 6. Limitações de hardware e impacto técnico
+Uma missão espacial precisa equilibrar capacidade de processamento, memória, energia disponível e resistência ao ambiente. Como exemplo concreto, o Perseverance utiliza um processador RAD750 tolerante à radiação, com operação de até 200 MHz, 256 MB de memória dinâmica e 2 GB de memória flash. Possui dois elementos computacionais, permitindo recorrer a uma unidade reserva. Esses valores caracterizam esse rover, sem estabelecer uma configuração obrigatória para a base Aurora. [3].
 
-Um computador embarcado de missão precisa operar com limites de massa, potência, memória, dissipação de calor e comunicação. Também precisa ser projetado para o ambiente de radiação. A página da NASA sobre o Perseverance informa o uso de processador RAD750 tolerante à radiação, redundância de computadores e memórias de diferentes tipos e capacidades. Ela também descreve monitoramento de energia e temperatura e controle térmico do corpo do rover.
-
-Esses números são características daquele rover, não uma especificação universal para toda missão a Marte. O exemplo mostra, porém, por que sistemas embarcados priorizam previsibilidade, monitoramento de saúde, recuperação diante de falhas e armazenamento de telemetria. A equipe deve evitar afirmar que todo computador espacial tem as mesmas capacidades.
-
-No protótipo, a lista de módulos é pequena e os algoritmos são simples. Busca linear custa tempo proporcional à quantidade de módulos; ordenação por inserção pode exigir muitas comparações quando a lista cresce. Para cinco módulos, a clareza vale mais do que otimização. A simulação também evita dependências externas no programa do aluno e usa estruturas que podem ser inspecionadas manualmente.
-
-A validação e os testes automatizados são parte da confiabilidade: testar cenários normais e adversos mostra se a lógica respeita suas regras. A bateria de testes usa recursos adicionais de Python, mas está separada do código didático. Isso evita introduzir ferramentas avançadas na implementação principal e ainda fornece uma checagem repetível para a equipe.
-
-A rede e a comunicação também são um limite operacional: o módulo precisa continuar decidindo quando a Terra não pode responder imediatamente. Por isso, bloqueios, eventos, motivos e estados são guardados localmente no protótipo.
+Para o MGPEB, essas restrições sugerem cuidados distintos. A memória limita o volume de módulos, alertas e eventos que pode permanecer armazenado. O processamento disponível limita o trabalho realizável em cada ciclo de decisão. O consumo de energia e o controle de temperatura exigem planejamento das atividades dos equipamentos. A exposição à radiação demanda componentes adequados e estratégias para lidar com falhas. O exemplo do Perseverance reúne proteção à radiação, redundância e monitoramento de energia e temperatura. [3].
 
 <!-- PAGE BREAK -->
 
-## 7. ESG, segurança e governança
+### 5.1. Limitações de hardware e escolhas do protótipo
 
-**Ambiental:** a exploração deve considerar uso de energia, combustível, resíduos e contaminação biológica. A NASA define proteção planetária como a proteção de outros corpos celestes contra contaminação terrestre e a proteção da Terra contra possível contaminação de amostras retornadas. No cenário, isso pode ser discutido como requisito de planejamento e operação; o código atual não calcula esterilização nem impacto ambiental.
+Na implementação atual, cada módulo é representado por uma lista de atributos. A fila organiza a entrada dos módulos conforme sua chegada; em seguida, os candidatos aptos são ordenados pelas regras do projeto. Listas auxiliares registram espera, pousos e alertas. A pilha permite consultar os eventos do mais recente para o mais antigo. Essas estruturas tornam o fluxo compreensível e permitem acompanhar manualmente uma simulação pequena.
 
-**Social:** a ordem de pouso deve considerar dependências e consequências para a segurança da futura tripulação. Energia e Habitação sustentam funções essenciais da base. Regras claras ajudam a evitar que uma escolha de prioridade deixe de atender uma condição mínima de segurança. A criticidade da carga descreve a consequência de uma perda; prioridade descreve a sequência necessária. Não são a mesma métrica.
+A busca linear percorre os registros até encontrar o módulo desejado. Quando se procura um valor extremo, o programa compara os elementos sem precisar ordenar toda a coleção. A ordenação por inserção reorganiza os índices dos candidatos aptos, preservando o cadastro principal. Para o cenário de cinco módulos, essas escolhas favorecem a compreensão e a revisão das regras. Se a quantidade de módulos aumentar, a ordenação por inserção poderá exigir um número de comparações que cresce aproximadamente com o quadrado da quantidade de candidatos, no pior caso.
 
-**Governança:** toda decisão precisa ter critérios verificáveis, motivo de bloqueio e histórico. O programa guarda os eventos e suas razões, valida dados antes de simular e testa casos adversos. Em um sistema real seriam necessários processos formais de engenharia, revisão independente, segurança de software, controle de versões, rastreabilidade de requisitos e planos de contingência. A NASA descreve garantia e segurança de software como atividades ao longo do ciclo de vida, incluindo avaliação independente para sistemas críticos. Os testes deste trabalho são educacionais e não equivalem a certificação.
+O código também possui custos que precisam ser reconhecidos: a função `quantidade` percorre a lista para contar elementos, várias operações concatenam ou reconstroem listas e o histórico acumula eventos. Portanto, a simplicidade didática não comprova eficiência de memória ou de processamento. Uma adaptação para hardware limitado precisaria medir esses custos, reduzir cópias desnecessárias e definir limites de armazenamento e uma política de preservação dos registros importantes.
 
-Uma regra operacional de governança para a equipe é separar três categorias: apto, aguardando condição recuperável e alerta impeditivo. Também se deve registrar a origem de cada parâmetro: dado de fonte, hipótese de projeto ou valor apenas didático. Essa separação torna o relatório honesto e permite que outro integrante reproduza os resultados.
+A organização em funções de validação, autorização, busca e ordenação facilita a identificação de erros. A verificação dos dados antes da simulação e os testes de cenários adversos contribuem para avaliar o comportamento do protótipo. Entretanto, os indicadores booleanos de sensores e sistemas apenas representam condições simuladas: não implementam redundância física, correção de erros de memória ou tolerância à radiação. Assim, o MGPEB permite estudar princípios de organização e confiabilidade, enquanto um sistema de voo exigiria desenvolvimento e validação específicos.
 
 <!-- PAGE BREAK -->
 
-## 8. Conclusão, limites e referências
+## 6. Princípios ESG na concepção da base Aurora
+
+### Ambiental: área de pouso e recursos
+
+Propõe-se escolher a área de pouso considerando estabilidade e inclinação do terreno, obstáculos, distância das instalações e dispersão de poeira e detritos. A equipe também deve identificar regiões de interesse científico, evitando que pousos, descarte ou extração comprometam observações e amostras. A proteção planetária busca evitar contaminação biológica de outros corpos por material terrestre e contaminação da Terra em missões de retorno [4]. Para a Aurora, esse princípio orienta limpeza dos equipamentos, contenção de resíduos e separação entre áreas operacionais e científicas.
+
+A gestão energética proposta deve acompanhar geração, armazenamento e consumo, mantendo reserva para suporte à vida, comunicação e operações críticas. Experimentos e produção adiáveis devem acompanhar a disponibilidade de energia. Se houver painéis solares, períodos de baixa geração e manutenção precisam entrar no planejamento. O protótipo representa a dependência do módulo Energia, mas não calcula eletricidade ou baterias.
+
+Para água, materiais e resíduos, propõem-se controle de estoques, redução de desperdícios, recuperação tecnicamente viável e separação dos resíduos que exigem contenção. A produção deve priorizar necessidades justificadas e reparos. Extrair recursos locais exige avaliar energia consumida, resíduos e alteração do terreno: a origem local, isoladamente, não garante sustentabilidade.
+
+### Social: segurança e necessidades essenciais
+
+As prioridades devem considerar necessidades da comunidade, consequências da perda de cargas e dependências entre módulos. No MGPEB, urgência de combustível influencia somente a ordem dos candidatos aptos; não elimina bloqueios de segurança. Isso exemplifica como atender necessidades urgentes sem ignorar condições obrigatórias.
+
+Para a base, propõem-se treinamento, procedimentos acessíveis, divisão de responsabilidades e canais para relatar falhas sem retaliação. Representantes das áreas médica, técnica, científica e de habitação devem participar da definição de prioridades, considerando quem depende de atendimento e recursos essenciais. Influência pessoal não deve substituir critérios conhecidos.
+
+### Governança: transparência e participação
+
+A governança deve definir quem estabelece regras, autoriza mudanças e revisa ocorrências. Propõe-se registrar a justificativa de alterações nos limites de segurança e exigir revisão por outro responsável. Emergências devem seguir procedimentos previamente acordados, com análise posterior das decisões.
+
+O MGPEB registra eventos, estados e motivos de bloqueio, mas o histórico fica em memória e não é um registro permanente protegido contra alterações. Como evolução, propõe-se armazenar horário, módulo, motivo e versão das regras de cada decisão, com critérios de acesso, preservação e revisão. Dados pessoais e médicos devem ter acesso restrito, enquanto os critérios gerais permanecem transparentes.
+
+Indicadores propostos incluem energia disponível para emergências, recuperação de água, resíduos armazenados, incidentes e bloqueios por motivo. Sua revisão periódica, com participação dos ocupantes, deve orientar correções. Essas diretrizes ESG são propostas de concepção da base; o código atual não implementa gestão ambiental, votação ou auditoria persistente.
+
+<!-- PAGE BREAK -->
+
+## 7. Conclusão, limites e referências
 
 O protótipo demonstra a organização de módulos, a fila de chegadas, buscas, ordenação por inserção, regras AND, eventos, dependências e pilha de histórico. A função afim de consumo conecta um fenômeno operacional a uma decisão de autorização. Os testes verificam os cenários previstos e ajudam a detectar regressões.
 
@@ -196,11 +216,12 @@ O principal limite é físico: não se calculam a trajetória ou a velocidade re
 
 ### Referências
 
-1. COMPUTER HISTORY MUSEUM. **ENIAC**, exposição Birth of the Computer. Disponível em: https://www.computerhistory.org/revolution/birth-of-the-computer/4/78/ . Acesso em: 4 out. 2026.
-2. MINDELL, David A. **Digital Apollo: Human and Machine in Spaceflight**. Cambridge: MIT Press, 2008.
-3. NASA. **Apollo Lunar Surface Journal and Apollo Flight Journal**. Disponível em: https://www.nasa.gov/history/alsj/ . Acesso em: 4 out. 2026.
-4. NASA. **Mars 2020 Perseverance Rover Components**. Informações sobre computador, redundância, potência, controle térmico e navegação. Disponível em: https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/ . Acesso em: 4 out. 2026.
-5. NASA Office of Safety and Mission Assurance. **Software Assurance and Software Safety**. Disponível em: https://sma.nasa.gov/sma-disciplines/software-assurance-and-software-safety . Acesso em: 4 out. 2026.
-6. NASA Office of Safety and Mission Assurance. **Planetary Protection**. Disponível em: https://sma.nasa.gov/sma-disciplines/planetary-protection . Acesso em: 4 out. 2026.
+[1] COMPUTER HISTORY MUSEUM. **ENIAC**. Disponível em: https://www.computerhistory.org/revolution/story/78 . Acesso em: 6 out. 2026.
 
-**Observação:** o conteúdo histórico e técnico foi resumido com palavras próprias. Valores do simulador não são dados oficiais de desempenho de uma nave real.
+[2] NASA. **High Performance Spaceflight Computing**. Disponível em: https://www.nasa.gov/directorates/stmd/nasa-industry-advance-high-performance-spaceflight-computing/ . Acesso em: 6 out. 2026.
+
+[3] NASA. **Perseverance Rover Components**. Disponível em: https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/ . Acesso em: 6 out. 2026.
+
+[4] NASA/JPL. **Planetary Protection**. Disponível em: https://planetaryprotection.jpl.nasa.gov/ . Acesso em: 6 out. 2026.
+
+**Observação:** as fontes sustentam os exemplos históricos e espaciais. As regras do simulador e as propostas de gestão da base são hipóteses didáticas da equipe. A seção 2 constitui o anexo de estruturas de dados integrado ao relatório.

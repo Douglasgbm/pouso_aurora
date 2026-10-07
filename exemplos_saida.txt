@@ -1,72 +1,26 @@
-Consulta: Ìndice do menor combustÌvel: 0
-Consulta: Ìndice da maior prioridade: 0
-Consulta: Ìndice do tipo MÈdico: 3
-Tempo final (min): 25.0 | ¡rea: livre
-Pousados (inclui operacionais):
-  E Energia
-  H HabitaÁ„o
-  G LogÌstica
-  M MÈdico
-  L LaboratÛrio
-Operacionais:
-  E Energia
-  H HabitaÁ„o
-  G LogÌstica
-  M MÈdico
-  L LaboratÛrio
-Aguardando ou com impedimento:
-CombustÌvel restante (kg):
-  E 20.0
-  H 20.0
-  G 20.0
-  M 20.0
-  L 20.0
-Alertas histÛricos:
-Eventos:
-  0.0 min: E chegou
-  0.0 min: H chegou
-  0.0 min: G chegou
-  0.0 min: M chegou
-  0.0 min: L chegou
-  0.0 min: E iniciou descida
-  5.0 min: E pousado
-  E operacional
-  5.0 min: H iniciou descida
-  10.0 min: H pousado
-  H operacional
-  10.0 min: G iniciou descida
-  15.0 min: G pousado
-  G operacional
-  15.0 min: M iniciou descida
-  20.0 min: M pousado
-  M operacional
-  20.0 min: L iniciou descida
-  25.0 min: L pousado
-  L operacional
-  25.0 min: rodada encerrada
 
 === normal ===
-Tempo final (min): 25.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 25.0 | √Årea: livre
+Pousados:
   E Energia
-  H HabitaÁ„o
-  G LogÌstica
-  M MÈdico
-  L LaboratÛrio
+  H Habita√ß√£o
+  G Log√≠stica
+  M M√©dico
+  L Laborat√≥rio
 Operacionais:
   E Energia
-  H HabitaÁ„o
-  G LogÌstica
-  M MÈdico
-  L LaboratÛrio
+  H Habita√ß√£o
+  G Log√≠stica
+  M M√©dico
+  L Laborat√≥rio
 Aguardando ou com impedimento:
-CombustÌvel restante (kg):
+Combust√≠vel restante (kg):
   E 20.0
   H 20.0
   G 20.0
   M 20.0
   L 20.0
-Alertas histÛricos:
+Alertas hist√≥ricos:
 Eventos:
   0.0 min: E chegou
   0.0 min: H chegou
@@ -91,18 +45,18 @@ Eventos:
   25.0 min: rodada encerrada
 
 === urgente ===
-Tempo final (min): 10.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 10.0 | √Årea: livre
+Pousados:
+  M M√©dico
   E Energia
-  M MÈdico
 Operacionais:
   E Energia
-  M MÈdico
+  M M√©dico
 Aguardando ou com impedimento:
-CombustÌvel restante (kg):
+Combust√≠vel restante (kg):
   E 20.0
   M 3.0
-Alertas histÛricos:
+Alertas hist√≥ricos:
 Eventos:
   0.0 min: E chegou
   0.0 min: M chegou
@@ -115,55 +69,55 @@ Eventos:
   10.0 min: rodada encerrada
 
 === insuficiente ===
-Tempo final (min): 0.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 0.0 | √Årea: livre
+Pousados:
 Operacionais:
 Aguardando ou com impedimento:
-  E espera CombustÌvel insuficiente; 
-CombustÌvel restante (kg):
+  E espera Combust√≠vel insuficiente; 
+Combust√≠vel restante (kg):
   E 11.0
-Alertas histÛricos:
-  E: CombustÌvel insuficiente; 
+Alertas hist√≥ricos:
+  E: Combust√≠vel insuficiente; 
 Eventos:
   0.0 min: E chegou
   0.0 min: rodada encerrada
 
 === sensores ===
-Tempo final (min): 0.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 0.0 | √Årea: livre
+Pousados:
 Operacionais:
 Aguardando ou com impedimento:
   E espera Sensores/sistemas falhos; 
-CombustÌvel restante (kg):
+Combust√≠vel restante (kg):
   E 30.0
-Alertas histÛricos:
+Alertas hist√≥ricos:
   E: Sensores/sistemas falhos; 
 Eventos:
   0.0 min: E chegou
   0.0 min: rodada encerrada
 
 === clima ===
-Tempo final (min): 0.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 0.0 | √Årea: livre
+Pousados:
 Operacionais:
 Aguardando ou com impedimento:
-  E espera Atmosfera inaceit·vel; 
-  H espera Atmosfera inaceit·vel; 
-  G espera Atmosfera inaceit·vel; 
-  M espera Atmosfera inaceit·vel; 
-  L espera Atmosfera inaceit·vel; 
-CombustÌvel restante (kg):
+  E espera Atmosfera inaceit√°vel; 
+  H espera Atmosfera inaceit√°vel; 
+  G espera Atmosfera inaceit√°vel; 
+  M espera Atmosfera inaceit√°vel; 
+  L espera Atmosfera inaceit√°vel; 
+Combust√≠vel restante (kg):
   E 30.0
   H 30.0
   G 30.0
   M 30.0
   L 30.0
-Alertas histÛricos:
-  E: Atmosfera inaceit·vel; 
-  H: Atmosfera inaceit·vel; 
-  G: Atmosfera inaceit·vel; 
-  M: Atmosfera inaceit·vel; 
-  L: Atmosfera inaceit·vel; 
+Alertas hist√≥ricos:
+  E: Atmosfera inaceit√°vel; 
+  H: Atmosfera inaceit√°vel; 
+  G: Atmosfera inaceit√°vel; 
+  M: Atmosfera inaceit√°vel; 
+  L: Atmosfera inaceit√°vel; 
 Eventos:
   0.0 min: E chegou
   0.0 min: H chegou
@@ -173,27 +127,27 @@ Eventos:
   0.0 min: rodada encerrada
 
 === area ===
-Tempo final (min): 0.0 | ¡rea: ocupada
-Pousados (inclui operacionais):
+Tempo final (min): 0.0 | √Årea: ocupada
+Pousados:
 Operacionais:
 Aguardando ou com impedimento:
-  E espera ¡rea ocupada; 
-  H espera ¡rea ocupada; 
-  G espera ¡rea ocupada; 
-  M espera ¡rea ocupada; 
-  L espera ¡rea ocupada; 
-CombustÌvel restante (kg):
+  E espera √Årea ocupada; 
+  H espera √Årea ocupada; 
+  G espera √Årea ocupada; 
+  M espera √Årea ocupada; 
+  L espera √Årea ocupada; 
+Combust√≠vel restante (kg):
   E 30.0
   H 30.0
   G 30.0
   M 30.0
   L 30.0
-Alertas histÛricos:
-  E: ¡rea ocupada; 
-  H: ¡rea ocupada; 
-  G: ¡rea ocupada; 
-  M: ¡rea ocupada; 
-  L: ¡rea ocupada; 
+Alertas hist√≥ricos:
+  E: √Årea ocupada; 
+  H: √Årea ocupada; 
+  G: √Årea ocupada; 
+  M: √Årea ocupada; 
+  L: √Årea ocupada; 
 Eventos:
   0.0 min: E chegou
   0.0 min: H chegou
@@ -203,18 +157,18 @@ Eventos:
   0.0 min: rodada encerrada
 
 === duas_urgencias ===
-Tempo final (min): 10.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 10.0 | √Årea: livre
+Pousados:
+  M M√©dico
   E Energia
-  M MÈdico
 Operacionais:
   E Energia
-  M MÈdico
+  M M√©dico
 Aguardando ou com impedimento:
-CombustÌvel restante (kg):
+Combust√≠vel restante (kg):
   E 3.0
   M 3.0
-Alertas histÛricos:
+Alertas hist√≥ricos:
 Eventos:
   0.0 min: E chegou
   0.0 min: M chegou
@@ -227,15 +181,15 @@ Eventos:
   10.0 min: rodada encerrada
 
 === chegada_futura ===
-Tempo final (min): 25.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 25.0 | √Årea: livre
+Pousados:
   E Energia
 Operacionais:
   E Energia
 Aguardando ou com impedimento:
-CombustÌvel restante (kg):
+Combust√≠vel restante (kg):
   E 20.0
-Alertas histÛricos:
+Alertas hist√≥ricos:
 Eventos:
   20.0 min: E chegou
   20.0 min: E iniciou descida
@@ -244,21 +198,21 @@ Eventos:
   25.0 min: rodada encerrada
 
 === ativacao_dependente ===
-Tempo final (min): 30.0 | ¡rea: livre
-Pousados (inclui operacionais):
-  L LaboratÛrio
-  H HabitaÁ„o
+Tempo final (min): 30.0 | √Årea: livre
+Pousados:
+  L Laborat√≥rio
   E Energia
+  H Habita√ß√£o
 Operacionais:
-  L LaboratÛrio
-  H HabitaÁ„o
+  L Laborat√≥rio
+  H Habita√ß√£o
   E Energia
 Aguardando ou com impedimento:
-CombustÌvel restante (kg):
+Combust√≠vel restante (kg):
   L 2.0
   H 20.0
   E 20.0
-Alertas histÛricos:
+Alertas hist√≥ricos:
 Eventos:
   0.0 min: L chegou
   0.0 min: L iniciou descida
@@ -275,39 +229,39 @@ Eventos:
   30.0 min: rodada encerrada
 
 === evento_clima ===
-Tempo final (min): 35.0 | ¡rea: livre
-Pousados (inclui operacionais):
+Tempo final (min): 35.0 | √Årea: livre
+Pousados:
   E Energia
-  H HabitaÁ„o
-  G LogÌstica
-  M MÈdico
-  L LaboratÛrio
+  H Habita√ß√£o
+  G Log√≠stica
+  M M√©dico
+  L Laborat√≥rio
 Operacionais:
   E Energia
-  H HabitaÁ„o
-  G LogÌstica
-  M MÈdico
-  L LaboratÛrio
+  H Habita√ß√£o
+  G Log√≠stica
+  M M√©dico
+  L Laborat√≥rio
 Aguardando ou com impedimento:
-CombustÌvel restante (kg):
+Combust√≠vel restante (kg):
   E 20.0
   H 20.0
   G 20.0
   M 20.0
   L 20.0
-Alertas histÛricos:
-  E: Atmosfera inaceit·vel; 
-  H: Atmosfera inaceit·vel; 
-  G: Atmosfera inaceit·vel; 
-  M: Atmosfera inaceit·vel; 
-  L: Atmosfera inaceit·vel; 
+Alertas hist√≥ricos:
+  E: Atmosfera inaceit√°vel; 
+  H: Atmosfera inaceit√°vel; 
+  G: Atmosfera inaceit√°vel; 
+  M: Atmosfera inaceit√°vel; 
+  L: Atmosfera inaceit√°vel; 
 Eventos:
   0.0 min: E chegou
   0.0 min: H chegou
   0.0 min: G chegou
   0.0 min: M chegou
   0.0 min: L chegou
-  10.0 min: evento clima
+  10.0 min: evento clima = True | ID:  | previsto: 10.0 min
   10.0 min: E iniciou descida
   15.0 min: E pousado
   E operacional
@@ -326,21 +280,158 @@ Eventos:
   35.0 min: rodada encerrada
 
 === acidente ===
-Tempo final (min): 5.0 | ¡rea: obstruÌda
-Pousados (inclui operacionais):
+Tempo final (min): 5.0 | √Årea: obstru√≠da
+Pousados:
 Operacionais:
 Aguardando ou com impedimento:
-  E acidente Acidente: ·rea obstruÌda
-  H espera ¡rea obstruÌda; 
-CombustÌvel restante (kg):
+  E acidente Acidente: √°rea obstru√≠da
+  H espera √Årea obstru√≠da; 
+Combust√≠vel restante (kg):
   E 20.0
   H 30.0
-Alertas histÛricos:
-  E: Acidente: ·rea obstruÌda
-  H: ¡rea obstruÌda; 
+Alertas hist√≥ricos:
+  E: Acidente: √°rea obstru√≠da
+  H: √Årea obstru√≠da; 
 Eventos:
   0.0 min: E chegou
   0.0 min: H chegou
   0.0 min: E iniciou descida
   5.0 min: E acidente
+  5.0 min: rodada encerrada
+
+=== falha_energia_base ===
+Tempo final (min): 26.0 | √Årea: livre
+Pousados:
+  E Energia
+  H Habita√ß√£o
+  G Log√≠stica
+  M M√©dico
+  L Laborat√≥rio
+Operacionais:
+Aguardando ou com impedimento:
+  E suspenso Sensores/sistemas falhos na base
+  H suspenso Aguarda Energia operacional
+  G suspenso Aguarda Energia operacional
+  M suspenso Aguarda Energia operacional
+  L suspenso Aguarda Energia e Habita√ß√£o operacionais
+Combust√≠vel restante (kg):
+  E 20.0
+  H 20.0
+  G 20.0
+  M 20.0
+  L 20.0
+Alertas hist√≥ricos:
+  E: Sensores/sistemas falhos na base
+  H: Aguarda Energia operacional
+  G: Aguarda Energia operacional
+  M: Aguarda Energia operacional
+  L: Aguarda Energia e Habita√ß√£o operacionais
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: G chegou
+  0.0 min: M chegou
+  0.0 min: L chegou
+  0.0 min: E iniciou descida
+  5.0 min: E pousado
+  E operacional
+  5.0 min: H iniciou descida
+  10.0 min: H pousado
+  H operacional
+  10.0 min: G iniciou descida
+  15.0 min: G pousado
+  G operacional
+  15.0 min: M iniciou descida
+  20.0 min: M pousado
+  M operacional
+  20.0 min: L iniciou descida
+  25.0 min: L pousado
+  L operacional
+  26.0 min: evento sistemas = False | ID: E | previsto: 26.0 min
+  E suspenso: Sensores/sistemas falhos na base
+  H suspenso: Aguarda Energia operacional
+  G suspenso: Aguarda Energia operacional
+  M suspenso: Aguarda Energia operacional
+  L suspenso: Aguarda Energia e Habita√ß√£o operacionais
+  26.0 min: rodada encerrada
+
+=== recuperacao_energia_base ===
+Tempo final (min): 30.0 | √Årea: livre
+Pousados:
+  E Energia
+  H Habita√ß√£o
+  G Log√≠stica
+  M M√©dico
+  L Laborat√≥rio
+Operacionais:
+  E Energia
+  H Habita√ß√£o
+  G Log√≠stica
+  M M√©dico
+  L Laborat√≥rio
+Aguardando ou com impedimento:
+Combust√≠vel restante (kg):
+  E 20.0
+  H 20.0
+  G 20.0
+  M 20.0
+  L 20.0
+Alertas hist√≥ricos:
+  E: Sensores/sistemas falhos na base
+  H: Aguarda Energia operacional
+  G: Aguarda Energia operacional
+  M: Aguarda Energia operacional
+  L: Aguarda Energia e Habita√ß√£o operacionais
+Eventos:
+  0.0 min: E chegou
+  0.0 min: H chegou
+  0.0 min: G chegou
+  0.0 min: M chegou
+  0.0 min: L chegou
+  0.0 min: E iniciou descida
+  5.0 min: E pousado
+  E operacional
+  5.0 min: H iniciou descida
+  10.0 min: H pousado
+  H operacional
+  10.0 min: G iniciou descida
+  15.0 min: G pousado
+  G operacional
+  15.0 min: M iniciou descida
+  20.0 min: M pousado
+  M operacional
+  20.0 min: L iniciou descida
+  25.0 min: L pousado
+  L operacional
+  26.0 min: evento sistemas = False | ID: E | previsto: 26.0 min
+  E suspenso: Sensores/sistemas falhos na base
+  H suspenso: Aguarda Energia operacional
+  G suspenso: Aguarda Energia operacional
+  M suspenso: Aguarda Energia operacional
+  L suspenso: Aguarda Energia e Habita√ß√£o operacionais
+  30.0 min: evento sistemas = True | ID: E | previsto: 30.0 min
+  E operacional
+  H operacional
+  G operacional
+  M operacional
+  L operacional
+  30.0 min: rodada encerrada
+
+=== falha_sensores_na_descida ===
+Tempo final (min): 5.0 | √Årea: livre
+Pousados:
+  E Energia
+Operacionais:
+Aguardando ou com impedimento:
+  E suspenso Sensores/sistemas falhos na base
+Combust√≠vel restante (kg):
+  E 20.0
+Alertas hist√≥ricos:
+  E: Sensores/sistemas falhos na base
+Eventos:
+  0.0 min: E chegou
+  0.0 min: E iniciou descida
+  5.0 min: E pousado
+  5.0 min: evento sensores = False | ID: E | previsto: 3.0 min
+  E suspenso: Sensores/sistemas falhos na base
   5.0 min: rodada encerrada

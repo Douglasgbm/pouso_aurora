@@ -1,5 +1,6 @@
 """Validação externa: unittest/AST não fazem parte do código do aluno."""
 import ast
+from itertools import product, permutations
 import contextlib
 import copy
 import io
@@ -135,6 +136,144 @@ class TestMGPEB(unittest.TestCase):
             self.assertFalse(g.validar(dados, [], [True, "livre"], g.CONFIG))
         self.assertFalse(g.validar([lista[0], lista[0]], [], [True, "livre"], g.CONFIG))
         self.assertFalse(g.validar(lista, [], [True, "livre"], [0, 0.002, 2, 0.25]))
+
+    def test_entradas_malformadas(self):
+        bons = [[montar("E", "Energia")], [], [True, "livre"], list(g.CONFIG)]
+        for pos in range(4):
+            for valor in (None, 42, True, "abc", {}, ()):
+                args = copy.deepcopy(bons)
+                args[pos] = valor
+                with self.subTest(pos=pos, valor=valor), contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(g.simular(*args), [])
+        for pos in (0, 1):
+            for linha in (None, 42, True, "abc", {}, (), [], [1]):
+                args = copy.deepcopy(bons)
+                args[pos] = [linha]
+                with self.subTest(pos=pos, linha=linha), contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(g.simular(*args), [])
+
+    def test_campos_e_alvos_invalidos(self):
+        for campo, valor in [(g.ID, []), (g.TIPO, []), (g.ESTADO, 42),
+                             (g.MOTIVO, None), (g.SENSORES, 1), (g.SISTEMAS, 0)]:
+            dados = [montar("E", "Energia")]
+            dados[0][campo] = valor
+            self.assertFalse(g.validar(dados, [], [True, "livre"], g.CONFIG))
+        for evento in [[0, "clima", True, "E"], [0, "area", "livre", "E"],
+                       [0, "sistemas", True, "inexistente"], [0, "sensores", True, []],
+                       [0, [], True, ""], [0, "clima", 1, ""]]:
+            self.assertFalse(g.validar([montar("E", "Energia")], [evento], [True, "livre"], g.CONFIG))
+
+    def test_tabela_verdade_completa(self):
+        for c, s, e, a, d in product((False, True), repeat=5):
+            m = montar("E", "Energia", fuel=12 if c else 11, sensores=s, sistemas=e)
+            with self.subTest(condicoes=(c, s, e, a, d)):
+                self.assertEqual(g.autorizar(m, [a, "livre" if d else "ocupada"], g.CONFIG) == "",
+                                 all((c, s, e, a, d)))
+
+    def test_limites_combustivel(self):
+        for fuel, apto, urgente in [(11.999, False, None), (12, True, True),
+                                    (15, True, True), (15.001, True, False)]:
+            m = montar("M", "Médico", fuel=fuel)
+            self.assertEqual(g.autorizar(m, [True, "livre"], g.CONFIG) == "", apto)
+            if apto:
+                self.assertEqual(g.vem_antes(m, montar("E", "Energia"), g.CONFIG), urgente)
+                r = g.simular([m], [], [True, "livre"], g.CONFIG)
+                self.assertGreaterEqual(r[0][0][g.COMBUSTIVEL], g.CONFIG[2])
+
+    def test_falha_base_e_propagacao(self):
+        s = self.rodar("falha_energia_base")
+        self.assertTrue(all(m[g.ESTADO] == "suspenso" for m in s[0]))
+        self.assertEqual(s[7], [0, 1, 2, 3, 4])
+        self.assertEqual(s[1], [])
+        self.assertEqual(len(self.inicios(s)), 5)
+        self.assertIn("Sensores/sistemas", s[0][0][g.MOTIVO])
+        self.assertIn("Aguarda Energia", s[0][1][g.MOTIVO])
+        self.assertTrue(all(m[g.COMBUSTIVEL] == 20 for m in s[0]))
+        self.assertEqual(len(s[3]), 5)
+
+    def test_recuperacao_sem_novo_pouso(self):
+        s = self.rodar("recuperacao_energia_base")
+        self.assertTrue(all(m[g.ESTADO] == "operacional" and m[g.MOTIVO] == "" for m in s[0]))
+        self.assertEqual(s[7], [0, 1, 2, 3, 4])
+        self.assertEqual(len(self.inicios(s)), 5)
+        self.assertTrue(all(m[g.COMBUSTIVEL] == 20 for m in s[0]))
+        self.assertEqual(s[5], 30)
+        self.assertEqual(s[2].count("E operacional"), 2)
+        self.assertEqual(s[2].count("L operacional"), 2)
+        # Os alertas anteriores continuam disponíveis como histórico.
+        self.assertEqual(len(s[3]), 5)
+
+    def test_falha_durante_descida_impede_ativacao(self):
+        s = self.rodar("falha_sensores_na_descida")
+        self.assertEqual(s[5], 5)
+        self.assertEqual(s[7], [0])
+        self.assertEqual(s[0][0][g.ESTADO], "suspenso")
+        self.assertNotIn("E operacional", s[2])
+        self.assertTrue(any("previsto: 3.0" in e and "5.0 min:" in e for e in s[2]))
+
+    def test_dependencias_ordem_inversa_e_redundancia(self):
+        dados = [montar("L", "Laboratório"), montar("H", "Habitação"), montar("E", "Energia")]
+        for m in dados:
+            m[g.ESTADO] = "pousado"
+        hist = g.ativar(dados, [])
+        self.assertEqual(hist, ["E operacional", "H operacional", "L operacional"])
+        dados[1][g.SENSORES] = False
+        hist = g.ativar(dados, hist)
+        self.assertEqual([m[g.ESTADO] for m in dados], ["suspenso", "suspenso", "operacional"])
+        copia = list(hist)
+        self.assertEqual(g.ativar(dados, hist), copia)  # sem registros repetidos
+        dados[1][g.SENSORES] = True
+        self.assertEqual(g.ativar(dados, hist)[-2:], ["H operacional", "L operacional"])
+        # Um segundo módulo Energia saudável mantém o fornecimento.
+        dados = [montar("E1", "Energia"), montar("E2", "Energia"), montar("H", "Habitação")]
+        s = g.simular(dados, [[16, "sistemas", False, "E1"]], [True, "livre"], g.CONFIG)
+        self.assertEqual([m[g.ESTADO] for m in s[0]], ["suspenso", "operacional", "operacional"])
+
+    def test_acidente_nao_e_recuperado_com_evento_sistemas(self):
+        s = g.simular([montar("E", "Energia", acidente=True)],
+                      [[6, "sistemas", True, "E"]], [True, "livre"], g.CONFIG)
+        self.assertEqual(s[0][0][g.ESTADO], "acidente")
+        self.assertEqual(s[7], [])
+        self.assertEqual(s[6][1], "obstruída")
+
+    def test_todas_permutacoes_candidatos(self):
+        mods = [montar("E", "Energia"), montar("H", "Habitação"),
+                montar("G", "Logística"), montar("M", "Médico", fuel=13),
+                montar("L", "Laboratório", fuel=12)]
+        for entrada in permutations(range(5)):
+            ordem = list(entrada)
+            g.ordenar(ordem, mods, g.CONFIG)
+            self.assertEqual(ordem, [4, 3, 0, 1, 2])
+
+    def test_eventos_empatados_respeitam_cadastro(self):
+        for valores in ([False, True], [True, False]):
+            eventos = [[6, "sistemas", valor, "E"] for valor in valores]
+            s = g.simular([montar("E", "Energia")], eventos, [True, "livre"], g.CONFIG)
+            self.assertEqual(s[0][0][g.SISTEMAS], valores[-1])
+            self.assertEqual(s[0][0][g.ESTADO], "operacional" if valores[-1] else "suspenso")
+            self.assertEqual(len(self.inicios(s)), 1)
+
+    def test_falha_habitacao_isola_dependencia_laboratorio(self):
+        mods = [montar("E", "Energia"), montar("H", "Habitação"),
+                montar("M", "Médico"), montar("L", "Laboratório")]
+        eventos = [[21, "sensores", False, "H"]]
+        s = g.simular(mods, eventos, [True, "livre"], g.CONFIG)
+        self.assertEqual([m[g.ESTADO] for m in s[0]],
+                         ["operacional", "suspenso", "operacional", "suspenso"])
+        s = g.simular(mods, eventos + [[22, "sensores", True, "H"]], [True, "livre"], g.CONFIG)
+        self.assertTrue(all(m[g.ESTADO] == "operacional" for m in s[0]))
+        self.assertEqual(len(self.inicios(s)), 4)
+        self.assertTrue(all(m[g.COMBUSTIVEL] == 20 for m in s[0]))
+
+    def test_simulacao_e_pilha_vazias(self):
+        s = g.simular([], [], [True, "livre"], g.CONFIG)
+        self.assertEqual(s[0], [])
+        self.assertEqual(s[1], [])
+        self.assertEqual(s[7], [])
+        self.assertEqual(s[5], 0)
+        self.assertEqual(g.buscar([], g.ID, "E"), -1)
+        self.assertEqual(g.desfazer_consulta([]), [])
+        self.assertEqual(g.ultimo_evento([]), "Pilha de consulta vazia")
 
     def test_recursos_do_codigo_estudantil(self):
         arvore = ast.parse(Path(g.__file__).read_text(encoding="utf-8"))

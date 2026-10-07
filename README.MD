@@ -1,3 +1,8 @@
+> Revisão de integração da Fase 2: 21 testes e 14 cenários. Consulte
+> `docs/REVISAO_RIGOROSA_DOUGLAS.md` para achados, correções e limitações.
+> Execute `python auditoria.py .` após instalar as dependências documentais.
+> O guia detalhado explica a base 1.1 (17 testes); esta revisão acrescenta quatro testes.
+
 # MGPEB — Aurora Siger
 
 Protótipo didático para organizar a autorização e a ordem de pouso dos módulos
@@ -6,13 +11,17 @@ da base em Marte. A implementação atual está em `mgpeb.py`.
 ## Arquivos principais
 
 - `mgpeb.py`: cadastro, validação, fila, regras lógicas, busca, ordenação e relatório da simulação.
-- `exemplos.py`: 11 cenários para estudar as decisões do programa.
+- `exemplos.py`: 14 cenários para estudar as decisões do programa.
 - `test_mgpeb.py`: testes automatizados externos ao código didático.
 - `RELATORIO_TECNICO.pdf`: relatório da Fase 2; `RELATORIO_TECNICO.md` é sua fonte editável.
 - `docs/grafico_topico_04.svg`: gráfico vetorial do modelo de consumo.
 - `gerar_relatorio_pdf.py`: converte a fonte Markdown, tabelas e gráfico para PDF.
 - `LEIA-ME.txt`: explicação direta dos campos, regras, estruturas e comandos.
 - `ROADMAP.MD`: planejamento e decisões da equipe.
+- `docs/APRESENTACAO_ALTERACOES.md`: apresentação escrita das partes 5 e 6 e dos motivos das alterações.
+- `docs/GUIA_DETALHADO.md` e `docs/GUIA_DETALHADO.pdf`: explicação metódica do projeto e das correções da versão 1.1.
+- `docs/portas_logicas.svg`: diagrama gráfico AND/NOT correspondente à autorização.
+- `docs/REVISAO_PROJETO.md`: revisão geral, evidências de testes e pendências para a entrega.
 - `main.py`: experimento antigo de descida, mantido para comparação.
 
 ## Executar
@@ -28,6 +37,18 @@ Para regenerar o PDF, instale `requirements-relatorio.txt`; ReportLab e svglib
 são dependências opcionais apenas do gerador de documentos.
 O simulador atual trata autorização, fila e consumo estimado; não calcula uma
 trajetória ou velocidade física de pouso.
+
+Para gerar o relatório, use o mesmo ambiente Python nos dois comandos:
+
+```text
+python -m pip install -r requirements-relatorio.txt
+python gerar_relatorio_pdf.py
+```
+
+A revisão documental de 6 de outubro de 2026 integra os itens 5 (evolução da
+computação e hardware) e 6 (ESG) do enunciado. O PDF tem 10 páginas, e a seção 2
+contém o anexo integrado de estruturas de dados. A combinação documental foi
+verificada com Python 3.12, ReportLab 4.4.9 e svglib 2.3.0.
 
 ---
 
@@ -93,3 +114,22 @@ Protótipo do MGPEB organizado, comentado e executável com exemplos simples.
 
 Descrição de como listas, filas e pilhas foram utilizadas no projeto, com exemplos concretos 
 (pode ser parte do relatório).
+
+## Correções da versão 1.1
+
+Entradas malformadas são rejeitadas antes das travessias. Módulos em solo são
+reavaliados quanto a saúde e dependências, podendo ficar suspensos e recuperar
+operação após reparo. A suíte tem 17 testes e os exemplos têm 14 cenários.
+A saída de `exemplos_saida.txt` está em UTF-8 e corresponde a `exemplos.py`.
+
+Para reproduzir a saída de exemplos de modo independente da codificação do terminal:
+
+```text
+python -X utf8 exemplos.py > exemplos_saida.txt
+```
+
+Para gerar o guia detalhado separado do relatório acadêmico:
+
+```text
+python gerar_relatorio_pdf.py --fonte docs/GUIA_DETALHADO.md --destino docs/GUIA_DETALHADO.pdf --titulo "MGPEB - Guia detalhado"
+```

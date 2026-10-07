@@ -80,21 +80,21 @@ def converter_inline(texto):
     texto = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", texto)
     texto = re.sub(r"`(.+?)`", r'<font name="Courier">\1</font>', texto)
     texto = re.sub(
-        r"(https?://[^\s&lt;&gt;]+)",
+        r"(https?://[^\s<>]+)",
         r'<link href="\1" color="#176B87">\1</link>',
         texto,
     )
     return texto
 
 
-def desenhar_pagina(canvas, documento):
+def desenhar_pagina(canvas, documento, cabecalho="MGPEB | Aurora Siger | Relatório técnico"):
     canvas.saveState()
     largura, altura = A4
     canvas.setStrokeColor(colors.HexColor("#D4DFDA"))
     canvas.line(18 * mm, altura - 17 * mm, largura - 18 * mm, altura - 17 * mm)
     canvas.setFont("Helvetica", 8)
     canvas.setFillColor(colors.HexColor("#526661"))
-    canvas.drawString(18 * mm, altura - 13 * mm, "MGPEB | Aurora Siger | Relatório técnico")
+    canvas.drawString(18 * mm, altura - 13 * mm, cabecalho)
     canvas.line(18 * mm, 15 * mm, largura - 18 * mm, 15 * mm)
     canvas.drawRightString(largura - 18 * mm, 10 * mm, f"Página {documento.page}")
     canvas.restoreState()
@@ -110,6 +110,7 @@ class GraficoSVG(Flowable):
         self.fator = fator
         self.width = desenho.width * fator
         self.height = desenho.height * fator
+        self.keepWithNext = True  # Mantém o gráfico junto de sua legenda.
 
     def draw(self):
         self.canv.saveState()
@@ -118,13 +119,14 @@ class GraficoSVG(Flowable):
         self.canv.restoreState()
 
 
-def gerar():
-    texto = FONTE.read_text(encoding="utf-8")
+def gerar(fonte=FONTE, destino=DESTINO, titulo="MGPEB - Relatório técnico"):
+    fonte, destino = Path(fonte), Path(destino)
+    texto = fonte.read_text(encoding="utf-8")
     documento = SimpleDocTemplate(
-        str(DESTINO), pagesize=A4,
+        str(destino), pagesize=A4,
         rightMargin=20 * mm, leftMargin=20 * mm,
         topMargin=23 * mm, bottomMargin=22 * mm,
-        title="MGPEB - Relatório técnico",
+        title=titulo,
         author="Equipe Aurora Siger",
     )
     elementos = []
@@ -219,19 +221,26 @@ def gerar():
             fechar_paragrafo()
             correspondencia = re.search(r"\]\(([^)]+\.svg)\)", linha)
             if correspondencia:
-                caminho_svg = PASTA / correspondencia.group(1)
+                caminho_svg = fonte.parent / correspondencia.group(1)
                 desenho = svg2rlg(str(caminho_svg))
                 if desenho is None:
                     raise ValueError(f"Não foi possível ler o gráfico: {caminho_svg}")
                 elementos.append(GraficoSVG(desenho, documento.width, 210))
-                elementos.append(Spacer(1, 5))
         else:
             paragrafo.append(linha)
     fechar_paragrafo()
     fechar_tabela()
-    documento.build(elementos, onFirstPage=desenhar_pagina, onLaterPages=desenhar_pagina)
-    print(f"PDF gerado: {DESTINO.name} ({documento.page} páginas)")
+    def pagina(canvas, doc):
+        desenhar_pagina(canvas, doc, "Aurora Siger | " + titulo)
+    documento.build(elementos, onFirstPage=pagina, onLaterPages=pagina)
+    print(f"PDF gerado: {destino.name} ({documento.page} páginas)")
 
 
 if __name__ == "__main__":
-    gerar()
+    import argparse
+    parser = argparse.ArgumentParser(description="Gera PDFs a partir dos relatórios Markdown do MGPEB.")
+    parser.add_argument("--fonte", type=Path, default=FONTE)
+    parser.add_argument("--destino", type=Path, default=DESTINO)
+    parser.add_argument("--titulo", default="MGPEB - Relatório técnico")
+    args = parser.parse_args()
+    gerar(args.fonte, args.destino, args.titulo)
