@@ -1,0 +1,105 @@
+{
+  "commit": "cbaf4d0de7f54e1f2fc0c2863adbfe4e472ae6c9",
+  "checagens": [
+    {
+      "nome": "32 combinações de autorização",
+      "aprovado": true,
+      "evidencia": "Apenas todas as condições verdadeiras autorizam."
+    },
+    {
+      "nome": "4 fronteiras de combustível",
+      "aprovado": true,
+      "evidencia": "11.999 bloqueado; 12 e 15 urgentes; 15.001 não urgente."
+    },
+    {
+      "nome": "contêiner inválido",
+      "aprovado": false,
+      "evidencia": "TypeError: 'NoneType' object is not iterable"
+    },
+    {
+      "nome": "linha de módulo inválida",
+      "aprovado": false,
+      "evidencia": "TypeError: 'int' object is not iterable"
+    },
+    {
+      "nome": "linha de evento inválida",
+      "aprovado": false,
+      "evidencia": "TypeError: 'int' object is not iterable"
+    },
+    {
+      "nome": "falha própria após pouso",
+      "aprovado": false,
+      "evidencia": {
+        "estado": "operacional",
+        "sistemas": false
+      }
+    },
+    {
+      "nome": "propagação da falha de Energia",
+      "aprovado": false,
+      "evidencia": [
+        [
+          "E",
+          "operacional",
+          false
+        ],
+        [
+          "H",
+          "operacional",
+          true
+        ]
+      ]
+    },
+    {
+      "nome": "ativação com falha ao fim da descida",
+      "aprovado": false,
+      "evidencia": {
+        "estado": "operacional",
+        "sensores": false,
+        "historico": [
+          "0.0 min: E chegou",
+          "0.0 min: E iniciou descida",
+          "5.0 min: E pousado",
+          "5.0 min: evento sensores",
+          "E operacional",
+          "5.0 min: rodada encerrada"
+        ]
+      }
+    },
+    {
+      "nome": "acidente preservado",
+      "aprovado": true,
+      "evidencia": "acidente"
+    },
+    {
+      "nome": "pousos sequenciais",
+      "aprovado": true,
+      "evidencia": {
+        "tempo": 10.0,
+        "pousados": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "nome": "120 permutações de ordenação",
+      "aprovado": true,
+      "evidencia": "Resultado L, M, E, H, G para margens e tipos escolhidos."
+    },
+    {
+      "nome": "saída salva UTF-8 e atual",
+      "aprovado": false,
+      "evidencia": {
+        "utf8": false,
+        "igual_execucao": false,
+        "cenarios_executados": 11
+      }
+    },
+    {
+      "nome": "URL integral no gerador",
+      "aprovado": false,
+      "evidencia": "<link href=\"https://science.nasa.\" color=\"#176B87\">https://science.nasa.</link>gov/mission/mars-2020-perseverance/rover-components/"
+    }
+  ]
+}

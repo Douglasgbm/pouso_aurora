@@ -30,6 +30,11 @@ def casos():
         ["evento_clima", normal, [[10.0, "clima", True, ""]], [False, "livre"]],
         ["acidente", [montar("E", "Energia", acidente=True),
                       montar("H", "Habitação")], [], [True, "livre"]],
+        ["falha_energia_base", normal, [[26.0, "sistemas", False, "E"]], [True, "livre"]],
+        ["recuperacao_energia_base", normal,
+         [[26.0, "sistemas", False, "E"], [30.0, "sistemas", True, "E"]], [True, "livre"]],
+        ["falha_sensores_na_descida", [montar("E", "Energia")],
+         [[3.0, "sensores", False, "E"]], [True, "livre"]],
     ]
 
 

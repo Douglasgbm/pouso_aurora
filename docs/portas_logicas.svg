@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="300" viewBox="0 0 1000 300">
+  <rect width="1000" height="300" fill="white"/>
+  <g font-family="Helvetica,Arial,sans-serif" font-size="19" fill="#202b2a">
+    <text x="20" y="85">C: combustível suficiente</text>
+    <text x="20" y="115">S: sensores operacionais</text>
+    <text x="20" y="145">E: sistemas operacionais</text>
+    <text x="20" y="175">A: atmosfera aceitável</text>
+    <text x="20" y="205">D: área livre</text>
+  </g>
+  <g fill="none" stroke="#174a45" stroke-width="3">
+    <path d="M275 80 H330 M275 110 H330 M275 140 H330 M275 170 H330 M275 200 H330"/>
+    <path d="M330 60 H400 A80 80 0 0 1 400 220 H330 Z" fill="#f0f4f2"/>
+    <path d="M480 140 H740 M570 140 V230 H645"/>
+    <path d="M645 205 L645 255 L695 230 Z" fill="#f0f4f2"/>
+    <circle cx="702" cy="230" r="7" fill="white"/>
+    <path d="M709 230 H740"/>
+    <circle cx="570" cy="140" r="4" fill="#174a45"/>
+  </g>
+  <g font-family="Helvetica,Arial,sans-serif" fill="#174a45">
+    <text x="365" y="148" font-size="24">AND</text>
+    <text x="650" y="192" font-size="17">NOT</text>
+    <text x="755" y="146" font-size="21">AUTORIZAR</text>
+    <text x="755" y="236" font-size="21">ADIAR</text>
+    <text x="20" y="280" font-size="19">AUTORIZAR = C AND S AND E AND A AND D; ADIAR = NOT AUTORIZAR</text>
+  </g>
+</svg>

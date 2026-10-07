@@ -4,7 +4,7 @@ COMO RODAR
 Python 3, sem dependências externas, sem instalação ou interface gráfica.
 Abra o terminal nesta pasta e execute:
   python mgpeb.py              (rodada padrão com cinco tipos)
-  python exemplos.py           (11 cenários separados)
+  python exemplos.py           (14 cenários separados)
   python -m unittest -v        (validação externa)
 Para gerar o PDF (opcional), use o mesmo Python nos dois comandos:
   python -m pip install -r requirements-relatorio.txt
@@ -43,7 +43,8 @@ Sensores, sistemas e acidente: True ou False. Acidente é resultado explícito
 do cenário, não sorteio. Entradas numéricas ficam abaixo de 1 bilhão, faixa
 didática de validação declarada em numero_valido(); não é limite aeroespacial.
 Não há leitura interativa de números: altere os valores no modelo de listas.
-Dados inválidos imprimem aviso e devolvem lista vazia, sem exceções próprias.
+Os quatro argumentos e suas linhas devem ser listas. Antes de medir ou percorrer,
+validam-se os tipos. Dados inválidos imprimem aviso e devolvem lista vazia.
 
 PARÂMETROS E MODELO HIPOTÉTICO
 CONFIG = [duração min, taxa kg/(kg*min), reserva kg, margem de urgência].
@@ -72,6 +73,11 @@ Pousado não significa operacional. Energia ativa autonomamente NA BASE.
 Habitação, Logística e Médico aguardam Energia operacional; Laboratório
 aguarda Energia e Habitação. Dependências não impedem pouso. Reavaliação
 continua até nenhuma nova ativação ser possível (ponto fixo).
+Na versão 1.1, sensores e sistemas também precisam estar saudáveis na base.
+Perder saúde ou dependência suspende a operação sem desfazer o pouso.
+Um reparo permite reativação sem novo consumo. A lista de pousados é mantida.
+Reavalia-se toda a base a cada ciclo; acidentes não voltam a operar por reparo.
+Alertas de suspensão ficam no histórico mesmo após a recuperação.
 
 EVENTOS E ENCERRAMENTO
 Evento: [instante min, tipo, valor, ID]. Tipos: clima (True/False), area
@@ -105,11 +111,14 @@ Os PDFs não fornecem as regras MGPEB específicas: elas vêm do pedido e
 da lógica discutida. Não se atribuem hipóteses do protótipo ao material.
 
 EXEMPLOS E TESTES
-11 cenários: normal, urgente suficiente, insuficiente, sensores falhos,
+14 cenários: normal, urgente suficiente, insuficiente, sensores falhos,
 clima adverso, área ocupada, duas urgências, ETA futuro, ativação dependente,
-melhora climática por evento explícito e acidente/obstrução.
+melhora climática, acidente/obstrução, falha da Energia na base, recuperação
+da Energia e falha de sensores durante a descida.
 test_mgpeb.py é ferramenta externa de validação. Usa unittest, AST e outros
 recursos que NÃO são conteúdo do código estudantil. Verifica resultados,
 segurança, conservação/unicidade, estabilidade, desempates, consumo,
 eventos, pilha de consulta e ausência dos recursos evitados no arquivo aluno.
-Não há publicação, instalação, PDF, alteração do Drive ou projeto original.
+A versão atual é mantida no repositório privado MRC888/pouso_aurora.
+O relatório acadêmico e o guia detalhado estão disponíveis em Markdown e PDF.
+Não há sincronização de mudanças com o repositório original do Douglas.

@@ -59,7 +59,11 @@ def numero_valido(valor, minimo):
 
 
 def validar(modulos, eventos, ambiente, config):
-    # Confere os tamanhos das listas antes de acessar posições por índice.
+    # Confere tipos antes de percorrer ou medir qualquer lista.
+    if type(modulos) != list or type(eventos) != list:
+        return False
+    if type(ambiente) != list or type(config) != list:
+        return False
     if quantidade(config) != 4 or quantidade(ambiente) != 2:
         return False
     for valor in config:
@@ -74,9 +78,13 @@ def validar(modulos, eventos, ambiente, config):
     # Cada módulo precisa ter os campos válidos e um identificador exclusivo.
     for i in range(quantidade(modulos)):
         m = modulos[i]
-        if quantidade(m) != 12 or type(m[ID]) != str or m[ID] == "":
+        if type(m) != list or quantidade(m) != 12:
             return False
-        if m[TIPO] not in TIPOS:
+        if type(m[ID]) != str or m[ID] == "":
+            return False
+        if type(m[TIPO]) != str or m[TIPO] not in TIPOS:
+            return False
+        if type(m[ESTADO]) != str or type(m[MOTIVO]) != str:
             return False
         for campo in [COMBUSTIVEL, MASSA, ETA]:
             if not numero_valido(m[campo], 0):
@@ -95,7 +103,11 @@ def validar(modulos, eventos, ambiente, config):
     # Eventos também são validados para não alterar um módulo inexistente.
     for e in eventos:
         # Formato: [instante em minutos, tipo, valor, ID quando necessário].
-        if quantidade(e) != 4 or not numero_valido(e[0], 0):
+        if type(e) != list or quantidade(e) != 4:
+            return False
+        if not numero_valido(e[0], 0) or type(e[1]) != str or type(e[3]) != str:
+            return False
+        if (e[1] == "area" or e[1] == "clima") and e[3] != "":
             return False
         if e[1] == "area":
             if e[2] != "livre" and e[2] != "ocupada" and e[2] != "obstruída":
@@ -199,7 +211,20 @@ def existe_operacional(modulos, tipo):
 
 
 def ativar(modulos, historico):
-    # Resolve dependências após pousos, repetindo até não haver novas ativações.
+    # Recalcula a saúde de TODOS os módulos em solo, inclusive os já ativos.
+    # Guarda o estado anterior para registrar só mudanças reais, sem duplicar pousos.
+    anteriores = []
+    for m in modulos:
+        anteriores = anteriores + [[m[ESTADO], m[MOTIVO]]]
+        if m[ESTADO] == "operacional" or m[ESTADO] == "suspenso":
+            m[ESTADO] = "pousado"
+        if m[ESTADO] == "pousado":
+            m[MOTIVO] = ""
+            if not m[SENSORES] or not m[SISTEMAS]:
+                m[ESTADO] = "suspenso"
+                m[MOTIVO] = "Sensores/sistemas falhos na base"
+    # Reconstrói as dependências a partir dos módulos saudáveis.
+    # Cada passagem ativa novos módulos; termina quando nenhuma ativação muda.
     mudou = True
     while mudou:
         mudou = False
@@ -214,12 +239,22 @@ def ativar(modulos, historico):
                 if pode:
                     m[ESTADO] = "operacional"
                     m[MOTIVO] = ""
-                    historico = historico + [m[ID] + " operacional"]
+                    pos = buscar(modulos, ID, m[ID])
+                    if anteriores[pos][0] != "operacional":
+                        historico = historico + [m[ID] + " operacional"]
                     mudou = True
                 else:
                     m[MOTIVO] = "Aguarda Energia operacional"
                     if m[TIPO] == "Laboratório":
                         m[MOTIVO] = "Aguarda Energia e Habitação operacionais"
+    for i in range(quantidade(modulos)):
+        m = modulos[i]
+        anterior = anteriores[i]
+        # Quem já operou e perdeu uma dependência fica suspenso, ainda em solo.
+        if m[ESTADO] == "pousado" and (anterior[0] == "operacional" or anterior[0] == "suspenso"):
+            m[ESTADO] = "suspenso"
+        if m[ESTADO] == "suspenso" and (anterior[0] != "suspenso" or anterior[1] != m[MOTIVO]):
+            historico = historico + [m[ID] + " suspenso: " + m[MOTIVO]]
     return historico
 
 
@@ -272,7 +307,7 @@ def simular(modulos, eventos, ambiente, config):
                 else:
                     dados[pos][SISTEMAS] = e[2]
             aplicados[proximo] = True
-            historico = historico + [f"{tempo:.1f} min: evento {e[1]}"]
+            historico = historico + [f"{tempo:.1f} min: evento {e[1]} = {e[2]} | ID: {e[3]} | previsto: {e[0]} min"]
         # 2. Enfileira módulos cujo horário estimado de chegada já foi atingido.
         while True:
             pos = -1
@@ -289,8 +324,13 @@ def simular(modulos, eventos, ambiente, config):
         while quantidade(fila) > 0:
             espera = espera + [fila[0]]  # Primeiro a entrar, primeiro a sair.
             fila = retirar(fila, 0)
-        # 4. Liga os módulos que já podem funcionar na base.
+        # 4. Reavalia saúde e dependências, suspendendo ou recuperando a operação.
         historico = ativar(dados, historico)
+        for m in dados:
+            if m[ESTADO] == "suspenso":
+                alerta = m[ID] + ": " + m[MOTIVO]
+                if alerta not in alertas:
+                    alertas = alertas + [alerta]
         aptos = []
         # 5. Separa candidatos seguros dos que continuam aguardando.
         for pos in espera:
