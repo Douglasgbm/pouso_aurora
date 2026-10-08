@@ -5,21 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Missão Aurora</title>
 <!-- Painel didático do MGPEB. Só mostra o que o mgpeb.py decidiu:
-     os dados vêm de dados.js, gerado por exportar_painel.py. -->
+     os dados vêm de dados.js, gerado por exportar_painel.py.
+     A sala é a ilustração de referência (img/sala.png, com o vidro vazado);
+     tudo o que está vivo é desenhado por cima, nas telas da própria arte. -->
 <style>
   :root {
-    --fundo: #0b0a1a;
-    --parede: #14122b;
-    --parede-2: #1b1838;
+    --fundo: #0c0b1e;
     --rosa: #ff3d7f;
-    --ciano: #3ff3ff;
-    --ciano-fraco: #3ff3ff55;
-    --texto: #bdfcff;
-    --texto-fraco: #6fa9b3;
-    --verde: #49ff8b;
-    --vermelho: #ff4d5e;
-    --ambar: #ffc04d;
-    --vidro: #070616;
+    --ciano: #46f0ff;
+    --ciano-fraco: #46f0ff55;
+    --texto: #c4fbff;
+    --texto-fraco: #74b4bf;
+    --verde: #4dff95;
+    --vermelho: #ff4d63;
+    --ambar: #ffc44d;
+    --tela: #06141c;
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   }
   * { box-sizing: border-box; }
@@ -28,143 +28,131 @@
     background: var(--fundo);
     color: var(--texto);
     font-family: var(--mono);
-    font-size: 13px;
     overflow: hidden;
   }
 
-  /* ---------- A sala ---------- */
-  .sala {
-    position: relative;
-    height: 100vh;
-    min-height: 620px;
-    padding: 14px 18px 0;
-    display: grid;
-    grid-template-columns: minmax(220px, 1fr) minmax(420px, 2.3fr) minmax(220px, 1fr);
-    grid-template-rows: auto 1fr auto;
-    gap: 14px 18px;
-    background:
-      radial-gradient(ellipse at 50% 35%, #231f4a 0%, transparent 60%),
-      linear-gradient(180deg, var(--parede) 0%, var(--fundo) 100%);
-  }
-  /* Arcos neon da moldura da sala */
-  .sala::before, .sala::after {
-    content: "";
+  /* O palco tem o tamanho da arte (1344x768) e é escalado para caber na janela. */
+  .palco {
     position: absolute;
-    top: -40px; bottom: 120px;
-    width: 46%;
-    border: 3px solid var(--rosa);
-    box-shadow: 0 0 12px var(--rosa), inset 0 0 12px var(--rosa);
-    pointer-events: none;
-    opacity: .85;
+    left: 50%; top: 50%;
+    width: 1344px; height: 768px;
+    transform-origin: 0 0;
   }
-  .sala::before { left: -2%; border-right: none; border-radius: 0 0 0 90px; border-top: none; }
-  .sala::after  { right: -2%; border-left: none; border-radius: 0 0 90px 0; border-top: none; }
+  .palco > * { position: absolute; }
+  #ceu { left: 374px; top: 170px; width: 587px; height: 297px; }
+  .arte { left: 0; top: 0; width: 1344px; height: 768px; pointer-events: none; }
 
-  /* ---------- Letreiro ---------- */
+  /* ---------- Letreiro (cobre o texto da arte) ---------- */
   .letreiro {
-    grid-column: 2;
-    justify-self: center;
-    text-align: center;
-    padding: 8px 28px;
+    left: 466px; top: 110px; width: 400px; height: 47px;
     border: 2px solid var(--ciano);
-    border-radius: 10px;
-    box-shadow: 0 0 10px var(--ciano), inset 0 0 10px var(--ciano-fraco);
-    background: #0a0920cc;
-    position: relative;
-    z-index: 1;
+    border-radius: 7px;
+    background: #0b0a22;
+    box-shadow: 0 0 9px var(--ciano), inset 0 0 8px var(--ciano-fraco);
+    text-align: center;
+    padding-top: 3px;
   }
-  .letreiro h1 {
-    margin: 0;
-    font-size: 22px;
-    letter-spacing: .12em;
-    color: var(--ciano);
-    text-shadow: 0 0 8px var(--ciano);
-    font-weight: 700;
-  }
-  .letreiro p {
-    margin: 2px 0 0;
-    font-size: 14px;
+  .letreiro b {
+    display: block;
+    font-size: 17px;
     letter-spacing: .14em;
-    color: var(--rosa);
-    text-shadow: 0 0 8px var(--rosa);
-  }
-  .cenario {
-    grid-column: 3;
-    align-self: center;
-    justify-self: end;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 11px;
-    color: var(--texto-fraco);
-  }
-  select {
-    font: inherit;
-    font-size: 13px;
     color: var(--ciano);
-    background: #0a0920;
-    border: 1px solid var(--ciano);
-    border-radius: 6px;
-    padding: 5px 8px;
-    box-shadow: 0 0 6px var(--ciano-fraco);
+    text-shadow: 0 0 7px var(--ciano);
+  }
+  .letreiro span {
+    display: block;
+    font-size: 12px;
+    letter-spacing: .16em;
+    color: var(--rosa);
+    text-shadow: 0 0 7px var(--rosa);
   }
 
-  /* ---------- Telas de parede ---------- */
-  .lado { display: flex; flex-direction: column; gap: 14px; z-index: 1; min-height: 0; }
+  /* ---------- Telas da parede: desenhadas em 2x e encaixadas em perspectiva ---------- */
   .tela {
-    background: linear-gradient(180deg, #0a1b26ee, #071119ee);
-    border: 1.5px solid var(--ciano);
-    border-radius: 8px;
-    box-shadow: 0 0 8px var(--ciano-fraco), inset 0 0 18px #3ff3ff1a;
-    padding: 10px 12px;
-    position: relative;
+    left: 0; top: 0;
+    transform-origin: 0 0;
+    background: linear-gradient(180deg, #072230, var(--tela));
+    border: 3px solid var(--ciano);
+    border-radius: 12px;
+    box-shadow: 0 0 14px var(--ciano-fraco), inset 0 0 26px #46f0ff22;
+    padding: 12px 16px;
     overflow: hidden;
-    min-height: 0;
+    color: var(--texto);
+    font-size: 19px;
   }
-  .tela::after { /* linhas de varredura */
+  .tela::after {
     content: "";
     position: absolute; inset: 0;
-    background: repeating-linear-gradient(0deg, transparent 0 2px, #00000022 2px 3px);
+    background: repeating-linear-gradient(0deg, transparent 0 3px, #00000030 3px 5px);
     pointer-events: none;
   }
   .tela h2 {
-    margin: 0 0 8px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .18em;
+    margin: 0 0 6px;
+    font-size: 15px;
+    letter-spacing: .2em;
+    font-weight: 700;
     color: var(--ciano);
     text-shadow: 0 0 6px var(--ciano-fraco);
     display: flex;
     justify-content: space-between;
   }
   .tela h2 small { color: var(--texto-fraco); letter-spacing: .05em; font-weight: 400; }
-  .lado .tela { flex: 1; }
 
-  /* Fila */
-  .fila { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  #t-missao { width: 272px; height: 140px; }
+  .relogio { font-size: 46px; font-weight: 700; color: var(--ciano); text-shadow: 0 0 12px var(--ciano); line-height: 1; }
+  .linha-amb { display: flex; justify-content: space-between; margin-top: 8px; font-size: 17px; }
+
+  #t-fila { width: 276px; height: 240px; }
+  .fila { list-style: none; margin: 0; padding: 0; }
   .fila li {
     display: grid;
-    grid-template-columns: 22px 26px 1fr auto;
+    grid-template-columns: 30px 28px 1fr 16px;
     align-items: center;
-    gap: 6px;
-    padding: 4px 6px;
-    border: 1px solid #3ff3ff33;
-    border-radius: 4px;
-    background: #3ff3ff0a;
+    height: 34px;
+    border-bottom: 1px solid #46f0ff26;
+    font-size: 18px;
   }
-  .fila .pos { color: var(--texto-fraco); }
+  .fila .pos { color: var(--texto-fraco); font-size: 15px; }
   .fila .id { color: var(--ciano); font-weight: 700; }
-  .vazio { color: var(--texto-fraco); font-style: italic; }
+  .luz { width: 13px; height: 13px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
 
-  .selo {
-    font-size: 10px;
-    padding: 1px 6px;
-    border-radius: 3px;
-    border: 1px solid currentColor;
-    white-space: nowrap;
+  #t-portas { width: 272px; height: 150px; padding-top: 8px; }
+  #t-portas svg { display: block; width: 100%; height: 108px; }
+  #t-portas text { font: 700 14px var(--mono); fill: var(--texto); }
+
+  #t-comb { width: 276px; height: 236px; }
+  .barra { display: grid; grid-template-columns: 26px 1fr 62px; align-items: center; gap: 8px; height: 34px; font-size: 18px; }
+  .barra .id { color: var(--ciano); font-weight: 700; }
+  .trilho { position: relative; height: 15px; border: 2px solid #46f0ff66; border-radius: 3px; }
+  .cheio { position: absolute; inset: 0 auto 0 0; background: var(--ciano); box-shadow: 0 0 8px var(--ciano); }
+  .cheio.urgente { background: var(--ambar); box-shadow: 0 0 8px var(--ambar); }
+  .cheio.baixo { background: var(--vermelho); box-shadow: 0 0 8px var(--vermelho); }
+  .cheio.solo { background: #6f93ad; box-shadow: none; }
+  .minimo { position: absolute; top: -6px; bottom: -6px; width: 4px; background: var(--rosa); box-shadow: 0 0 6px var(--rosa); }
+  .barra .kg { text-align: right; color: var(--texto-fraco); font-size: 16px; }
+
+  #t-crt {
+    width: 220px; height: 170px;
+    background: radial-gradient(ellipse at center, #0a2a22 0%, #031410 100%);
+    border-color: #2fae8a;
+    box-shadow: 0 0 14px #4dff9544, inset 0 0 30px #000;
+    color: var(--verde);
+    text-shadow: 0 0 6px #4dff9599;
+    font-size: 21px;
+    line-height: 1.25;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
-  .e-orbita { color: var(--texto-fraco); }
+  #t-crt .titulo { font-size: 13px; color: #2fae8a; letter-spacing: .2em; margin-bottom: auto; }
+  #t-crt .agora { font-weight: 700; }
+  #t-crt .agora::after { content: "█"; animation: pisca 1s steps(1) infinite; }
+  @keyframes pisca { 50% { opacity: 0; } }
+
+  .ok { color: var(--verde); }
+  .ruim { color: var(--vermelho); }
+  .aviso { color: var(--ambar); }
+  .e-orbita { color: #9fb6cc; }
   .e-espera { color: var(--ambar); }
   .e-descendo { color: var(--ciano); }
   .e-pousado { color: #9fd8ff; }
@@ -172,203 +160,119 @@
   .e-suspenso { color: var(--ambar); }
   .e-acidente { color: var(--vermelho); }
 
-  /* Ambiente */
-  .dados { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin: 0; }
-  .dados dt { color: var(--texto-fraco); }
-  .dados dd { margin: 0; text-align: right; }
-  .ok { color: var(--verde); }
-  .ruim { color: var(--vermelho); }
-  .aviso { color: var(--ambar); }
-  .relogio {
-    font-size: 30px;
-    color: var(--ciano);
-    text-shadow: 0 0 10px var(--ciano);
-    margin: 2px 0 10px;
-    letter-spacing: .05em;
-  }
-
-  /* Portas lógicas */
-  .portas svg { width: 100%; height: auto; max-height: 19vh; display: block; }
-  .portas .rotulo { font: 10px var(--mono); fill: var(--texto); }
-  .checagem-de { font-size: 12px; margin-bottom: 4px; }
-  .checagem-motivo { font-size: 11px; color: var(--texto-fraco); margin-top: 6px; min-height: 2.6em; }
-
-  /* Combustível */
-  .barras { display: flex; flex-direction: column; gap: 7px; }
-  .barra { display: grid; grid-template-columns: 22px 1fr 58px; align-items: center; gap: 6px; }
-  .barra .trilho {
-    position: relative;
-    height: 10px;
-    border: 1px solid #3ff3ff55;
-    border-radius: 2px;
-    background: #3ff3ff0d;
-  }
-  .barra .cheio { position: absolute; inset: 0 auto 0 0; background: var(--ciano); box-shadow: 0 0 6px var(--ciano); }
-  .barra .cheio.urgente { background: var(--ambar); box-shadow: 0 0 6px var(--ambar); }
-  .barra .cheio.solo { background: #6f8fa8; box-shadow: none; }
-  .barra .cheio.baixo { background: var(--vermelho); box-shadow: 0 0 6px var(--vermelho); }
-  .barra .minimo { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--rosa); box-shadow: 0 0 4px var(--rosa); }
-  .barra .kg { text-align: right; color: var(--texto-fraco); font-size: 11px; }
-  .legenda { margin-top: 8px; font-size: 10px; color: var(--texto-fraco); }
-  .legenda i { display: inline-block; width: 8px; height: 8px; background: var(--rosa); margin-right: 4px; }
-
-  /* ---------- Janela com Marte ---------- */
-  .janela {
-    grid-column: 2;
-    position: relative;
-    border-radius: 26px;
-    border: 3px solid #2c2852;
-    box-shadow: 0 0 0 2px #0c0b1f, 0 0 30px #00000088, inset 0 0 40px #000;
-    background: var(--vidro);
-    overflow: hidden;
-    min-height: 0;
-    z-index: 1;
-  }
-  .janela canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .hud { position: absolute; font-size: 11px; color: var(--ciano); text-shadow: 0 0 6px var(--ciano-fraco); }
-  .hud.se { top: 14px; left: 18px; }
-  .hud.sd { top: 14px; right: 18px; text-align: right; }
-  .hud.id { bottom: 14px; left: 18px; }
-  .hud.dd { bottom: 14px; right: 18px; text-align: right; }
-  .hud .grande { font-size: 15px; letter-spacing: .1em; }
+  /* ---------- HUD dentro do vidro ---------- */
+  .hud { font-size: 11px; color: var(--ciano); text-shadow: 0 0 5px #000, 0 0 6px var(--ciano-fraco); }
+  .hud .grande { font-size: 13px; font-weight: 700; letter-spacing: .12em; }
   .hud .fraco { color: var(--texto-fraco); }
-
-  /* ---------- Mesa e CRT ---------- */
-  .mesa {
-    grid-column: 1 / -1;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 14px;
-    z-index: 1;
-  }
-  .mesa::before { /* tampo da mesa */
-    content: "";
-    position: absolute;
-    left: 22%; right: 22%; bottom: 0; height: 46px;
-    background: linear-gradient(180deg, #2a2850, #15132c);
-    border-top: 2px solid #3a3670;
-    border-radius: 6px 6px 0 0;
-  }
-  .crt {
-    position: relative;
-    width: min(620px, 52vw);
-    padding: 12px;
-    background: linear-gradient(180deg, #34315e, #22203f);
-    border-radius: 14px;
-    box-shadow: 0 8px 20px #000a;
-  }
-  .crt .tubo {
-    height: clamp(110px, 17vh, 190px);
-    border-radius: 10px / 18px;
-    background: radial-gradient(ellipse at center, #08241f 0%, #031210 100%);
-    border: 2px solid #111;
-    box-shadow: inset 0 0 25px #000, 0 0 14px #49ff8b33;
-    padding: 8px 12px;
+  #hud-orbita { left: 390px; top: 184px; }
+  #hud-base { left: 760px; top: 184px; width: 186px; text-align: right; }
+  #hud-area { left: 386px; top: 430px; }
+  #hud-area .grande { font-size: 11px; letter-spacing: .02em; }
+  .telemetria {
+    left: 646px; top: 388px; width: 302px; height: 70px;
+    border: 1px solid #46f0ff66;
+    border-radius: 6px;
+    background: #04101acc;
+    padding: 5px 8px;
+    font-size: 10px;
+    line-height: 1.42;
+    color: var(--texto);
     overflow: hidden;
-    position: relative;
-    color: var(--verde);
-    text-shadow: 0 0 5px #49ff8b88;
-    font-size: 12px;
-    line-height: 1.45;
   }
-  .crt .tubo::after {
-    content: "";
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(0deg, transparent 0 2px, #0000003a 2px 3px);
-    pointer-events: none;
-  }
-  .console { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
-  .console div { flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .console .t-acidente { color: var(--vermelho); text-shadow: 0 0 5px #ff4d5e88; }
-  .console .t-evento { color: var(--ambar); text-shadow: 0 0 5px #ffc04d88; }
-  .console .cursor::after { content: "█"; animation: pisca 1s steps(1) infinite; }
-  @keyframes pisca { 50% { opacity: 0; } }
-  .crt .pe { height: 8px; margin: 8px auto 0; width: 40%; background: #1a1834; border-radius: 0 0 6px 6px; }
+  .telemetria div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .telemetria .t-acidente { color: var(--vermelho); }
+  .telemetria .t-evento { color: var(--ambar); }
+  .telemetria .t-motivo { color: var(--ambar); }
 
-  @media (max-height: 760px) {
-    .relogio { font-size: 24px; margin-bottom: 6px; }
-    .tela { padding: 8px 10px; }
-    .fila li { padding: 2px 6px; }
+  /* ---------- Controles sobre a mesa ---------- */
+  .controles {
+    left: 342px; top: 552px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; color: var(--texto-fraco); letter-spacing: .12em;
+  }
+  select {
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0;
+    color: var(--ciano);
+    background: #0a0a24e6;
+    border: 1px solid var(--ciano);
+    border-radius: 5px;
+    padding: 3px 6px;
+    box-shadow: 0 0 6px var(--ciano-fraco);
   }
 </style>
 </head>
 <body>
-<div class="sala" id="sala">
-  <header class="letreiro">
-    <h1>MISSÃO AURORA</h1>
-    <p>POUSO DOS MÓDULOS EM MARTE</p>
-  </header>
-  <label class="cenario">
-    CENÁRIO
-    <select id="seletor" aria-label="Cenário"></select>
-  </label>
+<div class="palco" id="palco">
+  <canvas id="ceu"></canvas>
+  <img class="arte" src="img/sala.png" alt="">
 
-  <aside class="lado">
-    <section class="tela">
-      <h2>MISSÃO <small>MGPEB</small></h2>
-      <div class="relogio" id="relogio">T+0.0</div>
-      <dl class="dados" id="ambiente"></dl>
-    </section>
-    <section class="tela">
-      <h2>FILA DE POUSO <small id="fila-info"></small></h2>
-      <ol class="fila" id="fila"></ol>
-    </section>
-  </aside>
+  <header class="letreiro"><b>MISSÃO AURORA:</b><span>POUSO DOS MÓDULOS EM MARTE</span></header>
 
-  <main class="janela" id="janela">
-    <canvas id="ceu"></canvas>
-    <div class="hud se"><div class="grande">ÓRBITA</div><div class="fraco" id="hud-orbita"></div></div>
-    <div class="hud sd"><div class="grande">BASE</div><div class="fraco" id="hud-base"></div></div>
-    <div class="hud id"><div class="fraco">ÁREA DE POUSO</div><div class="grande" id="hud-area"></div></div>
-    <div class="hud dd"><div class="fraco">ALERTAS</div><div class="grande" id="hud-alertas"></div></div>
-  </main>
+  <section class="tela" id="t-missao">
+    <h2>MISSÃO <small>MGPEB</small></h2>
+    <div class="relogio" id="relogio"></div>
+    <div class="linha-amb"><span id="amb-clima"></span><span id="amb-area"></span></div>
+  </section>
+  <section class="tela" id="t-fila">
+    <h2>FILA DE POUSO <small id="fila-info"></small></h2>
+    <ol class="fila" id="fila"></ol>
+  </section>
+  <section class="tela" id="t-portas">
+    <h2>AUTORIZAÇÃO <small id="portas-id"></small></h2>
+    <svg id="portas" viewBox="0 0 240 108" aria-label="Porta lógica de autorização"></svg>
+  </section>
+  <section class="tela" id="t-comb">
+    <h2>COMBUSTÍVEL <small>kg</small></h2>
+    <div id="barras"></div>
+  </section>
+  <section class="tela" id="t-crt">
+    <div class="titulo">MGPEB://LOG</div>
+    <div id="crt"></div>
+  </section>
 
-  <aside class="lado">
-    <section class="tela portas">
-      <h2>AUTORIZAÇÃO <small>AND</small></h2>
-      <div class="checagem-de" id="checagem-de"></div>
-      <svg id="portas" viewBox="0 0 260 150" role="img" aria-label="Porta lógica de autorização"></svg>
-      <div class="checagem-motivo" id="checagem-motivo"></div>
-    </section>
-    <section class="tela">
-      <h2>COMBUSTÍVEL <small>kg</small></h2>
-      <div class="barras" id="barras"></div>
-      <div class="legenda"><i></i>mínimo seguro para a descida (cinza: já em solo)</div>
-    </section>
-  </aside>
+  <div class="hud" id="hud-orbita"><div class="grande">ÓRBITA</div><div class="fraco" id="hud-orbita-ids"></div></div>
+  <div class="hud" id="hud-base"><div class="grande">BASE</div><div class="fraco" id="hud-base-ids"></div><div class="fraco" id="hud-alertas"></div></div>
+  <div class="hud" id="hud-area"><div class="fraco">ÁREA DE POUSO</div><div class="grande" id="hud-area-val"></div></div>
+  <div class="telemetria" id="telemetria"></div>
 
-  <footer class="mesa">
-    <div class="crt">
-      <div class="tubo"><div class="console" id="console"></div></div>
-      <div class="pe"></div>
-    </div>
-  </footer>
+  <label class="controles">CENÁRIO <select id="seletor" aria-label="Cenário"></select></label>
 </div>
 
 <script src="dados.js"></script>
 <script>
 "use strict";
 
-const ROTULO_ESTADO = {
+const ARTE = { w: 1344, h: 768 };
+// Cantos de cada tela da arte, medidos em pixels da imagem: TL, TR, BL, BR.
+const QUADROS = {
+  "t-missao": [[190, 166], [326, 191], [188, 240], [324, 260]],
+  "t-fila":   [[196, 311], [334, 322], [195, 440], [335, 433]],
+  "t-portas": [[1002, 190], [1138, 165], [1006, 253], [1142, 235]],
+  "t-comb":   [[997, 325], [1134, 314], [997, 443], [1136, 436]],
+  "t-crt":    [[510, 436], [622, 430], [509, 523], [620, 517]]
+};
+const VIDRO = { x: 374, y: 170, w: 587, h: 297 };
+
+const ROTULO = {
   "órbita": "ÓRBITA", espera: "ESPERA", descendo: "DESCENDO", pousado: "POUSADO",
   operacional: "OPERACIONAL", suspenso: "SUSPENSO", acidente: "ACIDENTE"
 };
-const CLASSE_ESTADO = {
+const CLASSE = {
   "órbita": "e-orbita", espera: "e-espera", descendo: "e-descendo", pousado: "e-pousado",
   operacional: "e-operacional", suspenso: "e-suspenso", acidente: "e-acidente"
 };
-const PORTAS = [
-  ["combustivel", "COMBUSTÍVEL"],
-  ["saude", "SENSORES"],
-  ["clima", "ATMOSFERA"],
-  ["area", "ÁREA LIVRE"]
-];
-
+const COR = {
+  "órbita": "#9fb6cc", espera: "#ffc44d", descendo: "#46f0ff", pousado: "#9fd8ff",
+  operacional: "#4dff95", suspenso: "#ffc44d", acidente: "#ff4d63"
+};
+const PORTAS = [["combustivel", "COMB"], ["saude", "SENS"], ["clima", "ATM"], ["area", "ÁREA"]];
 const NO_SOLO = ["pousado", "operacional", "suspenso", "acidente"];
+const NO_ALTO = ["órbita", "espera", "descendo"];
+
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toFixed(1);
-
 function el(tag, classe, texto) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;
@@ -376,15 +280,40 @@ function el(tag, classe, texto) {
   return e;
 }
 
+/* ---------- Perspectiva: leva um retângulo w x h para 4 cantos ---------- */
+function adj(m) {
+  return [m[4]*m[8]-m[5]*m[7], m[2]*m[7]-m[1]*m[8], m[1]*m[5]-m[2]*m[4],
+          m[5]*m[6]-m[3]*m[8], m[0]*m[8]-m[2]*m[6], m[2]*m[3]-m[0]*m[5],
+          m[3]*m[7]-m[4]*m[6], m[1]*m[6]-m[0]*m[7], m[0]*m[4]-m[1]*m[3]];
+}
+function mult(a, b) {
+  const c = [];
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) {
+    let s = 0;
+    for (let k = 0; k < 3; k++) s += a[3*i+k] * b[3*k+j];
+    c.push(s);
+  }
+  return c;
+}
+function base(p) {
+  const m = [p[0][0], p[1][0], p[2][0], p[0][1], p[1][1], p[2][1], 1, 1, 1];
+  const a = adj(m);
+  const v = [a[0]*p[3][0] + a[1]*p[3][1] + a[2], a[3]*p[3][0] + a[4]*p[3][1] + a[5], a[6]*p[3][0] + a[7]*p[3][1] + a[8]];
+  return mult(m, [v[0], 0, 0, 0, v[1], 0, 0, 0, v[2]]);
+}
+function encaixar(elemento, cantos) {
+  const w = elemento.offsetWidth, h = elemento.offsetHeight;
+  const origem = base([[0, 0], [w, 0], [0, h], [w, h]]);
+  const t = mult(base([cantos[0], cantos[1], cantos[2], cantos[3]]), adj(origem));
+  for (let i = 0; i < 9; i++) t[i] = t[i] / t[8];
+  elemento.style.transform = `matrix3d(${t[0]},${t[3]},0,${t[6]},${t[1]},${t[4]},0,${t[7]},0,0,1,0,${t[2]},${t[5]},0,${t[8]})`;
+}
+
 /* Quadro = tudo o que a tela mostra num instante. No andar 1 é o estado final;
    no andar 2 será montado passo a passo a partir da linha do tempo. */
 function quadroFinal(missao) {
-  const passos = missao.linha_do_tempo;
-  let checagem = null, ordenacao = null;
-  for (const p of passos) {
-    if (p.tipo === "checagem") checagem = p;
-    if (p.tipo === "ordenacao") ordenacao = p;
-  }
+  let checagem = null;
+  for (const p of missao.linha_do_tempo) if (p.tipo === "checagem") checagem = p;
   return {
     tempo: missao.final.tempo,
     ambiente: missao.final.ambiente,
@@ -392,29 +321,22 @@ function quadroFinal(missao) {
     espera: missao.final.espera,
     alertas: missao.final.alertas,
     logs: missao.final.historico,
-    checagem, ordenacao
+    checagem
   };
 }
 
-/* ---------- Painéis ---------- */
-function mostrarAmbiente(q) {
-  $("relogio").textContent = "T+" + fmt(q.tempo) + " min";
-  const dl = $("ambiente");
-  dl.replaceChildren();
-  const linhas = [
-    ["Atmosfera", q.ambiente[0] ? "aceitável" : "inaceitável", q.ambiente[0] ? "ok" : "ruim"],
-    ["Área", q.ambiente[1], q.ambiente[1] === "livre" ? "ok" : (q.ambiente[1] === "obstruída" ? "ruim" : "aviso")],
-    ["Pousados", String(q.modulos.filter(m => ["pousado", "operacional", "suspenso"].includes(m.estado)).length) + " / " + q.modulos.length, ""],
-    ["Operacionais", String(q.modulos.filter(m => m.estado === "operacional").length), "ok"]
-  ];
-  for (const [nome, valor, classe] of linhas) {
-    dl.append(el("dt", "", nome), el("dd", classe, valor));
-  }
+/* ---------- Telas ---------- */
+function mostrarMissao(q) {
+  $("relogio").textContent = "T+" + fmt(q.tempo);
+  const clima = $("amb-clima");
+  clima.textContent = q.ambiente[0] ? "ATM OK" : "ATM RUIM";
+  clima.className = q.ambiente[0] ? "ok" : "ruim";
+  const area = $("amb-area");
+  area.textContent = "ÁREA " + q.ambiente[1].toUpperCase();
+  area.className = q.ambiente[1] === "livre" ? "ok" : q.ambiente[1] === "obstruída" ? "ruim" : "aviso";
 }
 
 function mostrarFila(q) {
-  const ol = $("fila");
-  ol.replaceChildren();
   // Primeiro quem desceu, na ordem do histórico; depois a espera; depois a órbita.
   const porId = Object.fromEntries(q.modulos.map(m => [m.id, m]));
   const ordem = [];
@@ -424,22 +346,21 @@ function mostrarFila(q) {
   }
   for (const id of q.espera) if (!ordem.includes(id)) ordem.push(id);
   for (const m of q.modulos) if (!ordem.includes(m.id)) ordem.push(m.id);
-  $("fila-info").textContent = q.espera.length ? q.espera.length + " aguardando" : "";
-  ordem.forEach((id, i) => {
+  $("fila-info").textContent = q.espera.length ? q.espera.length + " esp." : "";
+  const ol = $("fila");
+  ol.replaceChildren();
+  ordem.slice(0, 6).forEach((id, i) => {
     const m = porId[id];
-    const li = el("li");
-    li.append(el("span", "pos", String(i + 1).padStart(2, "0")),
-              el("span", "id", m.id),
-              el("span", "", m.tipo),
-              el("span", "selo " + CLASSE_ESTADO[m.estado], ROTULO_ESTADO[m.estado]));
-    li.title = m.motivo || "";
+    const li = el("li", "", "");
+    li.title = ROTULO[m.estado] + (m.motivo ? ": " + m.motivo : "");
+    li.append(el("span", "pos", String(i + 1).padStart(2, "0")), el("span", "id", m.id),
+              el("span", "", m.tipo.slice(0, 11)), el("span", "luz " + CLASSE[m.estado]));
     ol.append(li);
   });
 }
 
 function mostrarPortas(q) {
   const svg = $("portas");
-  const c = q.checagem;
   const NS = "http://www.w3.org/2000/svg";
   const s = (tag, attrs, texto) => {
     const e = document.createElementNS(NS, tag);
@@ -449,40 +370,33 @@ function mostrarPortas(q) {
     return e;
   };
   svg.replaceChildren();
+  const c = q.checagem;
   if (!c) {
-    $("checagem-de").textContent = "Nenhuma checagem nesta missão";
-    $("checagem-motivo").textContent = "";
+    $("portas-id").textContent = "—";
+    s("text", { x: 0, y: 55 }, "sem checagem");
     return;
   }
-  const cor = (ok) => ok ? "#49ff8b" : "#ff4d5e";
-  const ys = [20, 55, 90, 125];
+  $("portas-id").textContent = c.id + " T+" + fmt(c.tempo);
+  const cor = (ok) => ok ? "#4dff95" : "#ff4d63";
   PORTAS.forEach(([chave, nome], i) => {
-    const ok = c.portas[chave];
-    s("circle", { cx: 10, cy: ys[i], r: 5, fill: cor(ok), style: "filter: drop-shadow(0 0 4px " + cor(ok) + ")" });
-    s("text", { x: 20, y: ys[i] - 6, class: "rotulo" }, nome);
-    s("path", { d: `M15 ${ys[i]} H120 L150 ${60 + i * 10}`, stroke: cor(ok), "stroke-width": 2, fill: "none", opacity: .9 });
+    const y = 12 + i * 26, ok = c.portas[chave];
+    s("circle", { cx: 8, cy: y, r: 6, fill: cor(ok), style: `filter: drop-shadow(0 0 4px ${cor(ok)})` });
+    s("text", { x: 20, y: y + 5 }, nome);
+    s("path", { d: `M66 ${y} H104 L130 ${40 + i * 9}`, stroke: cor(ok), "stroke-width": 3, fill: "none" });
   });
-  // Corpo da porta AND
-  s("path", { d: "M150 40 H180 A35 35 0 0 1 180 110 H150 Z", fill: "#0a1b26", stroke: "#3ff3ff", "stroke-width": 2 });
-  s("text", { x: 158, y: 80, class: "rotulo", fill: "#3ff3ff" }, "AND");
+  s("path", { d: "M130 28 H152 A26 26 0 0 1 152 80 H130 Z", fill: "#06141c", stroke: "#46f0ff", "stroke-width": 3 });
+  s("text", { x: 133, y: 59 }, "AND");
   const liberado = Object.values(c.portas).every(Boolean);
-  s("path", { d: "M215 75 H245", stroke: cor(liberado), "stroke-width": 3 });
-  s("circle", { cx: 250, cy: 75, r: 6, fill: cor(liberado), style: "filter: drop-shadow(0 0 5px " + cor(liberado) + ")" });
-  $("checagem-de").innerHTML = "";
-  $("checagem-de").append("Última checagem: ", el("b", "", c.id), " em T+" + fmt(c.tempo) + " → ",
-    el("b", liberado ? "ok" : "ruim", liberado ? "LIBERADO" : "BLOQUEADO"));
-  $("checagem-motivo").textContent = liberado
-    ? "Combustível " + fmt(c.combustivel) + " kg ≥ mínimo " + fmt(c.minimo) + " kg"
-    : c.motivo.replace(/; $/, "").split("; ").join(" · ");
+  s("path", { d: "M178 54 H206", stroke: cor(liberado), "stroke-width": 4 });
+  s("circle", { cx: 216, cy: 54, r: 10, fill: cor(liberado), style: `filter: drop-shadow(0 0 7px ${cor(liberado)})` });
+  s("text", { x: 150, y: 104, style: `fill: ${cor(liberado)}` }, liberado ? "LIBERA" : "BLOQUEIA");
 }
 
 function mostrarCombustivel(q) {
   const caixa = $("barras");
   caixa.replaceChildren();
-  // Escala comum: o maior combustível de entrada da missão vira 100%.
   const teto = Math.max(...missaoAtual.entrada.modulos.map(m => m.combustivel), ...q.modulos.map(m => m.minimo)) || 1;
-  for (const m of q.modulos) {
-    const linha = el("div", "barra");
+  for (const m of q.modulos.slice(0, 6)) {
     const trilho = el("div", "trilho");
     const cheio = el("div", "cheio");
     cheio.style.width = Math.max(0, Math.min(100, m.combustivel / teto * 100)) + "%";
@@ -493,197 +407,261 @@ function mostrarCombustivel(q) {
     const minimo = el("div", "minimo");
     minimo.style.left = Math.min(100, m.minimo / teto * 100) + "%";
     trilho.append(cheio, minimo);
+    const linha = el("div", "barra");
+    linha.title = m.tipo + ": " + fmt(m.combustivel) + " kg (mínimo para descer " + fmt(m.minimo) + " kg)";
     linha.append(el("span", "id", m.id), trilho, el("span", "kg", fmt(m.combustivel)));
-    linha.title = m.tipo + ": " + fmt(m.combustivel) + " kg (mínimo " + fmt(m.minimo) + " kg)";
     caixa.append(linha);
   }
 }
 
-function mostrarConsole(q) {
-  const caixa = $("console");
-  caixa.replaceChildren();
-  const ultimas = q.logs.slice(-12);
-  for (const linha of ultimas) {
-    let classe = "";
-    if (linha.includes("acidente")) classe = "t-acidente";
-    else if (linha.includes("evento") || linha.includes("suspenso")) classe = "t-evento";
-    caixa.append(el("div", classe, "> " + linha));
-  }
-  caixa.append(el("div", "cursor", "> "));
+function classeLinha(linha) {
+  if (linha.includes("acidente")) return "t-acidente";
+  if (linha.includes("evento") || linha.includes("suspenso")) return "t-evento";
+  return "";
+}
+
+function mostrarLogs(q) {
+  // CRT: só o fato mais recente, grande. Telemetria no vidro: as últimas linhas.
+  const crt = $("crt");
+  crt.replaceChildren();
+  const ultimas = q.logs.slice(-2);
+  ultimas.forEach((linha, i) => {
+    crt.append(el("div", i === ultimas.length - 1 ? "agora" : "", linha.replace(" min:", "'")));
+  });
+  const tel = $("telemetria");
+  tel.replaceChildren();
+  for (const linha of q.logs.slice(-3)) tel.append(el("div", classeLinha(linha), "> " + linha));
+  const c = q.checagem;
+  if (c && c.motivo) tel.append(el("div", "t-motivo", "! " + c.id + ": " + c.motivo.replace(/; $/, "").split("; ").join(" · ")));
 }
 
 function mostrarHud(q) {
-  const orbita = q.modulos.filter(m => m.estado === "órbita" || m.estado === "espera");
-  const base = q.modulos.filter(m => ["pousado", "operacional", "suspenso"].includes(m.estado));
-  $("hud-orbita").textContent = orbita.length ? orbita.map(m => m.id).join(" · ") : "vazia";
-  $("hud-base").textContent = base.length ? base.map(m => m.id).join(" · ") : "vazia";
-  $("hud-area").textContent = q.ambiente[1].toUpperCase();
-  $("hud-area").className = "grande " + (q.ambiente[1] === "livre" ? "ok" : q.ambiente[1] === "obstruída" ? "ruim" : "aviso");
-  $("hud-alertas").textContent = String(q.alertas.length);
-  $("hud-alertas").className = "grande " + (q.alertas.length ? "aviso" : "ok");
+  const alto = q.modulos.filter(m => NO_ALTO.includes(m.estado));
+  const solo = q.modulos.filter(m => NO_SOLO.includes(m.estado) && m.estado !== "acidente");
+  $("hud-orbita-ids").textContent = alto.length ? alto.map(m => m.id).join(" · ") : "vazia";
+  $("hud-base-ids").textContent = solo.length ? solo.map(m => m.id).join(" · ") : "vazia";
+  $("hud-alertas").textContent = q.alertas.length + " alerta" + (q.alertas.length === 1 ? "" : "s");
+  const area = $("hud-area-val");
+  area.textContent = q.ambiente[1].toUpperCase();
+  area.className = "grande " + (q.ambiente[1] === "livre" ? "ok" : q.ambiente[1] === "obstruída" ? "ruim" : "aviso");
 }
 
-/* ---------- Céu, Marte e módulos (canvas) ---------- */
+/* ---------- Céu em traço de anime: cor chapada, contorno e sombra dura ---------- */
 function aleatorio(semente) {
-  // Gerador simples com semente: o céu sai igual a cada abertura.
+  // Gerador com semente: o céu sai igual a cada abertura.
   let s = semente;
   return () => (s = (s * 16807) % 2147483647) / 2147483647;
 }
-
 const ceu = $("ceu");
 const ctx = ceu.getContext("2d");
-let estrelas = [], manchas = [];
+const estrelas = [], brilhos = [], terrenos = [], crateras = [];
 (function prepararCeu() {
-  const r = aleatorio(42);
-  for (let i = 0; i < 260; i++) estrelas.push([r(), r(), r() * 1.3 + 0.2, r()]);
-  for (let i = 0; i < 26; i++) manchas.push([r() * 2 - 1, r() * 2 - 1, r() * 0.35 + 0.08, r()]);
+  const r = aleatorio(7);
+  for (let i = 0; i < 220; i++) estrelas.push([r(), r(), r() < 0.85 ? 1 : 1.8, 0.35 + r() * 0.65]);
+  for (let i = 0; i < 9; i++) brilhos.push([r(), r(), 3 + r() * 4]);
+  // Manchas do relevo: polígonos irregulares, cor chapada.
+  for (let i = 0; i < 34; i++) {
+    const pontos = [], n = 8;
+    const cx = r() * 1.8 - 0.9, cy = r() * 1.8 - 0.9, raio = 0.05 + r() * 0.12;
+    for (let k = 0; k < n; k++) {
+      const a = k / n * Math.PI * 2, d = raio * (0.6 + r() * 0.6);
+      pontos.push([cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.75]);
+    }
+    terrenos.push([pontos, r() < 0.6 ? "escuro" : "claro"]);
+  }
+  for (let i = 0; i < 16; i++) crateras.push([r() * 1.6 - 0.8, r() * 1.6 - 0.8, 1.5 + r() * 4]);
 })();
 
-function geometria() {
-  const w = ceu.clientWidth, h = ceu.clientHeight;
-  const raio = Math.min(w, h) * 0.27;
-  return { w, h, cx: w / 2, cy: h * 0.47, raio };
-}
+const MARTE = { cx: 293, cy: 132, r: 102 };
+const ORBITA = { rx: 205, ry: 60, inclinacao: -0.08 };
 
-function desenharMarte(g) {
-  const { cx, cy, raio } = g;
-  // Halo
-  const halo = ctx.createRadialGradient(cx, cy, raio * 0.9, cx, cy, raio * 1.35);
-  halo.addColorStop(0, "#ff6a3a33");
-  halo.addColorStop(1, "#ff6a3a00");
+function desenharMarte() {
+  const { cx, cy, r } = MARTE;
+  // Halo de atmosfera
+  const halo = ctx.createRadialGradient(cx, cy, r * 0.95, cx, cy, r * 1.32);
+  halo.addColorStop(0, "#ff7a4a40");
+  halo.addColorStop(1, "#ff7a4a00");
   ctx.fillStyle = halo;
-  ctx.beginPath(); ctx.arc(cx, cy, raio * 1.35, 0, Math.PI * 2); ctx.fill();
-  // Disco
+  ctx.beginPath(); ctx.arc(cx, cy, r * 1.32, 0, Math.PI * 2); ctx.fill();
+
   ctx.save();
-  ctx.beginPath(); ctx.arc(cx, cy, raio, 0, Math.PI * 2); ctx.clip();
-  const corpo = ctx.createRadialGradient(cx - raio * 0.35, cy - raio * 0.35, raio * 0.1, cx, cy, raio);
-  corpo.addColorStop(0, "#f08a4e");
-  corpo.addColorStop(0.55, "#c9502b");
-  corpo.addColorStop(1, "#6e2414");
-  ctx.fillStyle = corpo;
-  ctx.fillRect(cx - raio, cy - raio, raio * 2, raio * 2);
-  // Manchas de borda suave: gradiente radial que some até a transparência.
-  for (const [x, y, t, tom] of manchas) {
-    const mx = cx + x * raio * 0.8, my = cy + y * raio * 0.8, mr = t * raio;
-    const mancha = ctx.createRadialGradient(mx, my, 0, mx, my, mr);
-    mancha.addColorStop(0, tom > 0.5 ? "#6a20104d" : "#f7a06a26");
-    mancha.addColorStop(1, tom > 0.5 ? "#6a201000" : "#f7a06a00");
-    ctx.fillStyle = mancha;
-    ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+  ctx.fillStyle = "#d9603d";
+  ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+  for (const [pontos, tom] of terrenos) {
+    ctx.fillStyle = tom === "escuro" ? "#c04f33" : "#e57a50";
+    ctx.beginPath();
+    pontos.forEach(([x, y], i) => i ? ctx.lineTo(cx + x * r, cy + y * r) : ctx.moveTo(cx + x * r, cy + y * r));
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "#a3402b"; ctx.lineWidth = 0.6; ctx.stroke();
   }
-  // Calota polar e sombra
-  ctx.fillStyle = "#ffe9dc99";
-  ctx.beginPath(); ctx.ellipse(cx - raio * 0.1, cy - raio * 0.93, raio * 0.28, raio * 0.09, 0, 0, Math.PI * 2); ctx.fill();
-  const sombra = ctx.createLinearGradient(cx - raio, cy - raio, cx + raio, cy + raio);
-  sombra.addColorStop(0.45, "#00000000");
-  sombra.addColorStop(1, "#000000aa");
-  ctx.fillStyle = sombra;
-  ctx.fillRect(cx - raio, cy - raio, raio * 2, raio * 2);
+  // Crateras: anel escuro com borda clara do lado da luz.
+  for (const [x, y, t] of crateras) {
+    ctx.strokeStyle = "#a23f2a"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx + x * r, cy + y * r, t, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "#f29a6c"; ctx.lineWidth = 0.8;
+    ctx.beginPath(); ctx.arc(cx + x * r, cy + y * r, t, Math.PI * 0.1, Math.PI * 0.9); ctx.stroke();
+  }
+  // Cânion (Valles Marineris estilizado)
+  ctx.strokeStyle = "#7d2a1c"; ctx.lineWidth = 2.2;
+  ctx.beginPath(); ctx.moveTo(cx - r * 0.55, cy + r * 0.05);
+  ctx.bezierCurveTo(cx - r * 0.2, cy - r * 0.08, cx + r * 0.1, cy + r * 0.12, cx + r * 0.5, cy + r * 0.02);
+  ctx.stroke();
+  // Calota polar
+  ctx.fillStyle = "#fff1e6";
+  ctx.beginPath(); ctx.ellipse(cx - r * 0.12, cy - r * 0.92, r * 0.34, r * 0.13, -0.1, 0, Math.PI * 2); ctx.fill();
+  // Sombra dura (cel shading): tudo fora de um círculo deslocado para a luz.
+  ctx.fillStyle = "#6e2418d9";
+  ctx.beginPath();
+  ctx.rect(cx - r, cy - r, r * 2, r * 2);
+  ctx.arc(cx - r * 0.3, cy - r * 0.26, r * 1.06, 0, Math.PI * 2, true);
+  ctx.fill("evenodd");
   ctx.restore();
+  // Contorno e luz de borda
+  ctx.strokeStyle = "#2b0e0b"; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = "#ffc09a"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx, cy, r - 2.5, Math.PI * 1.05, Math.PI * 1.55); ctx.stroke();
 }
 
-function desenharModulo(x, y, escala, id, estado, angulo) {
-  const cor = { "órbita": "#9fb3c8", espera: "#ffc04d", descendo: "#3ff3ff", pousado: "#9fd8ff",
-                operacional: "#49ff8b", suspenso: "#ffc04d", acidente: "#ff4d5e" }[estado];
+function desenharNave(x, y, escala, id, estado) {
+  // Nave de carga: casco em blocos, contorno escuro e propulsores com raios de luz.
+  const cor = COR[estado];
+  const ligada = NO_ALTO.includes(estado);
   ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(angulo || 0);
-  ctx.scale(escala, escala);
-  // Propulsores
-  if (estado === "órbita" || estado === "espera" || estado === "descendo") {
-    for (const dx of [-9, 9]) {
-      const chama = ctx.createRadialGradient(dx, 11, 0, dx, 11, 9);
-      chama.addColorStop(0, "#fff6c0");
-      chama.addColorStop(0.4, "#ffb44d");
-      chama.addColorStop(1, "#ff6a0000");
+  ctx.translate(x, y); ctx.scale(escala, escala);
+  ctx.lineJoin = "round";
+  if (ligada) {
+    for (const dx of [-15, 15]) {
+      const chama = ctx.createRadialGradient(dx, 15, 0, dx, 15, 13);
+      chama.addColorStop(0, "#fffbe0"); chama.addColorStop(0.35, "#ffc35a"); chama.addColorStop(1, "#ff7a1a00");
       ctx.fillStyle = chama;
-      ctx.beginPath(); ctx.arc(dx, 11, 9, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(dx, 15, 13, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#ffe2a0"; ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(dx - 16, 15); ctx.lineTo(dx + 16, 15); ctx.moveTo(dx, 2); ctx.lineTo(dx, 28); ctx.stroke();
     }
   }
-  // Casco
-  ctx.fillStyle = "#c9ced8";
-  ctx.strokeStyle = "#5d6475";
-  ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  ctx.moveTo(-16, -6); ctx.lineTo(-10, -12); ctx.lineTo(10, -12); ctx.lineTo(16, -6);
-  ctx.lineTo(16, 6); ctx.lineTo(-16, 6); ctx.closePath();
-  ctx.fill(); ctx.stroke();
-  ctx.fillStyle = "#8a91a3";
-  ctx.fillRect(-13, 6, 8, 4); ctx.fillRect(5, 6, 8, 4);
-  ctx.fillStyle = "#3b4152";
-  ctx.fillRect(-7, -9, 14, 5);
-  // Luz de estado
+  ctx.strokeStyle = "#151824"; ctx.lineWidth = 1.6;
+  // Pods dos propulsores
+  for (const dx of [-15, 15]) {
+    ctx.fillStyle = "#8e96aa";
+    ctx.beginPath(); ctx.rect(dx - 6, 2, 12, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#4a5064";
+    ctx.beginPath(); ctx.rect(dx - 4, 11, 8, 3); ctx.fill(); ctx.stroke();
+  }
+  // Casco: face de cima clara e face lateral em sombra
+  ctx.fillStyle = "#7b8396";
+  ctx.beginPath(); ctx.moveTo(-24, -2); ctx.lineTo(24, -2); ctx.lineTo(22, 6); ctx.lineTo(-22, 6); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#e3e7ef";
+  ctx.beginPath(); ctx.moveTo(-20, -14); ctx.lineTo(20, -14); ctx.lineTo(24, -2); ctx.lineTo(-24, -2); ctx.closePath(); ctx.fill(); ctx.stroke();
+  // Contêineres no dorso
+  ctx.fillStyle = "#c3c9d6";
+  for (const dx of [-13, 1]) { ctx.beginPath(); ctx.rect(dx, -20, 12, 7); ctx.fill(); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(-17, -8); ctx.lineTo(17, -8); ctx.stroke();
+  // Faixa de estado
   ctx.fillStyle = cor;
   ctx.shadowColor = cor; ctx.shadowBlur = 8;
-  ctx.beginPath(); ctx.arc(0, -1, 2.6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillRect(-20, 0, 9, 3);
   ctx.restore();
-  // Rótulo
+  rotulo(x, y - 26 * escala, id, cor);
+}
+
+function desenharModuloSolo(x, y, id, estado) {
+  // Módulo pousado: domo sobre a base, no mesmo traço.
+  const cor = COR[estado];
   ctx.save();
-  ctx.font = "bold 12px ui-monospace, Menlo, monospace";
+  ctx.translate(x, y);
+  ctx.strokeStyle = "#1a0a08"; ctx.lineWidth = 1.4;
+  if (estado === "acidente") {
+    ctx.rotate(0.5);
+    ctx.fillStyle = "#3a2420";
+    ctx.beginPath(); ctx.ellipse(0, 4, 14, 4, 0, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.fillStyle = "#d8dce6";
+  ctx.beginPath(); ctx.moveTo(-10, 3); ctx.lineTo(-10, -1); ctx.arc(0, -1, 10, Math.PI, 0); ctx.lineTo(10, 3); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#7b8396";
+  ctx.fillRect(-12, 3, 24, 3); ctx.strokeRect(-12, 3, 24, 3);
+  ctx.fillStyle = cor; ctx.shadowColor = cor; ctx.shadowBlur = 8;
+  ctx.beginPath(); ctx.arc(0, -4, 2.6, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  rotulo(x, y - 15, id, cor);
+}
+
+function rotulo(x, y, texto, cor) {
+  ctx.save();
+  ctx.font = "bold 11px ui-monospace, Menlo, monospace";
   ctx.textAlign = "center";
-  ctx.fillStyle = cor;
-  ctx.shadowColor = cor; ctx.shadowBlur = 6;
-  ctx.fillText(id, x, y - 20 * escala);
+  ctx.lineWidth = 3; ctx.strokeStyle = "#06060f";
+  ctx.strokeText(texto, x, y);
+  ctx.fillStyle = cor; ctx.shadowColor = cor; ctx.shadowBlur = 6;
+  ctx.fillText(texto, x, y);
   ctx.restore();
 }
 
 function desenharCeu(q) {
-  const dpr = window.devicePixelRatio || 1;
-  const w = ceu.clientWidth, h = ceu.clientHeight;
-  ceu.width = Math.round(w * dpr); ceu.height = Math.round(h * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, w, h);
-  for (const [x, y, t, brilho] of estrelas) {
-    ctx.fillStyle = `rgba(220,235,255,${0.3 + brilho * 0.6})`;
-    ctx.fillRect(x * w, y * h, t, t);
+  const escala = escalaAtual * (window.devicePixelRatio || 1);
+  ceu.width = Math.round(VIDRO.w * escala);
+  ceu.height = Math.round(VIDRO.h * escala);
+  ctx.setTransform(escala, 0, 0, escala, 0, 0);
+  const fundo = ctx.createRadialGradient(MARTE.cx, MARTE.cy, 40, MARTE.cx, MARTE.cy, 420);
+  fundo.addColorStop(0, "#151436"); fundo.addColorStop(1, "#05050f");
+  ctx.fillStyle = fundo;
+  ctx.fillRect(0, 0, VIDRO.w, VIDRO.h);
+  for (const [x, y, t, a] of estrelas) {
+    ctx.fillStyle = `rgba(214,236,255,${a})`;
+    ctx.fillRect(x * VIDRO.w, y * VIDRO.h, t, t);
   }
-  const g = geometria();
-  // Anel de órbita
-  ctx.save();
-  ctx.strokeStyle = "#3ff3ff33";
-  ctx.setLineDash([4, 6]);
-  ctx.beginPath(); ctx.ellipse(g.cx, g.cy, g.raio * 1.75, g.raio * 0.62, -0.12, 0, Math.PI * 2); ctx.stroke();
-  ctx.restore();
-  desenharMarte(g);
+  ctx.strokeStyle = "#e6f4ffcc"; ctx.lineWidth = 1;
+  for (const [x, y, t] of brilhos) {
+    const px = x * VIDRO.w, py = y * VIDRO.h;
+    ctx.beginPath(); ctx.moveTo(px - t, py); ctx.lineTo(px + t, py); ctx.moveTo(px, py - t); ctx.lineTo(px, py + t); ctx.stroke();
+  }
+  // Órbita: metade de trás antes do planeta, metade da frente depois.
+  const orbita = (inicio, fim) => {
+    ctx.save();
+    ctx.strokeStyle = "#46f0ff55"; ctx.setLineDash([5, 6]); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.ellipse(MARTE.cx, MARTE.cy, ORBITA.rx, ORBITA.ry, ORBITA.inclinacao, inicio, fim); ctx.stroke();
+    ctx.restore();
+  };
+  orbita(Math.PI, Math.PI * 2);
+  desenharMarte();
+  orbita(0, Math.PI);
 
-  // Módulos em órbita/espera: distribuídos no anel.
-  const noAlto = q.modulos.filter(m => m.estado === "órbita" || m.estado === "espera" || m.estado === "descendo");
-  noAlto.forEach((m, i) => {
-    const a = -Math.PI * 0.85 + (i / Math.max(1, noAlto.length)) * Math.PI * 2;
-    const x = g.cx + Math.cos(a) * g.raio * 1.75;
-    const y = g.cy + Math.sin(a) * g.raio * 0.62 - Math.cos(a) * g.raio * 0.12;
-    desenharModulo(x, y, 1.15, m.id, m.estado, 0);
-  });
-
-  // Base: módulos em solo alinhados na superfície, perto do equador visível.
-  const solo = q.modulos.filter(m => ["pousado", "operacional", "suspenso", "acidente"].includes(m.estado));
-  const larg = g.raio * 1.2;
+  // Base na superfície: módulos lado a lado, acompanhando a curva do disco.
+  const solo = q.modulos.filter(m => NO_SOLO.includes(m.estado));
   solo.forEach((m, i) => {
-    const x = g.cx - larg / 2 + (solo.length === 1 ? larg / 2 : i * larg / (solo.length - 1));
-    const y = g.cy + g.raio * 0.45;
-    if (m.estado === "acidente") {
-      ctx.save();
-      ctx.fillStyle = "#ff4d5e55";
-      ctx.beginPath(); ctx.arc(x, y + 4, 14, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-      desenharModulo(x, y, 0.75, m.id, m.estado, 0.6);
-    } else {
-      desenharModulo(x, y, 0.75, m.id, m.estado, 0);
-    }
+    const u = solo.length === 1 ? 0 : -1 + 2 * i / (solo.length - 1);
+    const x = MARTE.cx + u * MARTE.r * 0.58;
+    const y = MARTE.cy + MARTE.r * 0.5 - (1 - u * u) * MARTE.r * 0.08;
+    desenharModuloSolo(x, y, m.id, m.estado);
+  });
+  // Naves no anel de órbita.
+  const alto = q.modulos.filter(m => NO_ALTO.includes(m.estado));
+  alto.forEach((m, i) => {
+    const a = Math.PI * 1.12 + (i / Math.max(1, alto.length)) * Math.PI * 2;
+    const x = MARTE.cx + Math.cos(a) * ORBITA.rx;
+    const y = MARTE.cy + Math.sin(a) * ORBITA.ry + Math.cos(a) * ORBITA.rx * ORBITA.inclinacao;
+    desenharNave(x, y, 1, m.id, m.estado);
   });
 }
 
-/* ---------- Ligação ---------- */
-let missaoAtual = null;
-let quadroAtual = null;
+/* ---------- Palco e ligação ---------- */
+let missaoAtual = null, quadroAtual = null, escalaAtual = 1;
+
+function ajustarPalco() {
+  escalaAtual = Math.min(window.innerWidth / ARTE.w, window.innerHeight / ARTE.h);
+  const palco = $("palco");
+  palco.style.transform = `scale(${escalaAtual}) translate(-50%, -50%)`;
+  if (quadroAtual) desenharCeu(quadroAtual);
+}
 
 function mostrar(q) {
   quadroAtual = q;
-  mostrarAmbiente(q);
+  mostrarMissao(q);
   mostrarFila(q);
   mostrarPortas(q);
   mostrarCombustivel(q);
-  mostrarConsole(q);
+  mostrarLogs(q);
   mostrarHud(q);
   desenharCeu(q);
 }
@@ -698,6 +676,7 @@ function iniciar() {
     document.body.textContent = "dados.js não encontrado. Rode: python3 exportar_painel.py";
     return;
   }
+  for (const id in QUADROS) encaixar($(id), QUADROS[id]);
   const sel = $("seletor");
   for (const m of window.MISSOES) {
     const op = el("option", "", m.nome.replaceAll("_", " "));
@@ -707,7 +686,8 @@ function iniciar() {
   const inicial = new URLSearchParams(location.search).get("cenario") || "normal";
   sel.value = window.MISSOES.some(m => m.nome === inicial) ? inicial : window.MISSOES[0].nome;
   sel.addEventListener("change", () => escolher(sel.value));
-  window.addEventListener("resize", () => quadroAtual && desenharCeu(quadroAtual));
+  window.addEventListener("resize", ajustarPalco);
+  ajustarPalco();
   escolher(sel.value);
   document.body.dataset.pronto = window.MISSOES.length;
 }
