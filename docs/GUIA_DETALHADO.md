@@ -115,7 +115,7 @@ No cadastro padrão, E, H, G, M e L chegam no instante zero. Todos têm massa de
 
 Ao terminar, os cinco estão operacionais, cada um com 20 kg restantes, e a área está livre. O tempo total é 25 minutos porque as descidas são sequenciais e cada uma dura cinco minutos.
 
-A descida é atômica: um evento marcado no minuto 3 de uma descida entre 0 e 5 é processado no minuto 5. O registro informa tanto o instante de aplicação quanto o horário previsto. Essa hipótese simplifica o exercício, mas não representa controle de voo em tempo real.
+A descida é atômica: um evento marcado no minuto 3 de uma descida entre 0 e 5 é processado no minuto 5. O registro informa tanto o instante de aplicação quanto o horário previsto. Esses eventos são aplicados antes do resultado do pouso, respeitando a ordem dos fatos: um evento de "área livre" no minuto 2 não pode desfazer a obstrução causada por um acidente no minuto 5. Essa hipótese simplifica o exercício, mas não representa controle de voo em tempo real.
 
 <!-- PAGE BREAK -->
 
@@ -295,7 +295,7 @@ Os alertas da falha continuam na lista histórica após o reparo. Isso não sign
 
 ### Uma falha durante a descida
 
-Se Energia inicia às 0 min e seus sensores falham às 3 min, a descida atômica termina às 5 min. O evento é aplicado nesse instante. O registro aparece como previsto para 3 min e processado em 5 min. Energia consta como pousada, mas fica suspensa sem chegar a operacional. O protótipo não afirma que alterou a trajetória ou evitou um acidente durante o voo.
+Se Energia inicia às 0 min e seus sensores falham às 3 min, a descida atômica termina às 5 min. O evento é aplicado nesse instante, antes do registro do pouso. O registro aparece como previsto para 3 min e processado em 5 min. Energia consta como pousada, mas fica suspensa sem chegar a operacional. O protótipo não afirma que alterou a trajetória ou evitou um acidente durante o voo.
 
 ### Como ler o resultado retornado
 

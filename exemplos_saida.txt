@@ -431,7 +431,7 @@ Alertas históricos:
 Eventos:
   0.0 min: E chegou
   0.0 min: E iniciou descida
-  5.0 min: E pousado
   5.0 min: evento sensores = False | ID: E | previsto: 3.0 min
+  5.0 min: E pousado
   E suspenso: Sensores/sistemas falhos na base
   5.0 min: rodada encerrada

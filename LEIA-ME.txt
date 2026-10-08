@@ -86,6 +86,8 @@ Clima e área usam ID vazio. Eventos são tratados por tempo, preservando
 entrada nos empates, mesmo se cadastrados fora de ordem.
 Chegadas/eventos durante uma descida são processados no fim dela: a descida
 é uma transição atômica didática, sem interrupção ou reação em tempo real.
+Eventos previstos até o fim da descida entram antes do resultado do pouso,
+então um evento anterior não desfaz um acidente ocorrido depois dele.
 Sem aptos, avança ao próximo ETA/evento. Sem futuros, encerra com pendências.
 Não se fabrica melhora do clima. Alertas históricos iguais são deduplicados;
 motivos atuais são recalculados. Alertas registram a combinação de bloqueios.

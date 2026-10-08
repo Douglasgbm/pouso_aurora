@@ -258,6 +258,33 @@ def ativar(modulos, historico):
     return historico
 
 
+def aplicar_eventos(eventos, aplicados, dados, ambiente, historico, tempo):
+    # Aplica, em ordem de horário, os eventos previstos até o instante "tempo".
+    # Se eventos empatam no tempo, mantém a ordem em que foram cadastrados.
+    while True:
+        proximo = -1
+        for i in range(quantidade(eventos)):
+            if not aplicados[i] and eventos[i][0] <= tempo:
+                if proximo == -1 or eventos[i][0] < eventos[proximo][0]:
+                    proximo = i
+        if proximo == -1:
+            break
+        e = eventos[proximo]
+        if e[1] == "clima":
+            ambiente[0] = e[2]
+        elif e[1] == "area":
+            ambiente[1] = e[2]
+        else:
+            pos = buscar(dados, ID, e[3])
+            if e[1] == "sensores":
+                dados[pos][SENSORES] = e[2]
+            else:
+                dados[pos][SISTEMAS] = e[2]
+        aplicados[proximo] = True
+        historico = historico + [f"{tempo:.1f} min: evento {e[1]} = {e[2]} | ID: {e[3]} | previsto: {e[0]} min"]
+    return historico
+
+
 def simular(modulos, eventos, ambiente, config):
     # Simula chegada, autorização, fila e consumo estimado.
     # Não calcula a trajetória física da descida.
@@ -286,28 +313,7 @@ def simular(modulos, eventos, ambiente, config):
     continuar = True
     while continuar:
         # 1. Aplica mudanças de clima, área, sensores e sistemas já ocorridas.
-        # Se eventos empatam no tempo, mantém a ordem em que foram cadastrados.
-        while True:
-            proximo = -1
-            for i in range(quantidade(eventos)):
-                if not aplicados[i] and eventos[i][0] <= tempo:
-                    if proximo == -1 or eventos[i][0] < eventos[proximo][0]:
-                        proximo = i
-            if proximo == -1:
-                break
-            e = eventos[proximo]
-            if e[1] == "clima":
-                ambiente[0] = e[2]
-            elif e[1] == "area":
-                ambiente[1] = e[2]
-            else:
-                pos = buscar(dados, ID, e[3])
-                if e[1] == "sensores":
-                    dados[pos][SENSORES] = e[2]
-                else:
-                    dados[pos][SISTEMAS] = e[2]
-            aplicados[proximo] = True
-            historico = historico + [f"{tempo:.1f} min: evento {e[1]} = {e[2]} | ID: {e[3]} | previsto: {e[0]} min"]
+        historico = aplicar_eventos(eventos, aplicados, dados, ambiente, historico, tempo)
         # 2. Enfileira módulos cujo horário estimado de chegada já foi atingido.
         while True:
             pos = -1
@@ -359,6 +365,9 @@ def simular(modulos, eventos, ambiente, config):
             consumo = m[MASSA] * config[1] * config[0]
             m[COMBUSTIVEL] = m[COMBUSTIVEL] - consumo
             tempo = tempo + config[0]
+            # Eventos previstos até o fim da descida aconteceram antes do resultado.
+            # Aplicá-los depois deixaria um evento antigo desfazer um acidente.
+            historico = aplicar_eventos(eventos, aplicados, dados, ambiente, historico, tempo)
             if m[ACIDENTE]:
                 m[ESTADO] = "acidente"
                 m[MOTIVO] = "Acidente: área obstruída"

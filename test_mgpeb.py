@@ -236,6 +236,26 @@ class TestMGPEB(unittest.TestCase):
         self.assertEqual(s[7], [])
         self.assertEqual(s[6][1], "obstruída")
 
+    def test_evento_durante_descida_respeita_ordem_do_tempo(self):
+        # "Área livre" aos 2 min aconteceu antes do acidente aos 5 min:
+        # não pode desfazer a obstrução causada depois dele.
+        s = g.simular([montar("E", "Energia", acidente=True), montar("H", "Habitação")],
+                      [[2.0, "area", "livre", ""]], [True, "livre"], g.CONFIG)
+        self.assertEqual(s[6][1], "obstruída")
+        self.assertEqual(s[0][1][g.ESTADO], "espera")
+        self.assertEqual(s[7], [])
+        # O histórico mostra o evento antes do resultado da descida.
+        evento = [i for i, e in enumerate(s[2]) if "previsto: 2.0" in e][0]
+        self.assertLess(evento, s[2].index("5.0 min: E acidente"))
+        # Com pouso bem-sucedido, o pouso aos 5 min é o fato mais recente.
+        s = g.simular([montar("E", "Energia")],
+                      [[2.0, "area", "ocupada", ""]], [True, "livre"], g.CONFIG)
+        self.assertEqual(s[6][1], "livre")
+        # Evento previsto exatamente para o fim da descida também vem antes do resultado.
+        s = g.simular([montar("E", "Energia", acidente=True), montar("H", "Habitação")],
+                      [[5.0, "area", "livre", ""]], [True, "livre"], g.CONFIG)
+        self.assertEqual(s[6][1], "obstruída")
+
     def test_todas_permutacoes_candidatos(self):
         mods = [montar("E", "Energia"), montar("H", "Habitação"),
                 montar("G", "Logística"), montar("M", "Médico", fuel=13),
