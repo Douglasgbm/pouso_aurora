@@ -88,6 +88,26 @@ class TestExportarPainel(unittest.TestCase):
         ordem = [p for p in missao["linha_do_tempo"] if p["tipo"] == "ordenacao"][0]
         self.assertEqual(ordem["depois"], ["M", "E"])
 
+    def test_6_foto_durante_a_descida(self):
+        # Cada descida tem uma foto do estado durante o voo, logo após o início.
+        total = 0
+        for nome, modulos, eventos, ambiente in self.casos:
+            with self.subTest(nome=nome):
+                passos = ex.exportar_caso(nome, modulos, eventos, ambiente, g.CONFIG)["linha_do_tempo"]
+                inicios = [i for i, p in enumerate(passos)
+                           if p["tipo"] == "log" and p["texto"].endswith("iniciou descida")]
+                descidas = [i for i, p in enumerate(passos) if p["tipo"] == "descida"]
+                self.assertEqual([i + 1 for i in inicios], descidas)
+                for i in descidas:
+                    p = passos[i]
+                    quem = passos[i - 1]["texto"].split(" min: ")[1].split()[0]
+                    self.assertEqual(p["id"], quem)
+                    self.assertEqual(p["tempo"], passos[i - 1]["tempo"])
+                    self.assertEqual(p["ambiente"][1], "reservada")
+                    self.assertEqual([m["id"] for m in p["modulos"] if m["estado"] == "descendo"], [quem])
+                    total += 1
+        self.assertGreater(total, 20)
+
 
 if __name__ == "__main__":
     unittest.main()

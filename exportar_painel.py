@@ -54,6 +54,14 @@ def rodar_com_escuta(modulos, eventos, ambiente, config):
     }
 
     def escuta_eventos(eventos_, aplicados, dados, ambiente_, historico, tempo):
+        # Chamada no fim de uma descida: antes de aplicar os eventos, o estado
+        # ainda é o do voo (módulo descendo, área reservada). A foto fica logo
+        # depois da linha "iniciou descida", com a hora em que a descida começou.
+        for m in dados:
+            if m[g.ESTADO] == "descendo":
+                passos.append({"tipo": "descida", "tempo": atual["tempo"], "hist": len(historico),
+                               "id": m[g.ID], "ambiente": list(ambiente_),
+                               "modulos": foto_modulos(dados, config)})
         novo = originais["aplicar_eventos"](eventos_, aplicados, dados, ambiente_, historico, tempo)
         # A foto vem depois das linhas dos eventos que acabaram de ser aplicados.
         atual["tempo"] = tempo

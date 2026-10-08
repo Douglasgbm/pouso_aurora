@@ -384,6 +384,87 @@ window.MISSOES = [
     "texto": "0.0 min: E iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 5.0,
     "ambiente": [
@@ -723,6 +804,87 @@ window.MISSOES = [
     "texto": "5.0 min: H iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 5.0,
+    "id": "H",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 10.0,
     "ambiente": [
@@ -1042,6 +1204,87 @@ window.MISSOES = [
     "texto": "10.0 min: G iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 10.0,
+    "id": "G",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 15.0,
     "ambiente": [
@@ -1341,6 +1584,87 @@ window.MISSOES = [
     "texto": "15.0 min: M iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 15.0,
+    "id": "M",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 20.0,
     "ambiente": [
@@ -1618,6 +1942,87 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 20.0,
     "texto": "20.0 min: L iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 20.0,
+    "id": "L",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -2367,6 +2772,87 @@ window.MISSOES = [
     "texto": "0.0 min: E iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 5.0,
     "ambiente": [
@@ -2706,6 +3192,87 @@ window.MISSOES = [
     "texto": "5.0 min: H iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 5.0,
+    "id": "H",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 10.0,
     "ambiente": [
@@ -3025,6 +3592,87 @@ window.MISSOES = [
     "texto": "10.0 min: G iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 10.0,
+    "id": "G",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 15.0,
     "ambiente": [
@@ -3324,6 +3972,87 @@ window.MISSOES = [
     "texto": "15.0 min: M iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 15.0,
+    "id": "M",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 20.0,
     "ambiente": [
@@ -3601,6 +4330,87 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 20.0,
     "texto": "20.0 min: L iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 20.0,
+    "id": "L",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -4149,6 +4959,45 @@ window.MISSOES = [
     "texto": "0.0 min: M iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "M",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 3.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 5.0,
     "ambiente": [
@@ -4295,6 +5144,45 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 5.0,
     "texto": "5.0 min: E iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 5.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 3.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "pousado",
+      "motivo": "Aguarda Energia operacional",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -5885,6 +6773,45 @@ window.MISSOES = [
     "texto": "0.0 min: M iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "M",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 13.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 3.0,
+      "massa": 1000.0,
+      "carga": 5,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 5.0,
     "ambiente": [
@@ -6031,6 +6958,45 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 5.0,
     "texto": "5.0 min: E iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 5.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 3.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 3.0,
+      "massa": 1000.0,
+      "carga": 5,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "pousado",
+      "motivo": "Aguarda Energia operacional",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -6378,6 +7344,31 @@ window.MISSOES = [
     "texto": "20.0 min: E iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 20.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 20.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 25.0,
     "ambiente": [
@@ -6695,6 +7686,59 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 0.0,
     "texto": "0.0 min: L iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "L",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 2.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 20.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "órbita",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 20.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "órbita",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -7017,6 +8061,59 @@ window.MISSOES = [
     "texto": "20.0 min: E iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 20.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 2.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "pousado",
+      "motivo": "Aguarda Energia e Habitação operacionais",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 20.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 20.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 25.0,
     "ambiente": [
@@ -7210,6 +8307,59 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 25.0,
     "texto": "25.0 min: H iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 25.0,
+    "id": "H",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 2.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "pousado",
+      "motivo": "Aguarda Energia e Habitação operacionais",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 20.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 20.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -8100,6 +9250,87 @@ window.MISSOES = [
     "texto": "10.0 min: E iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 10.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 15.0,
     "ambiente": [
@@ -8439,6 +9670,87 @@ window.MISSOES = [
     "texto": "15.0 min: H iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 15.0,
+    "id": "H",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 20.0,
     "ambiente": [
@@ -8758,6 +10070,87 @@ window.MISSOES = [
     "texto": "20.0 min: G iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 20.0,
+    "id": "G",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 25.0,
     "ambiente": [
@@ -9057,6 +10450,87 @@ window.MISSOES = [
     "texto": "25.0 min: M iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 25.0,
+    "id": "M",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 30.0,
     "ambiente": [
@@ -9334,6 +10808,87 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 30.0,
     "texto": "30.0 min: L iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 30.0,
+    "id": "L",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -9887,6 +11442,45 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 0.0,
     "texto": "0.0 min: E iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -10471,6 +12065,87 @@ window.MISSOES = [
     "texto": "0.0 min: E iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 5.0,
     "ambiente": [
@@ -10810,6 +12485,87 @@ window.MISSOES = [
     "texto": "5.0 min: H iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 5.0,
+    "id": "H",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 10.0,
     "ambiente": [
@@ -11129,6 +12885,87 @@ window.MISSOES = [
     "texto": "10.0 min: G iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 10.0,
+    "id": "G",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 15.0,
     "ambiente": [
@@ -11428,6 +13265,87 @@ window.MISSOES = [
     "texto": "15.0 min: M iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 15.0,
+    "id": "M",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 20.0,
     "ambiente": [
@@ -11705,6 +13623,87 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 20.0,
     "texto": "20.0 min: L iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 20.0,
+    "id": "L",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -12665,6 +14664,87 @@ window.MISSOES = [
     "texto": "0.0 min: E iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 5.0,
     "ambiente": [
@@ -13004,6 +15084,87 @@ window.MISSOES = [
     "texto": "5.0 min: H iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 5.0,
+    "id": "H",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 10.0,
     "ambiente": [
@@ -13323,6 +15484,87 @@ window.MISSOES = [
     "texto": "10.0 min: G iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 10.0,
+    "id": "G",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 15.0,
     "ambiente": [
@@ -13622,6 +15864,87 @@ window.MISSOES = [
     "texto": "15.0 min: M iniciou descida"
    },
    {
+    "tipo": "descida",
+    "tempo": 15.0,
+    "id": "M",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 30.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "espera",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
+   },
+   {
     "tipo": "foto",
     "tempo": 20.0,
     "ambiente": [
@@ -13899,6 +16222,87 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 20.0,
     "texto": "20.0 min: L iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 20.0,
+    "id": "L",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "H",
+      "tipo": "Habitação",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "G",
+      "tipo": "Logística",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "M",
+      "tipo": "Médico",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "operacional",
+      "motivo": "",
+      "minimo": 12.0
+     },
+     {
+      "id": "L",
+      "tipo": "Laboratório",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "foto",
@@ -14775,6 +17179,31 @@ window.MISSOES = [
     "tipo": "log",
     "tempo": 0.0,
     "texto": "0.0 min: E iniciou descida"
+   },
+   {
+    "tipo": "descida",
+    "tempo": 0.0,
+    "id": "E",
+    "ambiente": [
+     true,
+     "reservada"
+    ],
+    "modulos": [
+     {
+      "id": "E",
+      "tipo": "Energia",
+      "prioridade": 1,
+      "combustivel": 20.0,
+      "massa": 1000.0,
+      "carga": 1,
+      "eta": 0.0,
+      "sensores": true,
+      "sistemas": true,
+      "estado": "descendo",
+      "motivo": "",
+      "minimo": 12.0
+     }
+    ]
    },
    {
     "tipo": "log",

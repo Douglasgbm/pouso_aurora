@@ -190,7 +190,7 @@
     display: flex; align-items: center; gap: 6px;
     font-size: 10px; color: var(--texto-fraco); letter-spacing: .12em;
   }
-  select {
+  select, .controles button {
     font: inherit;
     font-size: 11px;
     letter-spacing: 0;
@@ -200,6 +200,24 @@
     border-radius: 5px;
     padding: 3px 6px;
     box-shadow: 0 0 6px var(--ciano-fraco);
+    cursor: pointer;
+  }
+  .controles button { min-width: 26px; }
+  .controles button:hover, select:hover { background: #46f0ff22; }
+  .controles button:focus-visible, select:focus-visible { outline: 2px solid var(--rosa); outline-offset: 1px; }
+  .linha-tempo {
+    left: 342px; top: 578px; width: 650px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; color: var(--texto-fraco);
+  }
+  .linha-tempo input { flex: 1; accent-color: var(--ciano); }
+
+  /* ---------- Tela ampliada ao clicar ---------- */
+  .tela { cursor: zoom-in; transition: transform .35s ease, box-shadow .35s; }
+  .tela.aberta { cursor: zoom-out; z-index: 5; box-shadow: 0 0 0 2000px #05050fb0, 0 0 22px var(--ciano); }
+  .dica {
+    left: 1000px; top: 552px; width: 300px; text-align: right;
+    font-size: 9px; color: var(--texto-fraco); letter-spacing: .08em;
   }
 </style>
 </head>
@@ -237,7 +255,15 @@
   <div class="hud" id="hud-area"><div class="fraco">ÁREA DE POUSO</div><div class="grande" id="hud-area-val"></div></div>
   <div class="telemetria" id="telemetria"></div>
 
-  <label class="controles">CENÁRIO <select id="seletor" aria-label="Cenário"></select></label>
+  <div class="controles">
+    <label>CENÁRIO <select id="seletor" aria-label="Cenário"></select></label>
+    <button id="b-inicio" title="Voltar ao início" aria-label="Voltar ao início">↺</button>
+    <button id="b-play" title="Reproduzir / pausar (espaço)" aria-label="Reproduzir ou pausar">▶</button>
+    <button id="b-passo" title="Próximo fato (→)" aria-label="Próximo fato">⏭</button>
+    <select id="velocidade" aria-label="Velocidade"><option value="1">1x</option><option value="2">2x</option><option value="4">4x</option></select>
+  </div>
+  <div class="linha-tempo"><input id="barra-tempo" type="range" min="0" max="1000" value="0" aria-label="Linha do tempo"><span id="contador"></span></div>
+  <div class="dica">clique numa tela para ampliar</div>
 </div>
 
 <script src="dados.js"></script>
@@ -309,20 +335,108 @@ function encaixar(elemento, cantos) {
   elemento.style.transform = `matrix3d(${t[0]},${t[3]},0,${t[6]},${t[1]},${t[4]},0,${t[7]},0,0,1,0,${t[2]},${t[5]},0,${t[8]})`;
 }
 
-/* Quadro = tudo o que a tela mostra num instante. No andar 1 é o estado final;
-   no andar 2 será montado passo a passo a partir da linha do tempo. */
-function quadroFinal(missao) {
-  let checagem = null;
-  for (const p of missao.linha_do_tempo) if (p.tipo === "checagem") checagem = p;
+/* ---------- Roteiro: a linha do tempo exportada vira cenas com hora real ----------
+   Quadro = tudo o que a tela mostra num instante. Cada passo exportado produz
+   um novo quadro; nada é calculado aqui além de copiar o que o simulador gravou. */
+const SEG_POR_MIN = 0.7;   // 1 minuto simulado = 0,7 s na velocidade 1x
+const ESPERA_MAX = 2.5;    // espera longa sem voo é encurtada na tela
+const PAUSA = { log: 0.55, checagem: 0.9, ordenacao: 1.1, foto: 0, ativacao: 0.25, descida: 0 };
+const VOO_CHEGADA = 1.2;   // segundos da nave entrando no anel
+
+function quadroInicial(missao) {
   return {
-    tempo: missao.final.tempo,
-    ambiente: missao.final.ambiente,
-    modulos: missao.final.modulos,
-    espera: missao.final.espera,
-    alertas: missao.final.alertas,
-    logs: missao.final.historico,
-    checagem
+    tempo: 0,
+    ambiente: missao.entrada.ambiente,
+    modulos: missao.entrada.modulos.map(m => ({ ...m, estado: "órbita", motivo: "" })),
+    logs: [], alertas: [], chegadas: [],
+    checagem: null, ordenacao: null, rodada: {}, descendo: null
   };
+}
+
+function aplicarPasso(q, p) {
+  const n = { ...q, tempo: p.tempo };
+  if (p.tipo === "log") {
+    n.logs = [...q.logs, p.texto];
+    const chegou = p.texto.match(/min: (\S+) chegou$/);
+    if (chegou) n.chegadas = [...q.chegadas, chegou[1]];
+  } else if (p.tipo === "foto" || p.tipo === "ativacao" || p.tipo === "descida") {
+    n.modulos = p.modulos;
+    if (p.ambiente) n.ambiente = p.ambiente;
+    const voando = p.modulos.find(m => m.estado === "descendo");
+    n.descendo = voando ? voando.id : null;
+    // Uma rodada nova de checagens começa a cada foto do ciclo.
+    if (p.tipo === "foto") n.rodada = {};
+  } else if (p.tipo === "checagem") {
+    n.checagem = p;
+    n.rodada = { ...q.rodada, [p.id]: p.motivo === "" };
+    // O simulador grava o motivo devolvido pelo autorizar no próprio módulo.
+    n.modulos = q.modulos.map(m => m.id === p.id ? { ...m, motivo: p.motivo } : m);
+  } else if (p.tipo === "ordenacao") {
+    n.ordenacao = p;
+  }
+  return n;
+}
+
+function montarRoteiro(missao) {
+  const cenas = [];
+  let q = quadroInicial(missao), t = 0, tempoAnt = 0;
+  for (const p of missao.linha_do_tempo) {
+    if (p.tempo > tempoAnt) {
+      const dt = (p.tempo - tempoAnt) * SEG_POR_MIN;
+      t += q.descendo ? dt : Math.min(dt, ESPERA_MAX);
+      tempoAnt = p.tempo;
+    }
+    q = aplicarPasso(q, p);
+    cenas.push({ inicio: t, p, q });
+    t += PAUSA[p.tipo];
+  }
+  // Marcos de animação: chegada de cada nave, início e fim de cada descida, acidentes.
+  const chegada = {}, descidas = [], acidentes = {};
+  cenas.forEach((c, i) => {
+    if (c.p.tipo === "log") {
+      const ch = c.p.texto.match(/min: (\S+) chegou$/);
+      if (ch) chegada[ch[1]] = c.inicio;
+      const ac = c.p.texto.match(/min: (\S+) acidente$/);
+      if (ac) acidentes[ac[1]] = c.inicio;
+    }
+    if (c.p.tipo === "descida") {
+      const fim = cenas.find((d, j) => j > i && d.p.tempo > c.p.tempo);
+      descidas.push({ id: c.p.id, inicio: c.inicio, fim: fim ? fim.inicio : c.inicio + 5 * SEG_POR_MIN });
+    }
+  });
+  return { cenas, chegada, descidas, acidentes, duracao: t + 0.5 };
+}
+
+function cenaEm(roteiro, t) {
+  // Última cena que já começou (busca binária: as cenas estão em ordem de início).
+  let a = 0, b = roteiro.cenas.length - 1, achou = -1;
+  while (a <= b) {
+    const m = (a + b) >> 1;
+    if (roteiro.cenas[m].inicio <= t) { achou = m; a = m + 1; } else b = m - 1;
+  }
+  return achou;
+}
+
+function relogioEm(roteiro, k, t) {
+  // Interpola o relógio da missão entre duas cenas de horários diferentes.
+  if (k < 0) return 0;
+  const c = roteiro.cenas[k], prox = roteiro.cenas[k + 1];
+  if (!prox || prox.p.tempo === c.p.tempo) return c.p.tempo;
+  const ini = c.inicio + PAUSA[c.p.tipo];
+  const f = Math.max(0, Math.min(1, (t - ini) / Math.max(0.001, prox.inicio - ini)));
+  return c.p.tempo + (prox.p.tempo - c.p.tempo) * f;
+}
+
+function conferirFinal(missao, roteiro) {
+  // Critério 2: o último quadro da reprodução é o estado final do simulador.
+  const q = roteiro.cenas[roteiro.cenas.length - 1].q;
+  const f = missao.final;
+  const igual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  if (!igual(q.modulos, f.modulos)) return "modulos";
+  if (!igual(q.ambiente, f.ambiente)) return "ambiente";
+  if (!igual(q.logs, f.historico)) return "historico";
+  if (q.tempo !== f.tempo) return "tempo";
+  return "ok";
 }
 
 /* ---------- Telas ---------- */
@@ -344,17 +458,24 @@ function mostrarFila(q) {
     const achou = linha.match(/min: (\S+) iniciou descida$/);
     if (achou && !ordem.includes(achou[1])) ordem.push(achou[1]);
   }
-  for (const id of q.espera) if (!ordem.includes(id)) ordem.push(id);
+  // A espera segue a última ordenação da rodada; quem não foi ordenado vem pela chegada.
+  const esperando = q.chegadas.filter(id => porId[id].estado === "espera");
+  const ordenados = q.ordenacao && q.ordenacao.tempo === q.tempo ? q.ordenacao.depois : [];
+  for (const id of ordenados) if (esperando.includes(id) && !ordem.includes(id)) ordem.push(id);
+  for (const id of esperando) if (!ordem.includes(id)) ordem.push(id);
   for (const m of q.modulos) if (!ordem.includes(m.id)) ordem.push(m.id);
-  $("fila-info").textContent = q.espera.length ? q.espera.length + " esp." : "";
+  $("fila-info").textContent = esperando.length ? esperando.length + " esp." : "";
   const ol = $("fila");
   ol.replaceChildren();
   ordem.slice(0, 6).forEach((id, i) => {
     const m = porId[id];
     const li = el("li", "", "");
     li.title = ROTULO[m.estado] + (m.motivo ? ": " + m.motivo : "");
+    // Na espera, a luz mostra o resultado da checagem desta rodada (verde apto, vermelho bloqueado).
+    let luz = CLASSE[m.estado];
+    if (m.estado === "espera" && id in q.rodada) luz = q.rodada[id] ? "e-operacional" : "e-acidente";
     li.append(el("span", "pos", String(i + 1).padStart(2, "0")), el("span", "id", m.id),
-              el("span", "", m.tipo.slice(0, 11)), el("span", "luz " + CLASSE[m.estado]));
+              el("span", "", m.tipo.slice(0, 11)), el("span", "luz " + luz));
     ol.append(li);
   });
 }
@@ -438,9 +559,13 @@ function mostrarLogs(q) {
 function mostrarHud(q) {
   const alto = q.modulos.filter(m => NO_ALTO.includes(m.estado));
   const solo = q.modulos.filter(m => NO_SOLO.includes(m.estado) && m.estado !== "acidente");
-  $("hud-orbita-ids").textContent = alto.length ? alto.map(m => m.id).join(" · ") : "vazia";
+  const emOrbita = alto.filter(m => m.estado !== "órbita").map(m => m.id);
+  const chegando = alto.filter(m => m.estado === "órbita").map(m => m.id);
+  $("hud-orbita-ids").textContent = (emOrbita.length ? emOrbita.join(" · ") : "vazia") +
+    (chegando.length ? "  | chegando: " + chegando.join(" · ") : "");
   $("hud-base-ids").textContent = solo.length ? solo.map(m => m.id).join(" · ") : "vazia";
-  $("hud-alertas").textContent = q.alertas.length + " alerta" + (q.alertas.length === 1 ? "" : "s");
+  const bloqueados = Object.values(q.rodada).filter(ok => !ok).length;
+  $("hud-alertas").textContent = bloqueados ? bloqueados + " bloqueado" + (bloqueados === 1 ? "" : "s") : "";
   const area = $("hud-area-val");
   area.textContent = q.ambiente[1].toUpperCase();
   area.className = "grande " + (q.ambiente[1] === "livre" ? "ok" : q.ambiente[1] === "obstruída" ? "ruim" : "aviso");
@@ -524,7 +649,7 @@ function desenharMarte() {
   ctx.beginPath(); ctx.arc(cx, cy, r - 2.5, Math.PI * 1.05, Math.PI * 1.55); ctx.stroke();
 }
 
-function desenharNave(x, y, escala, id, estado) {
+function desenharNave(x, y, escala, id, estado, legenda) {
   // Nave de carga: casco em blocos, contorno escuro e propulsores com raios de luz.
   const cor = COR[estado];
   const ligada = NO_ALTO.includes(estado);
@@ -564,6 +689,14 @@ function desenharNave(x, y, escala, id, estado) {
   ctx.fillRect(-20, 0, 9, 3);
   ctx.restore();
   rotulo(x, y - 26 * escala, id, cor);
+  if (legenda) {
+    ctx.save();
+    ctx.font = "9px ui-monospace, Menlo, monospace";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#9fb6cc";
+    ctx.fillText(legenda, x, y + 20 * escala + 6);
+    ctx.restore();
+  }
 }
 
 function desenharModuloSolo(x, y, id, estado) {
@@ -598,7 +731,7 @@ function rotulo(x, y, texto, cor) {
   ctx.restore();
 }
 
-function desenharCeu(q) {
+function desenharCeu(q, t, k) {
   const escala = escalaAtual * (window.devicePixelRatio || 1);
   ceu.width = Math.round(VIDRO.w * escala);
   ceu.height = Math.round(VIDRO.h * escala);
@@ -627,48 +760,197 @@ function desenharCeu(q) {
   desenharMarte();
   orbita(0, Math.PI);
 
-  // Base na superfície: módulos lado a lado, acompanhando a curva do disco.
-  const solo = q.modulos.filter(m => NO_SOLO.includes(m.estado));
-  solo.forEach((m, i) => {
-    const u = solo.length === 1 ? 0 : -1 + 2 * i / (solo.length - 1);
-    const x = MARTE.cx + u * MARTE.r * 0.58;
-    const y = MARTE.cy + MARTE.r * 0.5 - (1 - u * u) * MARTE.r * 0.08;
-    desenharModuloSolo(x, y, m.id, m.estado);
+  // Cada módulo tem lugares fixos pelo índice do cadastro, para não "pular" na tela.
+  const n = q.modulos.length;
+  const posicoes = {};
+  q.modulos.forEach((m, i) => {
+    const pos = posicaoNoCeu(m, i, n, t);
+    posicoes[m.id] = pos;
+    if (pos.alvo) desenharAlvo(pos.alvo[0], pos.alvo[1], t);
   });
-  // Naves no anel de órbita.
-  const alto = q.modulos.filter(m => NO_ALTO.includes(m.estado));
-  alto.forEach((m, i) => {
-    const a = Math.PI * 1.12 + (i / Math.max(1, alto.length)) * Math.PI * 2;
-    const x = MARTE.cx + Math.cos(a) * ORBITA.rx;
-    const y = MARTE.cy + Math.sin(a) * ORBITA.ry + Math.cos(a) * ORBITA.rx * ORBITA.inclinacao;
-    desenharNave(x, y, 1, m.id, m.estado);
+  q.modulos.forEach((m) => {
+    const pos = posicoes[m.id];
+    if (pos.tipo === "solo") desenharModuloSolo(pos.x, pos.y, m.id, m.estado);
+    else desenharNave(pos.x, pos.y, pos.escala, m.id, m.estado, pos.legenda);
+    // A explosão começa junto com a linha "acidente" do histórico.
+    if (roteiro.acidentes[m.id] !== undefined) {
+      const f = (t - roteiro.acidentes[m.id]) / 1.6;
+      if (f >= 0 && f < 1) desenharExplosao(pos.x, pos.y, f);
+    }
   });
+  // Destaque de quem está sendo checado agora.
+  const c = k >= 0 ? roteiro.cenas[k] : null;
+  if (c && c.p.tipo === "checagem" && t - c.inicio < PAUSA.checagem && posicoes[c.p.id]) {
+    const pos = posicoes[c.p.id];
+    desenharVarredura(pos.x, pos.y, (t - c.inicio) / PAUSA.checagem, c.p.motivo === "");
+  }
 }
 
-/* ---------- Palco e ligação ---------- */
-let missaoAtual = null, quadroAtual = null, escalaAtual = 1;
+const suave = (f) => f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;
+function lugarSolo(i, n) {
+  const u = n === 1 ? 0 : -1 + 2 * i / (n - 1);
+  return [MARTE.cx + u * MARTE.r * 0.58, MARTE.cy + MARTE.r * 0.5 - (1 - u * u) * MARTE.r * 0.08];
+}
+// Lugares em volta do planeta, em raios de Marte, como na ilustração: dois de cada
+// lado em alturas diferentes, fugindo da telemetria (embaixo à direita) e do monitor.
+const LUGARES = [[-1.65, 0.05], [1.6, -0.15], [-2.3, 0.5], [2.3, 0.45], [-1.2, 0.8], [1.2, 0.55]];
+function lugarOrbita(i, n) {
+  const [u, v] = LUGARES[i % LUGARES.length];
+  return [MARTE.cx + u * MARTE.r, MARTE.cy + v * MARTE.r];
+}
+function lugarLonge(i) {
+  return [40 + i * 44, 62 + (i % 2) * 26];
+}
+
+function posicaoNoCeu(m, i, n, t) {
+  if (NO_SOLO.includes(m.estado)) {
+    const [x, y] = lugarSolo(i, n);
+    return { tipo: "solo", x, y };
+  }
+  const descida = roteiro.descidas.find(d => d.id === m.id && d.inicio <= t);
+  if (m.estado === "descendo" && descida) {
+    const f = suave(Math.max(0, Math.min(1, (t - descida.inicio) / (descida.fim - descida.inicio))));
+    const [x0, y0] = lugarOrbita(i, n), [x1, y1] = lugarSolo(i, n);
+    return { tipo: "nave", x: x0 + (x1 - x0) * f, y: y0 + (y1 - y0) * f, escala: 1 - 0.45 * f, alvo: [x1, y1] };
+  }
+  const chegou = roteiro.chegada[m.id];
+  if (chegou !== undefined && chegou <= t) {
+    const f = suave(Math.max(0, Math.min(1, (t - chegou) / VOO_CHEGADA)));
+    const [x0, y0] = lugarLonge(i), [x1, y1] = lugarOrbita(i, n);
+    return { tipo: "nave", x: x0 + (x1 - x0) * f, y: y0 + (y1 - y0) * f, escala: 0.5 + 0.5 * f };
+  }
+  const [x, y] = lugarLonge(i);
+  return { tipo: "nave", x, y, escala: 0.5, legenda: "ETA " + fmt(m.eta) };
+}
+
+function desenharAlvo(x, y, t) {
+  // Área reservada: anel pulsando no ponto de pouso.
+  const f = (t * 1.5) % 1;
+  ctx.save();
+  ctx.strokeStyle = `rgba(255,196,77,${1 - f})`;
+  ctx.lineWidth = 1.6;
+  ctx.beginPath(); ctx.ellipse(x, y + 4, 8 + f * 14, 3 + f * 5, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = "#ffc44d"; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.ellipse(x, y + 4, 10, 3.5, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.restore();
+}
+
+function desenharVarredura(x, y, f, ok) {
+  const cor = ok ? "77,255,149" : "255,77,99";
+  ctx.save();
+  ctx.strokeStyle = `rgba(${cor},${1 - f * 0.6})`;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(x, y - 4, 22 + f * 10, 0, Math.PI * 2); ctx.stroke();
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.arc(x, y - 4, 30, f * Math.PI * 2, f * Math.PI * 2 + Math.PI); ctx.stroke();
+  ctx.restore();
+}
+
+function desenharExplosao(x, y, f) {
+  ctx.save();
+  const r = 6 + f * 30;
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, `rgba(255,250,220,${1 - f})`);
+  g.addColorStop(0.4, `rgba(255,140,60,${0.9 * (1 - f)})`);
+  g.addColorStop(1, "rgba(255,60,60,0)");
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+/* ---------- Palco e reprodução ---------- */
+let missaoAtual = null, roteiro = null, escalaAtual = 1;
+let agora = 0, velocidade = 1, tocando = false, ultimoQuadro = null, cenaMostrada = -2;
 
 function ajustarPalco() {
   escalaAtual = Math.min(window.innerWidth / ARTE.w, window.innerHeight / ARTE.h);
   const palco = $("palco");
   palco.style.transform = `scale(${escalaAtual}) translate(-50%, -50%)`;
-  if (quadroAtual) desenharCeu(quadroAtual);
+  if (roteiro) desenhar();
 }
 
-function mostrar(q) {
-  quadroAtual = q;
-  mostrarMissao(q);
-  mostrarFila(q);
-  mostrarPortas(q);
-  mostrarCombustivel(q);
-  mostrarLogs(q);
-  mostrarHud(q);
-  desenharCeu(q);
+function desenhar() {
+  const k = cenaEm(roteiro, agora);
+  const q = k >= 0 ? roteiro.cenas[k].q : quadroInicial(missaoAtual);
+  // As telas só mudam quando muda a cena; o céu e o relógio andam a cada quadro.
+  if (k !== cenaMostrada) {
+    cenaMostrada = k;
+    mostrarMissao(q);
+    mostrarFila(q);
+    mostrarPortas(q);
+    mostrarCombustivel(q);
+    mostrarLogs(q);
+    mostrarHud(q);
+    $("contador").textContent = (k + 1) + "/" + roteiro.cenas.length;
+  }
+  $("relogio").textContent = "T+" + fmt(relogioEm(roteiro, k, agora));
+  desenharCeu(q, agora, k);
+  $("barra-tempo").value = Math.round(agora / roteiro.duracao * 1000);
 }
 
-function escolher(nome) {
+function avancar(ts) {
+  if (!tocando) return;
+  if (ultimoQuadro !== null) agora += (ts - ultimoQuadro) / 1000 * velocidade;
+  ultimoQuadro = ts;
+  if (agora >= roteiro.duracao) { agora = roteiro.duracao; pausar(); }
+  desenhar();
+  if (tocando) requestAnimationFrame(avancar);
+}
+function tocar() {
+  if (agora >= roteiro.duracao) agora = 0;
+  tocando = true;
+  ultimoQuadro = null;
+  $("b-play").textContent = "❚❚";
+  requestAnimationFrame(avancar);
+}
+function pausar() {
+  tocando = false;
+  $("b-play").textContent = "▶";
+}
+function irPara(t) {
+  agora = Math.max(0, Math.min(roteiro.duracao, t));
+  desenhar();
+}
+function proximoFato() {
+  // Pula para a próxima cena que muda algo visível (fotos sozinhas não contam).
+  pausar();
+  const k = cenaEm(roteiro, agora);
+  for (let j = k + 1; j < roteiro.cenas.length; j++) {
+    if (roteiro.cenas[j].p.tipo !== "foto") { irPara(roteiro.cenas[j].inicio); return; }
+  }
+  irPara(roteiro.duracao);
+}
+
+function escolher(nome, inicio) {
+  pausar();
+  fecharTela();
   missaoAtual = window.MISSOES.find(m => m.nome === nome);
-  mostrar(quadroFinal(missaoAtual));
+  roteiro = montarRoteiro(missaoAtual);
+  document.body.dataset.confere = conferirFinal(missaoAtual, roteiro);
+  cenaMostrada = -2;
+  agora = 0;
+  if (inicio === undefined) { desenhar(); tocar(); }
+  else irPara(inicio);
+}
+
+/* ---------- Tela ampliada ---------- */
+let telaAberta = null;
+function abrirTela(id) {
+  fecharTela();
+  const e = $(id);
+  const esc = Math.min(560 / e.offsetWidth, 290 / e.offsetHeight);
+  const w = e.offsetWidth * esc, h = e.offsetHeight * esc;
+  const x = 667 - w / 2, y = 318 - h / 2;
+  encaixar(e, [[x, y], [x + w, y], [x, y + h], [x + w, y + h]]);
+  e.classList.add("aberta");
+  telaAberta = id;
+}
+function fecharTela() {
+  if (!telaAberta) return;
+  const e = $(telaAberta);
+  encaixar(e, QUADROS[telaAberta]);
+  e.classList.remove("aberta");
+  telaAberta = null;
 }
 
 function iniciar() {
@@ -676,19 +958,37 @@ function iniciar() {
     document.body.textContent = "dados.js não encontrado. Rode: python3 exportar_painel.py";
     return;
   }
-  for (const id in QUADROS) encaixar($(id), QUADROS[id]);
+  for (const id in QUADROS) {
+    encaixar($(id), QUADROS[id]);
+    $(id).addEventListener("click", () => telaAberta === id ? fecharTela() : abrirTela(id));
+  }
   const sel = $("seletor");
   for (const m of window.MISSOES) {
     const op = el("option", "", m.nome.replaceAll("_", " "));
     op.value = m.nome;
     sel.append(op);
   }
-  const inicial = new URLSearchParams(location.search).get("cenario") || "normal";
+  const params = new URLSearchParams(location.search);
+  const inicial = params.get("cenario") || "normal";
   sel.value = window.MISSOES.some(m => m.nome === inicial) ? inicial : window.MISSOES[0].nome;
-  sel.addEventListener("change", () => escolher(sel.value));
+  sel.addEventListener("change", () => { escolher(sel.value); sel.blur(); });
+  $("b-play").addEventListener("click", () => tocando ? pausar() : tocar());
+  $("b-inicio").addEventListener("click", () => { pausar(); irPara(0); });
+  $("b-passo").addEventListener("click", proximoFato);
+  $("velocidade").addEventListener("change", (e) => { velocidade = Number(e.target.value); });
+  $("barra-tempo").addEventListener("input", (e) => { pausar(); irPara(e.target.value / 1000 * roteiro.duracao); });
+  document.addEventListener("keydown", (e) => {
+    if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
+    if (e.key === " ") { e.preventDefault(); tocando ? pausar() : tocar(); }
+    else if (e.key === "ArrowRight") proximoFato();
+    else if (e.key === "Escape") fecharTela();
+  });
   window.addEventListener("resize", ajustarPalco);
   ajustarPalco();
-  escolher(sel.value);
+  // ?t=segundos abre parado naquele instante; ?fim=1 abre no fim (usados para conferir telas).
+  const t = params.has("fim") ? Infinity : params.has("t") ? Number(params.get("t")) : undefined;
+  escolher(sel.value, t);
+  if (params.has("abrir")) abrirTela(params.get("abrir"));
   document.body.dataset.pronto = window.MISSOES.length;
 }
 
