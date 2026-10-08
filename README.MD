@@ -1,7 +1,5 @@
-> Revisão de integração da Fase 2: 21 testes e 14 cenários. Consulte
-> `docs/REVISAO_RIGOROSA_DOUGLAS.md` para achados, correções e limitações.
-> Execute `python auditoria.py .` após instalar as dependências documentais.
-> O guia detalhado explica a base 1.1 (17 testes); esta revisão acrescenta quatro testes.
+> Integração do painel HTML: 30 testes automatizados (22 do simulador e 8 do exportador).
+> Consulte `STATUS_ENTREGA.md` para o estado atual; revisões anteriores em `docs/` são históricas.
 
 # MGPEB — Aurora Siger
 
@@ -17,12 +15,18 @@ da base em Marte. A implementação atual está em `mgpeb.py`.
 - `docs/grafico_topico_04.svg`: gráfico vetorial do modelo de consumo.
 - `gerar_relatorio_pdf.py`: converte a fonte Markdown, tabelas e gráfico para PDF.
 - `LEIA-ME.txt`: explicação direta dos campos, regras, estruturas e comandos.
-- `ROADMAP.MD`: planejamento e decisões da equipe.
 - `docs/APRESENTACAO_ALTERACOES.md`: apresentação escrita das partes 5 e 6 e dos motivos das alterações.
 - `docs/GUIA_DETALHADO.md` e `docs/GUIA_DETALHADO.pdf`: explicação metódica do projeto e das correções da versão 1.1.
 - `docs/portas_logicas.svg`: diagrama gráfico AND/NOT correspondente à autorização.
 - `docs/REVISAO_PROJETO.md`: revisão geral, evidências de testes e pendências para a entrega.
 - `main.py`: experimento antigo de descida, mantido para comparação.
+
+## Painel HTML 1.0
+
+Abra `painel/index.html` no navegador. Funciona localmente, sem servidor.
+O painel reproduz os resultados do Python em 15 cenários (padrão + 14 exemplos).
+Para atualizar os dados após alterar o simulador, execute `python exportar_painel.py`.
+O HTML é um complemento visual; as decisões continuam no simulador Python.
 
 ## Executar
 
