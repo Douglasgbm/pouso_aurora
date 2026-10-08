@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Missão Aurora</title>
+<!-- Painel didático do MGPEB. Só mostra o que o mgpeb.py decidiu:
+     os dados vêm de dados.js, gerado por exportar_painel.py. -->
+<style>
+  :root {
+    --fundo: #0b0a1a;
+    --parede: #14122b;
+    --parede-2: #1b1838;
+    --rosa: #ff3d7f;
+    --ciano: #3ff3ff;
+    --ciano-fraco: #3ff3ff55;
+    --texto: #bdfcff;
+    --texto-fraco: #6fa9b3;
+    --verde: #49ff8b;
+    --vermelho: #ff4d5e;
+    --ambar: #ffc04d;
+    --vidro: #070616;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: var(--mono);
+    font-size: 13px;
+    overflow: hidden;
+  }
+
+  /* ---------- A sala ---------- */
+  .sala {
+    position: relative;
+    height: 100vh;
+    min-height: 620px;
+    padding: 14px 18px 0;
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(420px, 2.3fr) minmax(220px, 1fr);
+    grid-template-rows: auto 1fr auto;
+    gap: 14px 18px;
+    background:
+      radial-gradient(ellipse at 50% 35%, #231f4a 0%, transparent 60%),
+      linear-gradient(180deg, var(--parede) 0%, var(--fundo) 100%);
+  }
+  /* Arcos neon da moldura da sala */
+  .sala::before, .sala::after {
+    content: "";
+    position: absolute;
+    top: -40px; bottom: 120px;
+    width: 46%;
+    border: 3px solid var(--rosa);
+    box-shadow: 0 0 12px var(--rosa), inset 0 0 12px var(--rosa);
+    pointer-events: none;
+    opacity: .85;
+  }
+  .sala::before { left: -2%; border-right: none; border-radius: 0 0 0 90px; border-top: none; }
+  .sala::after  { right: -2%; border-left: none; border-radius: 0 0 90px 0; border-top: none; }
+
+  /* ---------- Letreiro ---------- */
+  .letreiro {
+    grid-column: 2;
+    justify-self: center;
+    text-align: center;
+    padding: 8px 28px;
+    border: 2px solid var(--ciano);
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--ciano), inset 0 0 10px var(--ciano-fraco);
+    background: #0a0920cc;
+    position: relative;
+    z-index: 1;
+  }
+  .letreiro h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: .12em;
+    color: var(--ciano);
+    text-shadow: 0 0 8px var(--ciano);
+    font-weight: 700;
+  }
+  .letreiro p {
+    margin: 2px 0 0;
+    font-size: 14px;
+    letter-spacing: .14em;
+    color: var(--rosa);
+    text-shadow: 0 0 8px var(--rosa);
+  }
+  .cenario {
+    grid-column: 3;
+    align-self: center;
+    justify-self: end;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--texto-fraco);
+  }
+  select {
+    font: inherit;
+    font-size: 13px;
+    color: var(--ciano);
+    background: #0a0920;
+    border: 1px solid var(--ciano);
+    border-radius: 6px;
+    padding: 5px 8px;
+    box-shadow: 0 0 6px var(--ciano-fraco);
+  }
+
+  /* ---------- Telas de parede ---------- */
+  .lado { display: flex; flex-direction: column; gap: 14px; z-index: 1; min-height: 0; }
+  .tela {
+    background: linear-gradient(180deg, #0a1b26ee, #071119ee);
+    border: 1.5px solid var(--ciano);
+    border-radius: 8px;
+    box-shadow: 0 0 8px var(--ciano-fraco), inset 0 0 18px #3ff3ff1a;
+    padding: 10px 12px;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .tela::after { /* linhas de varredura */
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent 0 2px, #00000022 2px 3px);
+    pointer-events: none;
+  }
+  .tela h2 {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    color: var(--ciano);
+    text-shadow: 0 0 6px var(--ciano-fraco);
+    display: flex;
+    justify-content: space-between;
+  }
+  .tela h2 small { color: var(--texto-fraco); letter-spacing: .05em; font-weight: 400; }
+  .lado .tela { flex: 1; }
+
+  /* Fila */
+  .fila { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .fila li {
+    display: grid;
+    grid-template-columns: 22px 26px 1fr auto;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    border: 1px solid #3ff3ff33;
+    border-radius: 4px;
+    background: #3ff3ff0a;
+  }
+  .fila .pos { color: var(--texto-fraco); }
+  .fila .id { color: var(--ciano); font-weight: 700; }
+  .vazio { color: var(--texto-fraco); font-style: italic; }
+
+  .selo {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+  }
+  .e-orbita { color: var(--texto-fraco); }
+  .e-espera { color: var(--ambar); }
+  .e-descendo { color: var(--ciano); }
+  .e-pousado { color: #9fd8ff; }
+  .e-operacional { color: var(--verde); }
+  .e-suspenso { color: var(--ambar); }
+  .e-acidente { color: var(--vermelho); }
+
+  /* Ambiente */
+  .dados { display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; margin: 0; }
+  .dados dt { color: var(--texto-fraco); }
+  .dados dd { margin: 0; text-align: right; }
+  .ok { color: var(--verde); }
+  .ruim { color: var(--vermelho); }
+  .aviso { color: var(--ambar); }
+  .relogio {
+    font-size: 30px;
+    color: var(--ciano);
+    text-shadow: 0 0 10px var(--ciano);
+    margin: 2px 0 10px;
+    letter-spacing: .05em;
+  }
+
+  /* Portas lógicas */
+  .portas svg { width: 100%; height: auto; max-height: 19vh; display: block; }
+  .portas .rotulo { font: 10px var(--mono); fill: var(--texto); }
+  .checagem-de { font-size: 12px; margin-bottom: 4px; }
+  .checagem-motivo { font-size: 11px; color: var(--texto-fraco); margin-top: 6px; min-height: 2.6em; }
+
+  /* Combustível */
+  .barras { display: flex; flex-direction: column; gap: 7px; }
+  .barra { display: grid; grid-template-columns: 22px 1fr 58px; align-items: center; gap: 6px; }
+  .barra .trilho {
+    position: relative;
+    height: 10px;
+    border: 1px solid #3ff3ff55;
+    border-radius: 2px;
+    background: #3ff3ff0d;
+  }
+  .barra .cheio { position: absolute; inset: 0 auto 0 0; background: var(--ciano); box-shadow: 0 0 6px var(--ciano); }
+  .barra .cheio.urgente { background: var(--ambar); box-shadow: 0 0 6px var(--ambar); }
+  .barra .cheio.solo { background: #6f8fa8; box-shadow: none; }
+  .barra .cheio.baixo { background: var(--vermelho); box-shadow: 0 0 6px var(--vermelho); }
+  .barra .minimo { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--rosa); box-shadow: 0 0 4px var(--rosa); }
+  .barra .kg { text-align: right; color: var(--texto-fraco); font-size: 11px; }
+  .legenda { margin-top: 8px; font-size: 10px; color: var(--texto-fraco); }
+  .legenda i { display: inline-block; width: 8px; height: 8px; background: var(--rosa); margin-right: 4px; }
+
+  /* ---------- Janela com Marte ---------- */
+  .janela {
+    grid-column: 2;
+    position: relative;
+    border-radius: 26px;
+    border: 3px solid #2c2852;
+    box-shadow: 0 0 0 2px #0c0b1f, 0 0 30px #00000088, inset 0 0 40px #000;
+    background: var(--vidro);
+    overflow: hidden;
+    min-height: 0;
+    z-index: 1;
+  }
+  .janela canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hud { position: absolute; font-size: 11px; color: var(--ciano); text-shadow: 0 0 6px var(--ciano-fraco); }
+  .hud.se { top: 14px; left: 18px; }
+  .hud.sd { top: 14px; right: 18px; text-align: right; }
+  .hud.id { bottom: 14px; left: 18px; }
+  .hud.dd { bottom: 14px; right: 18px; text-align: right; }
+  .hud .grande { font-size: 15px; letter-spacing: .1em; }
+  .hud .fraco { color: var(--texto-fraco); }
+
+  /* ---------- Mesa e CRT ---------- */
+  .mesa {
+    grid-column: 1 / -1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 14px;
+    z-index: 1;
+  }
+  .mesa::before { /* tampo da mesa */
+    content: "";
+    position: absolute;
+    left: 22%; right: 22%; bottom: 0; height: 46px;
+    background: linear-gradient(180deg, #2a2850, #15132c);
+    border-top: 2px solid #3a3670;
+    border-radius: 6px 6px 0 0;
+  }
+  .crt {
+    position: relative;
+    width: min(620px, 52vw);
+    padding: 12px;
+    background: linear-gradient(180deg, #34315e, #22203f);
+    border-radius: 14px;
+    box-shadow: 0 8px 20px #000a;
+  }
+  .crt .tubo {
+    height: clamp(110px, 17vh, 190px);
+    border-radius: 10px / 18px;
+    background: radial-gradient(ellipse at center, #08241f 0%, #031210 100%);
+    border: 2px solid #111;
+    box-shadow: inset 0 0 25px #000, 0 0 14px #49ff8b33;
+    padding: 8px 12px;
+    overflow: hidden;
+    position: relative;
+    color: var(--verde);
+    text-shadow: 0 0 5px #49ff8b88;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .crt .tubo::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent 0 2px, #0000003a 2px 3px);
+    pointer-events: none;
+  }
+  .console { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+  .console div { flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .console .t-acidente { color: var(--vermelho); text-shadow: 0 0 5px #ff4d5e88; }
+  .console .t-evento { color: var(--ambar); text-shadow: 0 0 5px #ffc04d88; }
+  .console .cursor::after { content: "█"; animation: pisca 1s steps(1) infinite; }
+  @keyframes pisca { 50% { opacity: 0; } }
+  .crt .pe { height: 8px; margin: 8px auto 0; width: 40%; background: #1a1834; border-radius: 0 0 6px 6px; }
+
+  @media (max-height: 760px) {
+    .relogio { font-size: 24px; margin-bottom: 6px; }
+    .tela { padding: 8px 10px; }
+    .fila li { padding: 2px 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="sala" id="sala">
+  <header class="letreiro">
+    <h1>MISSÃO AURORA</h1>
+    <p>POUSO DOS MÓDULOS EM MARTE</p>
+  </header>
+  <label class="cenario">
+    CENÁRIO
+    <select id="seletor" aria-label="Cenário"></select>
+  </label>
+
+  <aside class="lado">
+    <section class="tela">
+      <h2>MISSÃO <small>MGPEB</small></h2>
+      <div class="relogio" id="relogio">T+0.0</div>
+      <dl class="dados" id="ambiente"></dl>
+    </section>
+    <section class="tela">
+      <h2>FILA DE POUSO <small id="fila-info"></small></h2>
+      <ol class="fila" id="fila"></ol>
+    </section>
+  </aside>
+
+  <main class="janela" id="janela">
+    <canvas id="ceu"></canvas>
+    <div class="hud se"><div class="grande">ÓRBITA</div><div class="fraco" id="hud-orbita"></div></div>
+    <div class="hud sd"><div class="grande">BASE</div><div class="fraco" id="hud-base"></div></div>
+    <div class="hud id"><div class="fraco">ÁREA DE POUSO</div><div class="grande" id="hud-area"></div></div>
+    <div class="hud dd"><div class="fraco">ALERTAS</div><div class="grande" id="hud-alertas"></div></div>
+  </main>
+
+  <aside class="lado">
+    <section class="tela portas">
+      <h2>AUTORIZAÇÃO <small>AND</small></h2>
+      <div class="checagem-de" id="checagem-de"></div>
+      <svg id="portas" viewBox="0 0 260 150" role="img" aria-label="Porta lógica de autorização"></svg>
+      <div class="checagem-motivo" id="checagem-motivo"></div>
+    </section>
+    <section class="tela">
+      <h2>COMBUSTÍVEL <small>kg</small></h2>
+      <div class="barras" id="barras"></div>
+      <div class="legenda"><i></i>mínimo seguro para a descida (cinza: já em solo)</div>
+    </section>
+  </aside>
+
+  <footer class="mesa">
+    <div class="crt">
+      <div class="tubo"><div class="console" id="console"></div></div>
+      <div class="pe"></div>
+    </div>
+  </footer>
+</div>
+
+<script src="dados.js"></script>
+<script>
+"use strict";
+
+const ROTULO_ESTADO = {
+  "órbita": "ÓRBITA", espera: "ESPERA", descendo: "DESCENDO", pousado: "POUSADO",
+  operacional: "OPERACIONAL", suspenso: "SUSPENSO", acidente: "ACIDENTE"
+};
+const CLASSE_ESTADO = {
+  "órbita": "e-orbita", espera: "e-espera", descendo: "e-descendo", pousado: "e-pousado",
+  operacional: "e-operacional", suspenso: "e-suspenso", acidente: "e-acidente"
+};
+const PORTAS = [
+  ["combustivel", "COMBUSTÍVEL"],
+  ["saude", "SENSORES"],
+  ["clima", "ATMOSFERA"],
+  ["area", "ÁREA LIVRE"]
+];
+
+const NO_SOLO = ["pousado", "operacional", "suspenso", "acidente"];
+const $ = (id) => document.getElementById(id);
+const fmt = (n) => Number(n).toFixed(1);
+
+function el(tag, classe, texto) {
+  const e = document.createElement(tag);
+  if (classe) e.className = classe;
+  if (texto !== undefined) e.textContent = texto;
+  return e;
+}
+
+/* Quadro = tudo o que a tela mostra num instante. No andar 1 é o estado final;
+   no andar 2 será montado passo a passo a partir da linha do tempo. */
+function quadroFinal(missao) {
+  const passos = missao.linha_do_tempo;
+  let checagem = null, ordenacao = null;
+  for (const p of passos) {
+    if (p.tipo === "checagem") checagem = p;
+    if (p.tipo === "ordenacao") ordenacao = p;
+  }
+  return {
+    tempo: missao.final.tempo,
+    ambiente: missao.final.ambiente,
+    modulos: missao.final.modulos,
+    espera: missao.final.espera,
+    alertas: missao.final.alertas,
+    logs: missao.final.historico,
+    checagem, ordenacao
+  };
+}
+
+/* ---------- Painéis ---------- */
+function mostrarAmbiente(q) {
+  $("relogio").textContent = "T+" + fmt(q.tempo) + " min";
+  const dl = $("ambiente");
+  dl.replaceChildren();
+  const linhas = [
+    ["Atmosfera", q.ambiente[0] ? "aceitável" : "inaceitável", q.ambiente[0] ? "ok" : "ruim"],
+    ["Área", q.ambiente[1], q.ambiente[1] === "livre" ? "ok" : (q.ambiente[1] === "obstruída" ? "ruim" : "aviso")],
+    ["Pousados", String(q.modulos.filter(m => ["pousado", "operacional", "suspenso"].includes(m.estado)).length) + " / " + q.modulos.length, ""],
+    ["Operacionais", String(q.modulos.filter(m => m.estado === "operacional").length), "ok"]
+  ];
+  for (const [nome, valor, classe] of linhas) {
+    dl.append(el("dt", "", nome), el("dd", classe, valor));
+  }
+}
+
+function mostrarFila(q) {
+  const ol = $("fila");
+  ol.replaceChildren();
+  // Primeiro quem desceu, na ordem do histórico; depois a espera; depois a órbita.
+  const porId = Object.fromEntries(q.modulos.map(m => [m.id, m]));
+  const ordem = [];
+  for (const linha of q.logs) {
+    const achou = linha.match(/min: (\S+) iniciou descida$/);
+    if (achou && !ordem.includes(achou[1])) ordem.push(achou[1]);
+  }
+  for (const id of q.espera) if (!ordem.includes(id)) ordem.push(id);
+  for (const m of q.modulos) if (!ordem.includes(m.id)) ordem.push(m.id);
+  $("fila-info").textContent = q.espera.length ? q.espera.length + " aguardando" : "";
+  ordem.forEach((id, i) => {
+    const m = porId[id];
+    const li = el("li");
+    li.append(el("span", "pos", String(i + 1).padStart(2, "0")),
+              el("span", "id", m.id),
+              el("span", "", m.tipo),
+              el("span", "selo " + CLASSE_ESTADO[m.estado], ROTULO_ESTADO[m.estado]));
+    li.title = m.motivo || "";
+    ol.append(li);
+  });
+}
+
+function mostrarPortas(q) {
+  const svg = $("portas");
+  const c = q.checagem;
+  const NS = "http://www.w3.org/2000/svg";
+  const s = (tag, attrs, texto) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (texto !== undefined) e.textContent = texto;
+    svg.append(e);
+    return e;
+  };
+  svg.replaceChildren();
+  if (!c) {
+    $("checagem-de").textContent = "Nenhuma checagem nesta missão";
+    $("checagem-motivo").textContent = "";
+    return;
+  }
+  const cor = (ok) => ok ? "#49ff8b" : "#ff4d5e";
+  const ys = [20, 55, 90, 125];
+  PORTAS.forEach(([chave, nome], i) => {
+    const ok = c.portas[chave];
+    s("circle", { cx: 10, cy: ys[i], r: 5, fill: cor(ok), style: "filter: drop-shadow(0 0 4px " + cor(ok) + ")" });
+    s("text", { x: 20, y: ys[i] - 6, class: "rotulo" }, nome);
+    s("path", { d: `M15 ${ys[i]} H120 L150 ${60 + i * 10}`, stroke: cor(ok), "stroke-width": 2, fill: "none", opacity: .9 });
+  });
+  // Corpo da porta AND
+  s("path", { d: "M150 40 H180 A35 35 0 0 1 180 110 H150 Z", fill: "#0a1b26", stroke: "#3ff3ff", "stroke-width": 2 });
+  s("text", { x: 158, y: 80, class: "rotulo", fill: "#3ff3ff" }, "AND");
+  const liberado = Object.values(c.portas).every(Boolean);
+  s("path", { d: "M215 75 H245", stroke: cor(liberado), "stroke-width": 3 });
+  s("circle", { cx: 250, cy: 75, r: 6, fill: cor(liberado), style: "filter: drop-shadow(0 0 5px " + cor(liberado) + ")" });
+  $("checagem-de").innerHTML = "";
+  $("checagem-de").append("Última checagem: ", el("b", "", c.id), " em T+" + fmt(c.tempo) + " → ",
+    el("b", liberado ? "ok" : "ruim", liberado ? "LIBERADO" : "BLOQUEADO"));
+  $("checagem-motivo").textContent = liberado
+    ? "Combustível " + fmt(c.combustivel) + " kg ≥ mínimo " + fmt(c.minimo) + " kg"
+    : c.motivo.replace(/; $/, "").split("; ").join(" · ");
+}
+
+function mostrarCombustivel(q) {
+  const caixa = $("barras");
+  caixa.replaceChildren();
+  // Escala comum: o maior combustível de entrada da missão vira 100%.
+  const teto = Math.max(...missaoAtual.entrada.modulos.map(m => m.combustivel), ...q.modulos.map(m => m.minimo)) || 1;
+  for (const m of q.modulos) {
+    const linha = el("div", "barra");
+    const trilho = el("div", "trilho");
+    const cheio = el("div", "cheio");
+    cheio.style.width = Math.max(0, Math.min(100, m.combustivel / teto * 100)) + "%";
+    // O mínimo só vale para quem ainda vai descer; em solo a barra fica neutra.
+    if (NO_SOLO.includes(m.estado)) cheio.classList.add("solo");
+    else if (m.combustivel < m.minimo) cheio.classList.add("baixo");
+    else if ((m.combustivel - m.minimo) / m.minimo <= missaoAtual.entrada.config.margem) cheio.classList.add("urgente");
+    const minimo = el("div", "minimo");
+    minimo.style.left = Math.min(100, m.minimo / teto * 100) + "%";
+    trilho.append(cheio, minimo);
+    linha.append(el("span", "id", m.id), trilho, el("span", "kg", fmt(m.combustivel)));
+    linha.title = m.tipo + ": " + fmt(m.combustivel) + " kg (mínimo " + fmt(m.minimo) + " kg)";
+    caixa.append(linha);
+  }
+}
+
+function mostrarConsole(q) {
+  const caixa = $("console");
+  caixa.replaceChildren();
+  const ultimas = q.logs.slice(-12);
+  for (const linha of ultimas) {
+    let classe = "";
+    if (linha.includes("acidente")) classe = "t-acidente";
+    else if (linha.includes("evento") || linha.includes("suspenso")) classe = "t-evento";
+    caixa.append(el("div", classe, "> " + linha));
+  }
+  caixa.append(el("div", "cursor", "> "));
+}
+
+function mostrarHud(q) {
+  const orbita = q.modulos.filter(m => m.estado === "órbita" || m.estado === "espera");
+  const base = q.modulos.filter(m => ["pousado", "operacional", "suspenso"].includes(m.estado));
+  $("hud-orbita").textContent = orbita.length ? orbita.map(m => m.id).join(" · ") : "vazia";
+  $("hud-base").textContent = base.length ? base.map(m => m.id).join(" · ") : "vazia";
+  $("hud-area").textContent = q.ambiente[1].toUpperCase();
+  $("hud-area").className = "grande " + (q.ambiente[1] === "livre" ? "ok" : q.ambiente[1] === "obstruída" ? "ruim" : "aviso");
+  $("hud-alertas").textContent = String(q.alertas.length);
+  $("hud-alertas").className = "grande " + (q.alertas.length ? "aviso" : "ok");
+}
+
+/* ---------- Céu, Marte e módulos (canvas) ---------- */
+function aleatorio(semente) {
+  // Gerador simples com semente: o céu sai igual a cada abertura.
+  let s = semente;
+  return () => (s = (s * 16807) % 2147483647) / 2147483647;
+}
+
+const ceu = $("ceu");
+const ctx = ceu.getContext("2d");
+let estrelas = [], manchas = [];
+(function prepararCeu() {
+  const r = aleatorio(42);
+  for (let i = 0; i < 260; i++) estrelas.push([r(), r(), r() * 1.3 + 0.2, r()]);
+  for (let i = 0; i < 26; i++) manchas.push([r() * 2 - 1, r() * 2 - 1, r() * 0.35 + 0.08, r()]);
+})();
+
+function geometria() {
+  const w = ceu.clientWidth, h = ceu.clientHeight;
+  const raio = Math.min(w, h) * 0.27;
+  return { w, h, cx: w / 2, cy: h * 0.47, raio };
+}
+
+function desenharMarte(g) {
+  const { cx, cy, raio } = g;
+  // Halo
+  const halo = ctx.createRadialGradient(cx, cy, raio * 0.9, cx, cy, raio * 1.35);
+  halo.addColorStop(0, "#ff6a3a33");
+  halo.addColorStop(1, "#ff6a3a00");
+  ctx.fillStyle = halo;
+  ctx.beginPath(); ctx.arc(cx, cy, raio * 1.35, 0, Math.PI * 2); ctx.fill();
+  // Disco
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, raio, 0, Math.PI * 2); ctx.clip();
+  const corpo = ctx.createRadialGradient(cx - raio * 0.35, cy - raio * 0.35, raio * 0.1, cx, cy, raio);
+  corpo.addColorStop(0, "#f08a4e");
+  corpo.addColorStop(0.55, "#c9502b");
+  corpo.addColorStop(1, "#6e2414");
+  ctx.fillStyle = corpo;
+  ctx.fillRect(cx - raio, cy - raio, raio * 2, raio * 2);
+  // Manchas de borda suave: gradiente radial que some até a transparência.
+  for (const [x, y, t, tom] of manchas) {
+    const mx = cx + x * raio * 0.8, my = cy + y * raio * 0.8, mr = t * raio;
+    const mancha = ctx.createRadialGradient(mx, my, 0, mx, my, mr);
+    mancha.addColorStop(0, tom > 0.5 ? "#6a20104d" : "#f7a06a26");
+    mancha.addColorStop(1, tom > 0.5 ? "#6a201000" : "#f7a06a00");
+    ctx.fillStyle = mancha;
+    ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
+  }
+  // Calota polar e sombra
+  ctx.fillStyle = "#ffe9dc99";
+  ctx.beginPath(); ctx.ellipse(cx - raio * 0.1, cy - raio * 0.93, raio * 0.28, raio * 0.09, 0, 0, Math.PI * 2); ctx.fill();
+  const sombra = ctx.createLinearGradient(cx - raio, cy - raio, cx + raio, cy + raio);
+  sombra.addColorStop(0.45, "#00000000");
+  sombra.addColorStop(1, "#000000aa");
+  ctx.fillStyle = sombra;
+  ctx.fillRect(cx - raio, cy - raio, raio * 2, raio * 2);
+  ctx.restore();
+}
+
+function desenharModulo(x, y, escala, id, estado, angulo) {
+  const cor = { "órbita": "#9fb3c8", espera: "#ffc04d", descendo: "#3ff3ff", pousado: "#9fd8ff",
+                operacional: "#49ff8b", suspenso: "#ffc04d", acidente: "#ff4d5e" }[estado];
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angulo || 0);
+  ctx.scale(escala, escala);
+  // Propulsores
+  if (estado === "órbita" || estado === "espera" || estado === "descendo") {
+    for (const dx of [-9, 9]) {
+      const chama = ctx.createRadialGradient(dx, 11, 0, dx, 11, 9);
+      chama.addColorStop(0, "#fff6c0");
+      chama.addColorStop(0.4, "#ffb44d");
+      chama.addColorStop(1, "#ff6a0000");
+      ctx.fillStyle = chama;
+      ctx.beginPath(); ctx.arc(dx, 11, 9, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  // Casco
+  ctx.fillStyle = "#c9ced8";
+  ctx.strokeStyle = "#5d6475";
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(-16, -6); ctx.lineTo(-10, -12); ctx.lineTo(10, -12); ctx.lineTo(16, -6);
+  ctx.lineTo(16, 6); ctx.lineTo(-16, 6); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#8a91a3";
+  ctx.fillRect(-13, 6, 8, 4); ctx.fillRect(5, 6, 8, 4);
+  ctx.fillStyle = "#3b4152";
+  ctx.fillRect(-7, -9, 14, 5);
+  // Luz de estado
+  ctx.fillStyle = cor;
+  ctx.shadowColor = cor; ctx.shadowBlur = 8;
+  ctx.beginPath(); ctx.arc(0, -1, 2.6, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  // Rótulo
+  ctx.save();
+  ctx.font = "bold 12px ui-monospace, Menlo, monospace";
+  ctx.textAlign = "center";
+  ctx.fillStyle = cor;
+  ctx.shadowColor = cor; ctx.shadowBlur = 6;
+  ctx.fillText(id, x, y - 20 * escala);
+  ctx.restore();
+}
+
+function desenharCeu(q) {
+  const dpr = window.devicePixelRatio || 1;
+  const w = ceu.clientWidth, h = ceu.clientHeight;
+  ceu.width = Math.round(w * dpr); ceu.height = Math.round(h * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  for (const [x, y, t, brilho] of estrelas) {
+    ctx.fillStyle = `rgba(220,235,255,${0.3 + brilho * 0.6})`;
+    ctx.fillRect(x * w, y * h, t, t);
+  }
+  const g = geometria();
+  // Anel de órbita
+  ctx.save();
+  ctx.strokeStyle = "#3ff3ff33";
+  ctx.setLineDash([4, 6]);
+  ctx.beginPath(); ctx.ellipse(g.cx, g.cy, g.raio * 1.75, g.raio * 0.62, -0.12, 0, Math.PI * 2); ctx.stroke();
+  ctx.restore();
+  desenharMarte(g);
+
+  // Módulos em órbita/espera: distribuídos no anel.
+  const noAlto = q.modulos.filter(m => m.estado === "órbita" || m.estado === "espera" || m.estado === "descendo");
+  noAlto.forEach((m, i) => {
+    const a = -Math.PI * 0.85 + (i / Math.max(1, noAlto.length)) * Math.PI * 2;
+    const x = g.cx + Math.cos(a) * g.raio * 1.75;
+    const y = g.cy + Math.sin(a) * g.raio * 0.62 - Math.cos(a) * g.raio * 0.12;
+    desenharModulo(x, y, 1.15, m.id, m.estado, 0);
+  });
+
+  // Base: módulos em solo alinhados na superfície, perto do equador visível.
+  const solo = q.modulos.filter(m => ["pousado", "operacional", "suspenso", "acidente"].includes(m.estado));
+  const larg = g.raio * 1.2;
+  solo.forEach((m, i) => {
+    const x = g.cx - larg / 2 + (solo.length === 1 ? larg / 2 : i * larg / (solo.length - 1));
+    const y = g.cy + g.raio * 0.45;
+    if (m.estado === "acidente") {
+      ctx.save();
+      ctx.fillStyle = "#ff4d5e55";
+      ctx.beginPath(); ctx.arc(x, y + 4, 14, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      desenharModulo(x, y, 0.75, m.id, m.estado, 0.6);
+    } else {
+      desenharModulo(x, y, 0.75, m.id, m.estado, 0);
+    }
+  });
+}
+
+/* ---------- Ligação ---------- */
+let missaoAtual = null;
+let quadroAtual = null;
+
+function mostrar(q) {
+  quadroAtual = q;
+  mostrarAmbiente(q);
+  mostrarFila(q);
+  mostrarPortas(q);
+  mostrarCombustivel(q);
+  mostrarConsole(q);
+  mostrarHud(q);
+  desenharCeu(q);
+}
+
+function escolher(nome) {
+  missaoAtual = window.MISSOES.find(m => m.nome === nome);
+  mostrar(quadroFinal(missaoAtual));
+}
+
+function iniciar() {
+  if (!Array.isArray(window.MISSOES) || window.MISSOES.length === 0) {
+    document.body.textContent = "dados.js não encontrado. Rode: python3 exportar_painel.py";
+    return;
+  }
+  const sel = $("seletor");
+  for (const m of window.MISSOES) {
+    const op = el("option", "", m.nome.replaceAll("_", " "));
+    op.value = m.nome;
+    sel.append(op);
+  }
+  const inicial = new URLSearchParams(location.search).get("cenario") || "normal";
+  sel.value = window.MISSOES.some(m => m.nome === inicial) ? inicial : window.MISSOES[0].nome;
+  sel.addEventListener("change", () => escolher(sel.value));
+  window.addEventListener("resize", () => quadroAtual && desenharCeu(quadroAtual));
+  escolher(sel.value);
+  document.body.dataset.pronto = window.MISSOES.length;
+}
+
+window.addEventListener("error", (e) => { document.body.dataset.erro = e.message; });
+iniciar();
+</script>
+</body>
+</html>
