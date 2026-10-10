@@ -81,36 +81,71 @@ def caminho_painel(abrir=True):
     return 0
 
 
+def escolher_cenario():
+    # Importação tardia: o exportador é apenas um complemento do roteiro.
+    from exportar_painel import todos_os_casos
+    nomes = [caso[0] for caso in todos_os_casos()]
+    print("Cenários: " + ", ".join(nomes))
+    try:
+        nome = input("Cenário (Enter: padrao; 0: voltar): ").strip() or "padrao"
+    except EOFError:
+        return 0
+    if nome == "0":
+        return 0
+    if nome not in nomes:
+        print("Cenário desconhecido. Voltando ao menu.")
+        return 0
+    return rodar("Simulação ao vivo", ["ao_vivo.py", nome])
+
+
 def menu():
-    print("MGPEB - Aurora Siger | Roteiro de avaliação")
-    print()
-    print("  1 - Terminal: programa principal, 14 cenários ao vivo e testes")
-    print("  2 - Painel HTML: simulação animada no navegador")
-    print()
     if not interativo():
         print("Sem terminal interativo: use 'python avaliar.py terminal' ou 'painel'.")
         return 2
-    escolha = input("Escolha 1 ou 2: ").strip()
-    if escolha == "1":
-        return caminho_terminal()
-    if escolha == "2":
-        return caminho_painel()
-    print("Opção inválida.")
-    return 2
+    # Laço, sem recursão: cada rodada termina antes de oferecer a próxima.
+    while True:
+        print("\nMGPEB - Aurora Siger | Roteiro de avaliação")
+        print("  1 - Terminal: programa principal, 14 cenários ao vivo e testes")
+        print("  2 - Painel HTML: simulação animada no navegador")
+        print("  3 - Rodar um cenário no terminal")
+        print("  0 - Sair")
+        try:
+            escolha = input("Escolha: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nAvaliação encerrada.")
+            return 0
+        if escolha == "0":
+            return 0
+        if escolha == "1":
+            codigo = caminho_terminal()
+        elif escolha == "2":
+            codigo = caminho_painel()
+        elif escolha == "3":
+            codigo = escolher_cenario()
+        else:
+            print("Opção inválida. Escolha 0, 1, 2 ou 3.")
+            continue
+        if codigo != 0:
+            return codigo  # uma falha não pode ser escondida pelo loop
+        print("\nExecução concluída. Você pode escolher outra opção.")
 
 
 def main(argumentos):
     if not argumentos:
         return menu()
     if argumentos[0] == "terminal":
-        return caminho_terminal()
-    if argumentos[0] == "ao-vivo":
-        return rodar("Simulação ao vivo", ["ao_vivo.py"] + argumentos[1:])
-    if argumentos[0] == "painel":
-        # --nao-abrir serve para conferir o roteiro sem abrir o navegador.
-        return caminho_painel(abrir="--nao-abrir" not in argumentos)
-    print(__doc__)
-    return 2
+        codigo = caminho_terminal()
+    elif argumentos[0] == "ao-vivo":
+        codigo = rodar("Simulação ao vivo", ["ao_vivo.py"] + argumentos[1:])
+    elif argumentos[0] == "painel":
+        codigo = caminho_painel(abrir="--nao-abrir" not in argumentos)
+    else:
+        print(__doc__)
+        return 2
+    # Comandos automatizados acabam; no terminal, voltamos à escolha inicial.
+    if codigo == 0 and interativo() and "--nao-abrir" not in argumentos:
+        return menu()
+    return codigo
 
 
 if __name__ == "__main__":

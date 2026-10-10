@@ -1,26 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="300" viewBox="0 0 1000 300">
-  <rect width="1000" height="300" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="460" viewBox="0 0 1000 460">
+  <rect width="1000" height="460" fill="white"/>
+  <!-- Autorização: segue autorizar() em mgpeb.py. -->
   <g font-family="Helvetica,Arial,sans-serif" font-size="19" fill="#202b2a">
-    <text x="20" y="85">C: combustível suficiente</text>
-    <text x="20" y="115">S: sensores operacionais</text>
-    <text x="20" y="145">E: sistemas operacionais</text>
-    <text x="20" y="175">A: atmosfera aceitável</text>
-    <text x="20" y="205">D: área livre</text>
+    <text x="20" y="76">C: combustível suficiente</text>
+    <text x="20" y="116">S: sensores operacionais</text>
+    <text x="20" y="156">E: sistemas operacionais</text>
+    <text x="20" y="196">A: atmosfera aceitável</text>
+    <text x="20" y="236">D: área livre</text>
   </g>
   <g fill="none" stroke="#174a45" stroke-width="3">
-    <path d="M275 80 H330 M275 110 H330 M275 140 H330 M275 170 H330 M275 200 H330"/>
-    <path d="M330 60 H400 A80 80 0 0 1 400 220 H330 Z" fill="#f0f4f2"/>
-    <path d="M480 140 H740 M570 140 V230 H645"/>
-    <path d="M645 205 L645 255 L695 230 Z" fill="#f0f4f2"/>
-    <circle cx="702" cy="230" r="7" fill="white"/>
-    <path d="M709 230 H740"/>
-    <circle cx="570" cy="140" r="4" fill="#174a45"/>
+    <!-- C, A e D vão direto ao AND -->
+    <path d="M265 70 H540 M265 190 H540 M265 230 H540"/>
+    <!-- NOT S e NOT E -->
+    <path d="M265 110 H285 M265 150 H285"/>
+    <path d="M285 96 L285 124 L315 110 Z" fill="#f0f4f2"/>
+    <path d="M285 136 L285 164 L315 150 Z" fill="#f0f4f2"/>
+    <circle cx="321" cy="110" r="6" fill="white"/>
+    <circle cx="321" cy="150" r="6" fill="white"/>
+    <path d="M327 110 H371 M327 150 H371"/>
+    <!-- OR das falhas -->
+    <path d="M360 94 Q384 130 360 166 Q420 166 446 130 Q420 94 360 94 Z" fill="#f0f4f2"/>
+    <!-- NOT da falha: saúde ok -->
+    <path d="M446 130 H456"/>
+    <path d="M456 116 L456 144 L484 130 Z" fill="#f0f4f2"/>
+    <circle cx="490" cy="130" r="6" fill="white"/>
+    <path d="M496 130 H540"/>
+    <!-- AND final -->
+    <path d="M540 50 H600 A100 100 0 0 1 600 250 H540 Z" fill="#f0f4f2"/>
+    <path d="M700 150 H790 M740 150 V245 H770"/>
+    <path d="M770 231 L770 259 L800 245 Z" fill="#f0f4f2"/>
+    <circle cx="806" cy="245" r="6" fill="white"/>
+    <path d="M812 245 H830"/>
+    <circle cx="740" cy="150" r="4" fill="#174a45"/>
   </g>
   <g font-family="Helvetica,Arial,sans-serif" fill="#174a45">
-    <text x="365" y="148" font-size="24">AND</text>
-    <text x="650" y="192" font-size="17">NOT</text>
-    <text x="755" y="146" font-size="21">AUTORIZAR</text>
-    <text x="755" y="236" font-size="21">ADIAR</text>
-    <text x="20" y="280" font-size="19">AUTORIZAR = C AND S AND E AND A AND D; ADIAR = NOT AUTORIZAR</text>
+    <text x="286" y="90" font-size="13">NOT</text>
+    <text x="388" y="136" font-size="16">OR</text>
+    <text x="452" y="110" font-size="13">NOT</text>
+    <text x="579" y="158" font-size="24">AND</text>
+    <text x="772" y="224" font-size="13">NOT</text>
+    <text x="800" y="156" font-size="21">AUTORIZAR</text>
+    <text x="840" y="251" font-size="21">ADIAR</text>
+    <text x="20" y="290" font-size="17">AUTORIZAR = C AND NOT(NOT S OR NOT E) AND A AND D = C AND S AND E AND A AND D</text>
+  </g>
+  <!-- Ativação em solo: segue ativar() em mgpeb.py. -->
+  <path d="M20 312 H980" stroke="#c9d6d3" stroke-width="2"/>
+  <g font-family="Helvetica,Arial,sans-serif" font-size="19" fill="#202b2a">
+    <text x="20" y="340" font-size="17" fill="#174a45">Ativação na base, depois do pouso:</text>
+    <text x="20" y="386">EN: Energia operacional</text>
+    <text x="20" y="426">HB: Habitação operacional</text>
+  </g>
+  <g fill="none" stroke="#174a45" stroke-width="3">
+    <path d="M265 380 H420 M265 420 H420"/>
+    <path d="M300 380 V352 H560"/>
+    <circle cx="300" cy="380" r="4" fill="#174a45"/>
+    <path d="M420 360 H450 A40 40 0 0 1 450 440 H420 Z" fill="#f0f4f2"/>
+    <path d="M490 400 H560"/>
+  </g>
+  <g font-family="Helvetica,Arial,sans-serif" fill="#174a45">
+    <text x="429" y="406" font-size="17">AND</text>
+    <text x="570" y="358" font-size="19">ATIVA Habitação, Logística, Médico</text>
+    <text x="570" y="406" font-size="19">ATIVA Laboratório</text>
+    <text x="570" y="440" font-size="16" fill="#202b2a">Energia ativa sozinha.</text>
   </g>
 </svg>

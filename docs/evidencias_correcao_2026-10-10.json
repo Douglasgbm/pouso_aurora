@@ -1,0 +1,119 @@
+{
+  "arvore_modificada": true,
+  "commit": "cfd101d25f5061159215a418229c54fef57bc5cb",
+  "checagens": [
+    {
+      "nome": "32 combinações de autorização",
+      "aprovado": true,
+      "evidencia": "Apenas todas as condições verdadeiras autorizam."
+    },
+    {
+      "nome": "4 fronteiras de combustível",
+      "aprovado": true,
+      "evidencia": "11.999 bloqueado; 12 e 15 urgentes; 15.001 não urgente."
+    },
+    {
+      "nome": "contêiner inválido",
+      "aprovado": true,
+      "evidencia": "[]"
+    },
+    {
+      "nome": "linha de módulo inválida",
+      "aprovado": true,
+      "evidencia": "[]"
+    },
+    {
+      "nome": "linha de evento inválida",
+      "aprovado": true,
+      "evidencia": "[]"
+    },
+    {
+      "nome": "falha própria após pouso",
+      "aprovado": true,
+      "evidencia": {
+        "estado": "suspenso",
+        "sistemas": false
+      }
+    },
+    {
+      "nome": "propagação da falha de Energia",
+      "aprovado": true,
+      "evidencia": [
+        [
+          "E",
+          "suspenso",
+          false
+        ],
+        [
+          "H",
+          "suspenso",
+          true
+        ]
+      ]
+    },
+    {
+      "nome": "ativação com falha ao fim da descida",
+      "aprovado": true,
+      "evidencia": {
+        "estado": "suspenso",
+        "sensores": false,
+        "historico": [
+          "0.0 min: E chegou",
+          "0.0 min: E iniciou descida",
+          "5.0 min: evento sensores = False | ID: E | previsto: 3 min",
+          "5.0 min: E pousado",
+          "E suspenso: Sensores/sistemas falhos na base",
+          "5.0 min: rodada encerrada"
+        ]
+      }
+    },
+    {
+      "nome": "acidente preservado",
+      "aprovado": true,
+      "evidencia": "acidente"
+    },
+    {
+      "nome": "pousos sequenciais",
+      "aprovado": true,
+      "evidencia": {
+        "tempo": 10.0,
+        "pousados": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "nome": "120 permutações de ordenação",
+      "aprovado": true,
+      "evidencia": "Resultado L, M, E, H, G para margens e tipos escolhidos."
+    },
+    {
+      "nome": "saída salva UTF-8 e atual",
+      "aprovado": true,
+      "evidencia": {
+        "utf8": true,
+        "igual_execucao": true,
+        "cenarios_executados": 14
+      }
+    },
+    {
+      "nome": "URL integral no gerador",
+      "aprovado": true,
+      "evidencia": "<link href=\"https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/\" color=\"#176B87\">https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/</link>"
+    }
+  ],
+  "integracao": {
+    "data": "2026-10-10",
+    "testes": 46,
+    "simulador": 22,
+    "exportador": 11,
+    "transmissao": 4,
+    "roteiro": 9,
+    "loop_pty": "urgente -> menu -> insuficiente -> menu -> sair; código 0",
+    "controle_negativo": "troca margem por prioridade rejeitada pelo teste 7b",
+    "pdf_paginas": 10,
+    "guia_paginas": 13,
+    "html": "estrutura preservada; 15 cenários verificados na auditoria anterior sobre a mesma versão HTML"
+  }
+}

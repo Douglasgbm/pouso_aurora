@@ -1,16 +1,16 @@
 # Status da entrega - Fase 2
 
-Atualização: 8 de outubro de 2026.
+Atualização: 10 de outubro de 2026.
 
-## Integração atual
+## Versão integrada
 
-- Incluída a interface HTML 1.0 da branch `interface-painel` do Douglas, até o commit `ab3b0aec023c86058c7bae24adbed5794c59c68d`.
-- Incluída a correção de eventos durante a descida: eventos anteriores não desfazem o resultado posterior de um acidente.
-- Painel em `painel/index.html`, com reprodução de 15 cenários exportados pelo Python. Regenerar com `python exportar_painel.py` após alterar a simulação.
-- 30 testes automatizados aprovados: 22 do simulador e 8 do exportador. A verificação do exportador compara os resultados com o Python; não substitui uma revisão visual completa no navegador.
-- Removidos da versão atual `ROADMAP.MD` e `docs/partes_5_e_6_rascunho.md`. O conteúdo final dos itens 5 e 6 permanece no relatório técnico. Os rascunhos continuam recuperáveis no histórico Git.
-- Documentos de revisões anteriores em `docs/` registram etapas históricas, incluindo contagens antigas de testes e referências aos rascunhos removidos.
+- Integra as revisões documentais, a lógica no painel e o roteiro de avaliação das PRs #4, #5 e #6.
+- Mantém o HTML do Douglas e as escolhas de terminal/painel. `python avaliar.py` retorna ao menu após concluir; opção 3 executa um cenário e 0 sai. Falhas preservam o código de erro. Execuções automatizadas não entram em loop.
+- Corrige a legenda de De Morgan, a conclusão matemática, a validação de velocidade e a cobertura das justificativas de ordenação.
+- 46 testes: 22 do simulador, 11 do exportador, 4 da transmissão e 9 do roteiro. Auditoria: 13 verificações. Evidências atuais em `docs/evidencias_correcao_2026-10-10.json`.
+- O núcleo `mgpeb.py` permanece igual à versão anterior. NumPy e Matplotlib não são dependências do projeto.
+- Rascunhos continuam fora da versão atual; documentos antigos de auditoria são registros históricos.
 
-## Entrega pendente
+## PDF de apoio atualizado
 
-O PDF técnico final será preparado por outro integrante e enviado para revisão. O `RELATORIO_TECNICO.pdf` existente é material de apoio. Conferir identificação da equipe, limite de 5 a 10 páginas, anexo de estruturas de dados e coerência com a versão integrada.
+`RELATORIO_TECNICO.pdf` foi atualizado para servir de base à integrante responsável pelo PDF da equipe. A equipe ainda precisa aprovar a versão final de entrega. Conferir identificação, exigências do portal e limite de 5 a 10 páginas. O anexo de estruturas integra a seção 2.

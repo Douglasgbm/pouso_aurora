@@ -15,6 +15,7 @@ simulado. No fim, a transmissão é conferida contra o histórico do simulador.
 import contextlib
 import copy
 import io
+import math
 import os
 import sys
 import time
@@ -200,7 +201,13 @@ def main(argumentos):
             print(caso[0])
         return 0
     nome = argumentos[0] if argumentos else "padrao"
-    velocidade = float(argumentos[1]) if len(argumentos) > 1 else 1.0
+    try:
+        velocidade = float(argumentos[1]) if len(argumentos) > 1 else 1.0
+        if not math.isfinite(velocidade) or velocidade < 0:
+            raise ValueError
+    except ValueError:
+        print("Velocidade inválida: use um número finito maior que zero, ou 0 para executar sem esperas.")
+        return 2
     if nome == "--todos":
         return main_todos(velocidade if len(argumentos) > 1 else 2.0)
     caso = caso_por_nome(nome)

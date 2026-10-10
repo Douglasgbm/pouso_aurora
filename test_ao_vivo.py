@@ -3,6 +3,7 @@ import contextlib
 import copy
 import io
 import unittest
+from pathlib import Path
 
 with contextlib.redirect_stdout(io.StringIO()):
     import mgpeb as g
@@ -44,7 +45,7 @@ class TestAoVivo(unittest.TestCase):
         saida = io.StringIO()
         historicos_ok, relatorios = ao_vivo.transmitir_todos(velocidade=0, cores=False, saida=saida)
         self.assertTrue(historicos_ok)
-        with open("exemplos_saida.txt", encoding="utf-8") as arquivo:
+        with open(Path(__file__).parent / "exemplos_saida.txt", encoding="utf-8") as arquivo:
             self.assertEqual(relatorios, arquivo.read())
         self.assertEqual(saida.getvalue().count("transmissão conferida"), 14)
 

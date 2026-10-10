@@ -142,6 +142,28 @@ class TestExportarPainel(unittest.TestCase):
                         self.assertTrue(g.vem_antes(la, lb, g.CONFIG), (nome, par))
         self.assertTrue({"urgencia", "tipo"} <= vistos, vistos)
 
+    def test_7b_justificativa_exata_de_cada_criterio(self):
+        # Casos isolados: a ordem correta não basta; o motivo também deve ser.
+        from exemplos import montar
+        pares = [
+            ("urgencia", montar("A", "Médico", fuel=13), montar("B", "Energia", fuel=30)),
+            ("margem", montar("A", "Médico", fuel=13), montar("B", "Energia", fuel=14)),
+            ("criticidade", montar("A", "Médico", fuel=13, carga=5), montar("B", "Energia", fuel=13, carga=1)),
+            ("tipo", montar("A", "Energia", fuel=30), montar("B", "Médico", fuel=30)),
+            ("prioridade", montar("A", "Médico", fuel=30, prioridade=5), montar("B", "Médico", fuel=30, prioridade=1)),
+            ("empate", montar("A", "Médico", fuel=30), montar("B", "Médico", fuel=30)),
+        ]
+        for criterio, a, b in pares:
+            with self.subTest(criterio=criterio):
+                missao = ex.exportar_caso(criterio, [a, b], [], [True, "livre"], g.CONFIG)
+                ordem = next(p for p in missao["linha_do_tempo"] if p["tipo"] == "ordenacao")
+                self.assertEqual(ordem["comparacoes"], [{"a": "A", "b": "B", "criterio": criterio}])
+                self.assertEqual(ordem["indices_depois"], [0, 1])
+                for item, m in zip(ordem["aptos"], [a, b]):
+                    esperado = (m[g.COMBUSTIVEL] - 12.0) / 12.0
+                    self.assertAlmostEqual(item["margem"], esperado)
+                    self.assertEqual(item["urgente"], esperado <= .25)
+
     def test_8_expressao_booleana_da_checagem(self):
         # C AND (S AND E) AND A AND D tem de dar o mesmo que o autorizar devolveu.
         for nome, modulos, eventos, ambiente in self.casos:

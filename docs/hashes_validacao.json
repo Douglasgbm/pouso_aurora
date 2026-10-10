@@ -5,8 +5,17 @@
   "exemplos_saida.txt": "09442e231dd7e2e98f23e73100821fd158490fb46df48083d1b9196bc3bfe303",
   "gerar_relatorio_pdf.py": "131916b3cea855915187183dbf65c2b1f2cc89e6640910ea2922ec9849e447c7",
   "auditoria.py": "380966271d93559ce0ea3906dee3548ddecd2c89aee98ac420f52dbca96734c8",
-  "exportar_painel.py": "5198562e7a24ae01768a17328349e3fece3293b020cc9e41e8ed0abb62acc073",
-  "test_exportar_painel.py": "15aba86b32bdef7afeef31a87f2618bbfc5c148412557f53f29b15e70e2392b9",
-  "painel/index.html": "9b55352a39e88fe740edb2e29f55fd62ec666b4017b16aba6b57bd03cdff4247",
-  "painel/dados.js": "1a480c1f6c7fe222fc954471353d0d97d9697354337bde773d24e2c59f346d34"
+  "exportar_painel.py": "baa74e27f5526dbcde2c75ddafb7b6acf8bc063e161ae2a3a569993100cde4ce",
+  "test_exportar_painel.py": "b49c42e12ace75883d0a4d2aaa97e5029f833eab43005c141af8961707a93e89",
+  "painel/index.html": "30fbe24b1f708b8e3896169554a776ecaf1a28d9367fcb88f723220fb91cf300",
+  "painel/dados.js": "52072dda108e5bbd229fc1d6ceaba85bbc887afca4bb406bc45c144d6a79f2c8",
+  "avaliar.py": "439a7ad2c6293110a99e25140536c2cfcaa2588fab48e296f2c71200673e2357",
+  "ao_vivo.py": "1d6486340cb688b3c394888110ed6d093b4329e9fd1cfe10008eca29bf40589d",
+  "test_avaliar.py": "c24d5a3df0e450265e5db9a59bbd3c73b13142006454a43ae532b98e515abacb",
+  "test_ao_vivo.py": "2a7a40d641d2754eee30c64c04e885995e485f3c87b94d05e97965152b2c3cd1",
+  "RELATORIO_TECNICO.md": "e2fdf13dc73a7afe680ba4f60a93da75aa986d3128fa44e187bc087314376500",
+  "RELATORIO_TECNICO.pdf": "9494f445d17c20d8a5a748960d8441ff1f718ce486dd36af748b57dbc8439055",
+  "docs/GUIA_DETALHADO.md": "4e254031a37637666fd72fe14826d3f073970e100e82e397d683e899ea513c95",
+  "docs/GUIA_DETALHADO.pdf": "a53fe6b8ee0cec6a58ec5d4b50670f12fae0377eadeb0170dbbc9b508774ff60",
+  "docs/portas_logicas.svg": "e64ae2dcf853cacd3cc759f6552d7fefb011d5cb02185593256686ca6346bb81"
 }

@@ -1,7 +1,8 @@
 MGPEB - Aurora Siger - versão alinhada ao curso para estudar/revisar
 
 COMO RODAR
-Python 3, sem dependências externas, sem instalação ou interface gráfica.
+Python 3, sem dependências externas e sem instalação. O simulador roda no
+terminal; o painel HTML (painel/index.html) é um complemento visual opcional.
 Abra o terminal nesta pasta e execute:
   python mgpeb.py              (rodada padrão com cinco tipos)
   python exemplos.py           (14 cenários separados)
@@ -88,6 +89,8 @@ Chegadas/eventos durante uma descida são processados no fim dela: a descida
 é uma transição atômica didática, sem interrupção ou reação em tempo real.
 Eventos previstos até o fim da descida entram antes do resultado do pouso,
 então um evento anterior não desfaz um acidente ocorrido depois dele.
+Num pouso bem-sucedido a área termina livre, mesmo que um evento "ocupada"
+tenha sido previsto durante a descida: o pouso é o fato mais recente.
 Sem aptos, avança ao próximo ETA/evento. Sem futuros, encerra com pendências.
 Não se fabrica melhora do clima. Alertas históricos iguais são deduplicados;
 motivos atuais são recalculados. Alertas registram a combinação de bloqueios.
@@ -121,6 +124,12 @@ test_mgpeb.py é ferramenta externa de validação. Usa unittest, AST e outros
 recursos que NÃO são conteúdo do código estudantil. Verifica resultados,
 segurança, conservação/unicidade, estabilidade, desempates, consumo,
 eventos, pilha de consulta e ausência dos recursos evitados no arquivo aluno.
-A versão atual é mantida no repositório privado MRC888/pouso_aurora.
+test_exportar_painel.py confere o exportador do painel (11 testes); com os
+22 do simulador, 4 da transmissão e 9 do roteiro, são 46 testes.
+O repositório da equipe é github.com/Douglasgbm/pouso_aurora, com o painel
+HTML e as correções integrados na branch main.
 O relatório acadêmico e o guia detalhado estão disponíveis em Markdown e PDF.
-Não há sincronização de mudanças com o repositório original do Douglas.
+
+MENU CONTÍNUO
+python avaliar.py mantém as opções 1 (terminal) e 2 (HTML), acrescenta
+3 (um cenário) e 0 (sair), e retorna ao menu ao concluir cada execução.
