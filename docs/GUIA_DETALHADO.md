@@ -356,7 +356,7 @@ Esses limites fazem parte do modelo. Não é necessário ampliar o projeto até 
 
 ### Pendências de identificação e material
 
-A capa do relatório precisa dos nomes corretos da equipe; eles não foram inventados. As ideias iniciais da equipe ficam no histórico do repositório, e main.py é um experimento anterior. Para a entrega, a equipe deve apresentar o fluxo de mgpeb.py e o relatório atual, sem atribuir a eles recursos de protótipos ou propostas que não foram integrados.
+A capa do relatório traz os nomes da equipe: Douglas, Marcelo e Alice. As ideias iniciais da equipe ficam no histórico do repositório, e main.py é um experimento anterior. Para a entrega, a equipe deve apresentar o fluxo de mgpeb.py e o relatório atual, sem atribuir a eles recursos de protótipos ou propostas que não foram integrados.
 
 <!-- PAGE BREAK -->
 

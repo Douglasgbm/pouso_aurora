@@ -15,7 +15,7 @@ Atualização: 8 de outubro de 2026.
 
 - Relatório: exemplo concreto das estruturas (cenário `urgente`) no anexo da seção 2; diagrama de portas refeito com AND, OR e NOT conforme `autorizar()` e com a ativação em solo; nota sobre IF/ELIF/ELSE; contagem corrigida para 22 testes do simulador. PDF regenerado com 10 páginas.
 - README, LEIA-ME e guia detalhado alinhados ao estado atual (30 testes, painel HTML, repositório da equipe, ROADMAP removido).
-- Continua pendente: nomes dos integrantes na capa do relatório.
+- Capa do relatório com os nomes da equipe: Douglas, Marcelo e Alice.
 
 ## Entrega pendente
 

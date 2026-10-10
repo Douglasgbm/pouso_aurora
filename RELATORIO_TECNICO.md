@@ -3,7 +3,7 @@
 
 **Atividade Integradora — Fase 2**
 
-**Equipe:** preencher os nomes dos integrantes
+**Equipe:** Douglas, Marcelo e Alice
 
 **Versão do protótipo:** 1.2 — outubro de 2026
 
