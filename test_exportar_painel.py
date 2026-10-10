@@ -109,5 +109,51 @@ class TestExportarPainel(unittest.TestCase):
         self.assertGreater(total, 20)
 
 
+    def test_7_criterio_da_ordem_concorda_com_vem_antes(self):
+        # O "porquê" exibido no painel não pode divergir da regra do simulador.
+        from itertools import permutations
+        from exemplos import montar
+        casos = list(self.casos)
+        mods = [montar("E", "Energia"), montar("H", "Habitação"),
+                montar("G", "Logística"), montar("M", "Médico", fuel=13.0, carga=5),
+                montar("L", "Laboratório", fuel=14.0, prioridade=3)]
+        for i, ordem in enumerate(permutations(mods)):
+            casos.append(["perm%d" % i, [list(m) for m in ordem], [], [True, "livre"]])
+        vistos = set()
+        for nome, modulos, eventos, ambiente in casos:
+            missao = ex.exportar_caso(nome, modulos, eventos, ambiente, g.CONFIG)
+            for p in missao["linha_do_tempo"]:
+                if p["tipo"] != "ordenacao":
+                    continue
+                linhas = {a["id"]: a for a in p["aptos"]}
+                self.assertEqual([a["id"] for a in p["aptos"]], p["depois"])
+                def linha(id_):
+                    # Cadastro do módulo com o combustível do instante da ordenação.
+                    m = list([m for m in modulos if m[g.ID] == id_][0])
+                    m[g.COMBUSTIVEL] = linhas[id_]["combustivel"]
+                    return m
+                for par in p["comparacoes"]:
+                    la, lb = linha(par["a"]), linha(par["b"])
+                    vistos.add(par["criterio"])
+                    self.assertFalse(g.vem_antes(lb, la, g.CONFIG), (nome, par))
+                    if par["criterio"] == "empate":
+                        self.assertFalse(g.vem_antes(la, lb, g.CONFIG), (nome, par))
+                    else:
+                        self.assertTrue(g.vem_antes(la, lb, g.CONFIG), (nome, par))
+        self.assertTrue({"urgencia", "tipo"} <= vistos, vistos)
+
+    def test_8_expressao_booleana_da_checagem(self):
+        # C AND (S AND E) AND A AND D tem de dar o mesmo que o autorizar devolveu.
+        for nome, modulos, eventos, ambiente in self.casos:
+            passos = ex.exportar_caso(nome, modulos, eventos, ambiente, g.CONFIG)["linha_do_tempo"]
+            for p in passos:
+                if p["tipo"] != "checagem":
+                    continue
+                v = p["valores"]
+                self.assertEqual(v["S"] and v["E"], p["portas"]["saude"])
+                expr = v["C"] and v["S"] and v["E"] and v["A"] and v["D"]
+                self.assertEqual(expr, p["motivo"] == "", (nome, p))
+
+
 if __name__ == "__main__":
     unittest.main()

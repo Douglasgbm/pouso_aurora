@@ -44,6 +44,43 @@ def foto_modulos(dados, config):
     return fotos
 
 
+def margem(m, config):
+    # Mesma margem relativa de g.vem_antes; o teste 7 confere a concordância.
+    minimo = g.minimo_seguro(m, config)
+    return (m[g.COMBUSTIVEL] - minimo) / minimo
+
+
+def explicar_apto(m, indice, config):
+    return {"id": m[g.ID], "indice": indice, "tipo": m[g.TIPO],
+            "combustivel": m[g.COMBUSTIVEL], "minimo": g.minimo_seguro(m, config),
+            "margem": margem(m, config), "urgente": margem(m, config) <= config[3],
+            "carga": m[g.CARGA], "ordem_tipo": g.ordem_tipo(m[g.TIPO]),
+            "prioridade": m[g.PRIORIDADE]}
+
+
+def comparar(a, b, config):
+    """Diz por que "a" ficou antes de "b" na ordenação.
+
+    Percorre os critérios na ordem de g.vem_antes e para no primeiro que
+    distingue os dois. O teste 7 confere que a conclusão bate com g.vem_antes.
+    """
+    ma, mb = margem(a, config), margem(b, config)
+    ua, ub = ma <= config[3], mb <= config[3]
+    par = {"a": a[g.ID], "b": b[g.ID]}
+    if ua != ub:
+        return {**par, "criterio": "urgencia"}
+    if ua:
+        if ma != mb:
+            return {**par, "criterio": "margem"}
+        if a[g.CARGA] != b[g.CARGA]:
+            return {**par, "criterio": "criticidade"}
+    if a[g.TIPO] != b[g.TIPO]:
+        return {**par, "criterio": "tipo"}
+    if a[g.PRIORIDADE] != b[g.PRIORIDADE]:
+        return {**par, "criterio": "prioridade"}
+    return {**par, "criterio": "empate"}
+
+
 def rodar_com_escuta(modulos, eventos, ambiente, config):
     """Roda g.simular() registrando cada passo. Devolve [resultado, passos]."""
     passos = []
@@ -82,8 +119,12 @@ def rodar_com_escuta(modulos, eventos, ambiente, config):
         portas = {}
         for nome, trecho in PORTAS:
             portas[nome] = trecho not in motivo
+        # Letras da expressão booleana, lidas no instante da checagem.
+        valores = {"C": portas["combustivel"], "S": m[g.SENSORES], "E": m[g.SISTEMAS],
+                   "A": ambiente_[0], "D": ambiente_[1] == "livre"}
         passos.append({"tipo": "checagem", "tempo": atual["tempo"], "hist": atual["hist"],
-                       "id": m[g.ID], "motivo": motivo, "portas": portas,
+                       "id": m[g.ID], "motivo": motivo, "portas": portas, "valores": valores,
+                       "massa": m[g.MASSA],
                        "combustivel": m[g.COMBUSTIVEL],
                        "minimo": g.minimo_seguro(m, config_),
                        "ambiente": list(ambiente_)})
@@ -91,10 +132,17 @@ def rodar_com_escuta(modulos, eventos, ambiente, config):
 
     def escuta_ordenar(aptos, dados, config_):
         antes = [dados[i][g.ID] for i in aptos]
+        indices_antes = list(aptos)
         resposta = originais["ordenar"](aptos, dados, config_)
         depois = [dados[i][g.ID] for i in aptos]
+        linhas = [explicar_apto(dados[i], i, config_) for i in aptos]
+        comparacoes = []
+        for k in range(len(aptos) - 1):
+            comparacoes.append(comparar(dados[aptos[k]], dados[aptos[k + 1]], config_))
         passos.append({"tipo": "ordenacao", "tempo": atual["tempo"], "hist": atual["hist"],
-                       "antes": antes, "depois": depois})
+                       "antes": antes, "depois": depois,
+                       "indices_antes": indices_antes, "indices_depois": list(aptos),
+                       "aptos": linhas, "comparacoes": comparacoes})
         return resposta
 
     g.aplicar_eventos = escuta_eventos

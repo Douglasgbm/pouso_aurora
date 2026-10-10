@@ -281,6 +281,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -299,6 +307,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -317,6 +333,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -335,6 +359,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -353,6 +385,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -376,6 +416,104 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     },
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "E",
+      "b": "H",
+      "criterio": "tipo"
+     },
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -721,6 +859,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -739,6 +885,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -757,6 +911,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -775,6 +937,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -796,6 +966,85 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -1141,6 +1390,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -1159,6 +1416,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -1177,6 +1442,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -1196,6 +1469,66 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -1541,6 +1874,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -1559,6 +1900,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -1576,6 +1925,47 @@ window.MISSOES = [
     "depois": [
      "M",
      "L"
+    ],
+    "indices_antes": [
+     3,
+     4
+    ],
+    "indices_depois": [
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -1921,6 +2311,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -1936,7 +2334,28 @@ window.MISSOES = [
     ],
     "depois": [
      "L"
-    ]
+    ],
+    "indices_antes": [
+     4
+    ],
+    "indices_depois": [
+     4
+    ],
+    "aptos": [
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -2669,6 +3088,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -2687,6 +3114,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -2705,6 +3140,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -2723,6 +3166,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -2741,6 +3192,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -2764,6 +3223,104 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     },
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "E",
+      "b": "H",
+      "criterio": "tipo"
+     },
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -3109,6 +3666,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3127,6 +3692,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3145,6 +3718,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3163,6 +3744,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3184,6 +3773,85 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -3529,6 +4197,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3547,6 +4223,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3565,6 +4249,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3584,6 +4276,66 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -3929,6 +4681,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3947,6 +4707,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -3964,6 +4732,47 @@ window.MISSOES = [
     "depois": [
      "M",
      "L"
+    ],
+    "indices_antes": [
+     3,
+     4
+    ],
+    "indices_depois": [
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -4309,6 +5118,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -4324,7 +5141,28 @@ window.MISSOES = [
     ],
     "depois": [
      "L"
-    ]
+    ],
+    "indices_antes": [
+     4
+    ],
+    "indices_depois": [
+     4
+    ],
+    "aptos": [
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -4916,6 +5754,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -4934,6 +5780,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 13.0,
     "minimo": 12.0,
     "ambiente": [
@@ -4951,6 +5805,47 @@ window.MISSOES = [
     "depois": [
      "M",
      "E"
+    ],
+    "indices_antes": [
+     0,
+     1
+    ],
+    "indices_depois": [
+     1,
+     0
+    ],
+    "aptos": [
+     {
+      "id": "M",
+      "indice": 1,
+      "tipo": "Médico",
+      "combustivel": 13.0,
+      "minimo": 12.0,
+      "margem": 0.08333333333333333,
+      "urgente": true,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "M",
+      "b": "E",
+      "criterio": "urgencia"
+     }
     ]
    },
    {
@@ -5123,6 +6018,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -5138,7 +6041,28 @@ window.MISSOES = [
     ],
     "depois": [
      "E"
-    ]
+    ],
+    "indices_antes": [
+     0
+    ],
+    "indices_depois": [
+     0
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -5463,6 +6387,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": false,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 11.0,
     "minimo": 12.0,
     "ambiente": [
@@ -5604,6 +6536,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": false,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -5933,6 +6873,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -5951,6 +6899,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -5969,6 +6925,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -5987,6 +6951,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6005,6 +6977,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6402,6 +7382,14 @@ window.MISSOES = [
      "clima": true,
      "area": false
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": false
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6420,6 +7408,14 @@ window.MISSOES = [
      "clima": true,
      "area": false
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": false
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6438,6 +7434,14 @@ window.MISSOES = [
      "clima": true,
      "area": false
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": false
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6456,6 +7460,14 @@ window.MISSOES = [
      "clima": true,
      "area": false
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": false
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6474,6 +7486,14 @@ window.MISSOES = [
      "clima": true,
      "area": false
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": false
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6730,6 +7750,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 13.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6748,6 +7776,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 13.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6765,6 +7801,47 @@ window.MISSOES = [
     "depois": [
      "M",
      "E"
+    ],
+    "indices_antes": [
+     0,
+     1
+    ],
+    "indices_depois": [
+     1,
+     0
+    ],
+    "aptos": [
+     {
+      "id": "M",
+      "indice": 1,
+      "tipo": "Médico",
+      "combustivel": 13.0,
+      "minimo": 12.0,
+      "margem": 0.08333333333333333,
+      "urgente": true,
+      "carga": 5,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 13.0,
+      "minimo": 12.0,
+      "margem": 0.08333333333333333,
+      "urgente": true,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "M",
+      "b": "E",
+      "criterio": "criticidade"
+     }
     ]
    },
    {
@@ -6937,6 +8014,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 13.0,
     "minimo": 12.0,
     "ambiente": [
@@ -6952,7 +8037,28 @@ window.MISSOES = [
     ],
     "depois": [
      "E"
-    ]
+    ],
+    "indices_antes": [
+     0
+    ],
+    "indices_depois": [
+     0
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 13.0,
+      "minimo": 12.0,
+      "margem": 0.08333333333333333,
+      "urgente": true,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -7321,6 +8427,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -7336,7 +8450,28 @@ window.MISSOES = [
     ],
     "depois": [
      "E"
-    ]
+    ],
+    "indices_antes": [
+     0
+    ],
+    "indices_depois": [
+     0
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -7665,6 +8800,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 12.0,
     "minimo": 12.0,
     "ambiente": [
@@ -7680,7 +8823,28 @@ window.MISSOES = [
     ],
     "depois": [
      "L"
-    ]
+    ],
+    "indices_antes": [
+     0
+    ],
+    "indices_depois": [
+     0
+    ],
+    "aptos": [
+     {
+      "id": "L",
+      "indice": 0,
+      "tipo": "Laboratório",
+      "combustivel": 12.0,
+      "minimo": 12.0,
+      "margem": 0.0,
+      "urgente": true,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -8018,6 +9182,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -8036,6 +9208,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -8053,6 +9233,47 @@ window.MISSOES = [
     "depois": [
      "E",
      "H"
+    ],
+    "indices_antes": [
+     1,
+     2
+    ],
+    "indices_depois": [
+     2,
+     1
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 2,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     },
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "E",
+      "b": "H",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -8286,6 +9507,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -8301,7 +9530,28 @@ window.MISSOES = [
     ],
     "depois": [
      "H"
-    ]
+    ],
+    "indices_antes": [
+     1
+    ],
+    "indices_depois": [
+     1
+    ],
+    "aptos": [
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -8896,6 +10146,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -8914,6 +10172,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -8932,6 +10198,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -8950,6 +10224,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -8968,6 +10250,14 @@ window.MISSOES = [
      "clima": false,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": false,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9147,6 +10437,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9165,6 +10463,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9183,6 +10489,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9201,6 +10515,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9219,6 +10541,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9242,6 +10572,104 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     },
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "E",
+      "b": "H",
+      "criterio": "tipo"
+     },
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -9587,6 +11015,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9605,6 +11041,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9623,6 +11067,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9641,6 +11093,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -9662,6 +11122,85 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -10007,6 +11546,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -10025,6 +11572,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -10043,6 +11598,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -10062,6 +11625,66 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -10407,6 +12030,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -10425,6 +12056,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -10442,6 +12081,47 @@ window.MISSOES = [
     "depois": [
      "M",
      "L"
+    ],
+    "indices_antes": [
+     3,
+     4
+    ],
+    "indices_depois": [
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -10787,6 +12467,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -10802,7 +12490,28 @@ window.MISSOES = [
     ],
     "depois": [
      "L"
-    ]
+    ],
+    "indices_antes": [
+     4
+    ],
+    "indices_depois": [
+     4
+    ],
+    "aptos": [
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -11401,6 +13110,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -11419,6 +13136,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -11436,6 +13161,47 @@ window.MISSOES = [
     "depois": [
      "E",
      "H"
+    ],
+    "indices_antes": [
+     0,
+     1
+    ],
+    "indices_depois": [
+     0,
+     1
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     },
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "E",
+      "b": "H",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -11608,6 +13374,14 @@ window.MISSOES = [
      "clima": true,
      "area": false
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": false
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -11962,6 +13736,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -11980,6 +13762,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -11998,6 +13788,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12016,6 +13814,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12034,6 +13840,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12057,6 +13871,104 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     },
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "E",
+      "b": "H",
+      "criterio": "tipo"
+     },
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -12402,6 +14314,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12420,6 +14340,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12438,6 +14366,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12456,6 +14392,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12477,6 +14421,85 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -12822,6 +14845,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12840,6 +14871,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12858,6 +14897,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -12877,6 +14924,66 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -13222,6 +15329,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -13240,6 +15355,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -13257,6 +15380,47 @@ window.MISSOES = [
     "depois": [
      "M",
      "L"
+    ],
+    "indices_antes": [
+     3,
+     4
+    ],
+    "indices_depois": [
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -13602,6 +15766,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -13617,7 +15789,28 @@ window.MISSOES = [
     ],
     "depois": [
      "L"
-    ]
+    ],
+    "indices_antes": [
+     4
+    ],
+    "indices_depois": [
+     4
+    ],
+    "aptos": [
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -14561,6 +16754,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -14579,6 +16780,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -14597,6 +16806,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -14615,6 +16832,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -14633,6 +16858,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -14656,6 +16889,104 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     },
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "E",
+      "b": "H",
+      "criterio": "tipo"
+     },
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -15001,6 +17332,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15019,6 +17358,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15037,6 +17384,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15055,6 +17410,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15076,6 +17439,85 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "H",
+      "indice": 1,
+      "tipo": "Habitação",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 1,
+      "prioridade": 1
+     },
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "H",
+      "b": "G",
+      "criterio": "tipo"
+     },
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -15421,6 +17863,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15439,6 +17889,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15457,6 +17915,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15476,6 +17942,66 @@ window.MISSOES = [
      "G",
      "M",
      "L"
+    ],
+    "indices_antes": [
+     2,
+     3,
+     4
+    ],
+    "indices_depois": [
+     2,
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "G",
+      "indice": 2,
+      "tipo": "Logística",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 2,
+      "prioridade": 1
+     },
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "G",
+      "b": "M",
+      "criterio": "tipo"
+     },
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -15821,6 +18347,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15839,6 +18373,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -15856,6 +18398,47 @@ window.MISSOES = [
     "depois": [
      "M",
      "L"
+    ],
+    "indices_antes": [
+     3,
+     4
+    ],
+    "indices_depois": [
+     3,
+     4
+    ],
+    "aptos": [
+     {
+      "id": "M",
+      "indice": 3,
+      "tipo": "Médico",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 3,
+      "prioridade": 1
+     },
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": [
+     {
+      "a": "M",
+      "b": "L",
+      "criterio": "tipo"
+     }
     ]
    },
    {
@@ -16201,6 +18784,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -16216,7 +18807,28 @@ window.MISSOES = [
     ],
     "depois": [
      "L"
-    ]
+    ],
+    "indices_antes": [
+     4
+    ],
+    "indices_depois": [
+     4
+    ],
+    "aptos": [
+     {
+      "id": "L",
+      "indice": 4,
+      "tipo": "Laboratório",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 4,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
@@ -17158,6 +19770,14 @@ window.MISSOES = [
      "clima": true,
      "area": true
     },
+    "valores": {
+     "C": true,
+     "S": true,
+     "E": true,
+     "A": true,
+     "D": true
+    },
+    "massa": 1000.0,
     "combustivel": 30.0,
     "minimo": 12.0,
     "ambiente": [
@@ -17173,7 +19793,28 @@ window.MISSOES = [
     ],
     "depois": [
      "E"
-    ]
+    ],
+    "indices_antes": [
+     0
+    ],
+    "indices_depois": [
+     0
+    ],
+    "aptos": [
+     {
+      "id": "E",
+      "indice": 0,
+      "tipo": "Energia",
+      "combustivel": 30.0,
+      "minimo": 12.0,
+      "margem": 1.5,
+      "urgente": false,
+      "carga": 1,
+      "ordem_tipo": 0,
+      "prioridade": 1
+     }
+    ],
+    "comparacoes": []
    },
    {
     "tipo": "log",
