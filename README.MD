@@ -30,6 +30,25 @@ O HTML é um complemento visual; as decisões continuam no simulador Python.
 
 ## Executar
 
+### Para avaliar: um comando, dois caminhos
+
+```text
+python avaliar.py
+```
+
+O menu oferece:
+
+- **1 - Terminal:** roda a rodada padrão (`mgpeb.py`), os 14 cenários
+  (`exemplos.py`) e os testes, mostrando cada comando antes de executá-lo.
+- **2 - Painel HTML:** regenera os dados a partir do simulador
+  (`exportar_painel.py`) e abre `painel/index.html` no navegador.
+
+Também é possível ir direto: `python avaliar.py terminal` ou
+`python avaliar.py painel`. O roteiro usa só a biblioteca padrão e para no
+primeiro erro.
+
+### Comandos individuais
+
 ```text
 python mgpeb.py
 python exemplos.py
