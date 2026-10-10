@@ -38,8 +38,11 @@ python avaliar.py
 
 O menu oferece:
 
-- **1 - Terminal:** roda a rodada padrão (`mgpeb.py`), os 14 cenários
+- **1 - Terminal:** transmite a rodada padrão ao vivo (`ao_vivo.py`: chegadas,
+  checagens, ordenação e descidas no ritmo do tempo simulado, conferidas no fim
+  contra o histórico do simulador), depois roda `mgpeb.py`, os 14 cenários
   (`exemplos.py`) e os testes, mostrando cada comando antes de executá-lo.
+  Qualquer cenário pode ser assistido ao vivo: `python ao_vivo.py urgente`.
 - **2 - Painel HTML:** regenera os dados a partir do simulador
   (`exportar_painel.py`) e abre `painel/index.html` no navegador.
 
