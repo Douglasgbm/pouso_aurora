@@ -4,6 +4,7 @@ Uso:
     python ao_vivo.py                 (rodada padrão)
     python ao_vivo.py urgente         (um cenário de exemplos.py)
     python ao_vivo.py urgente 2       (velocidade 2x; 0 = sem esperas)
+    python ao_vivo.py --todos 2       (os 14 cenários de exemplos.py, em 2x)
     python ao_vivo.py --lista         (lista os cenários)
 
 Extra de apresentação: não faz parte do código avaliado e não muda o
@@ -153,6 +154,39 @@ def transmitir(missao, velocidade=1.0, cores=False, saida=None):
     return [linhas, relogios]
 
 
+def relatorio_oficial(modulos, eventos, ambiente):
+    # Captura o que mgpeb.relatorio imprime, para mostrar e para conferir.
+    texto = io.StringIO()
+    with contextlib.redirect_stdout(texto):
+        g.relatorio(g.simular(copy.deepcopy(modulos), copy.deepcopy(eventos), list(ambiente), g.CONFIG))
+    return texto.getvalue()
+
+
+def transmitir_todos(velocidade=1.0, cores=False, saida=None, entre=None):
+    """Transmite os 14 cenários de exemplos.py, no formato de exemplos.py.
+
+    Devolve [todos os históricos conferem, texto dos cabeçalhos e relatórios].
+    Esse texto deve ser idêntico a exemplos_saida.txt.
+    """
+    saida = saida or sys.stdout
+    todos_ok, relatorios = True, ""
+    lista = ex.casos()
+    for numero, (nome, modulos, eventos, ambiente) in enumerate(lista, start=1):
+        cabecalho = "\n=== " + nome + " ===\n"
+        saida.write(pintar(cabecalho, "ciano", cores) +
+                    pintar(f"(cenário {numero} de {len(lista)})\n", "fraco", cores))
+        missao = ex.exportar_caso(nome, modulos, eventos, ambiente, g.CONFIG)
+        linhas, _ = transmitir(missao, velocidade, cores, saida)
+        todos_ok = todos_ok and linhas == missao["final"]["historico"]
+        oficial = relatorio_oficial(modulos, eventos, ambiente)
+        saida.write(pintar("Relatório do simulador:\n", "fraco", cores) + oficial)
+        saida.flush()
+        relatorios += cabecalho + oficial
+        if entre and velocidade > 0 and numero < len(lista) and entre() is False:
+            velocidade = 0  # o avaliador pediu para pular as esperas: não pergunta mais
+    return [todos_ok, relatorios]
+
+
 def caso_por_nome(nome):
     for caso in ex.todos_os_casos():
         if caso[0] == nome:
@@ -167,6 +201,8 @@ def main(argumentos):
         return 0
     nome = argumentos[0] if argumentos else "padrao"
     velocidade = float(argumentos[1]) if len(argumentos) > 1 else 1.0
+    if nome == "--todos":
+        return main_todos(velocidade if len(argumentos) > 1 else 2.0)
     caso = caso_por_nome(nome)
     if caso is None:
         print("Cenário desconhecido:", nome, "(use --lista)")
@@ -187,6 +223,36 @@ def main(argumentos):
     print("Relatório do simulador (mgpeb.relatorio):")
     g.relatorio(g.simular(copy.deepcopy(modulos), copy.deepcopy(eventos), list(ambiente), g.CONFIG))
     return 0 if linhas == missao["final"]["historico"] else 1
+
+
+def main_todos(velocidade):
+    interativo = sys.stdin.isatty() and sys.stdout.isatty()
+    if not sys.stdout.isatty():
+        velocidade = 0
+    cores = sys.stdout.isatty() and os.environ.get("NO_COLOR") is None
+    if cores and os.name == "nt":
+        os.system("")
+
+    def entre():
+        # Enter segue no mesmo ritmo; "q" mostra o restante sem esperas.
+        if not interativo:
+            return True
+        try:
+            return input("\nEnter: próximo cenário · q + Enter: restante sem esperas ").strip().lower() != "q"
+        except EOFError:
+            return True  # entrada fechada: segue sem perguntar
+
+    print(f"MGPEB ao vivo · 14 cenários de exemplos.py · velocidade {velocidade:g}x")
+    ok, relatorios = transmitir_todos(velocidade, cores, sys.stdout, entre)
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "exemplos_saida.txt"),
+              encoding="utf-8") as arquivo:
+        igual = relatorios == arquivo.read()
+    print()
+    print(pintar("✓" if ok else "✗", "verde" if ok else "vermelho", cores),
+          "14 transmissões conferidas contra os históricos do simulador")
+    print(pintar("✓" if igual else "✗", "verde" if igual else "vermelho", cores),
+          "relatórios idênticos a exemplos_saida.txt (saída salva de exemplos.py)")
+    return 0 if ok and igual else 1
 
 
 if __name__ == "__main__":

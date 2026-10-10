@@ -39,6 +39,15 @@ class TestAoVivo(unittest.TestCase):
         self.assertIn("CHECAGEM", texto)
         self.assertIn("conferida", texto)
 
+    def test_4_todos_os_cenarios_reproduzem_exemplos_saida(self):
+        # Ao vivo, os 14 relatórios têm de ser a mesma saída de exemplos.py.
+        saida = io.StringIO()
+        historicos_ok, relatorios = ao_vivo.transmitir_todos(velocidade=0, cores=False, saida=saida)
+        self.assertTrue(historicos_ok)
+        with open("exemplos_saida.txt", encoding="utf-8") as arquivo:
+            self.assertEqual(relatorios, arquivo.read())
+        self.assertEqual(saida.getvalue().count("transmissão conferida"), 14)
+
 
 if __name__ == "__main__":
     unittest.main()

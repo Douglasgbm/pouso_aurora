@@ -2,7 +2,7 @@
 
 Uso:
     python avaliar.py            (mostra o menu)
-    python avaliar.py terminal   (simulação ao vivo, 14 cenários e testes no terminal)
+    python avaliar.py terminal   (programa principal, 14 cenários ao vivo e testes)
     python avaliar.py ao-vivo urgente   (só a transmissão ao vivo de um cenário)
     python avaliar.py painel     (regenera os dados e abre o painel no navegador)
 
@@ -19,9 +19,8 @@ PASTA = Path(__file__).resolve().parent
 PAINEL = PASTA / "painel" / "index.html"
 
 ETAPAS_TERMINAL = [
-    ["Simulação ao vivo: rodada padrão transmitida como telemetria", ["ao_vivo.py"]],
     ["Programa principal: buscas, fila, autorização e relatório", ["mgpeb.py"]],
-    ["Os 14 cenários de estudo", ["exemplos.py"]],
+    ["Os 14 cenários de exemplos.py, transmitidos ao vivo (2x)", ["ao_vivo.py", "--todos", "2"]],
     ["Testes automatizados", ["-m", "unittest"]],
 ]
 
@@ -33,7 +32,10 @@ def interativo():
 
 def pausar(mensagem):
     if interativo():
-        input(mensagem)
+        try:
+            input(mensagem)
+        except EOFError:
+            pass  # entrada fechada: segue sem pausar
 
 
 def rodar(titulo, argumentos):
@@ -56,38 +58,10 @@ def caminho_terminal():
         codigo = rodar(f"[{numero}/{total}] {titulo}", argumentos)
         if codigo != 0:
             return codigo
-        if numero == 1:
-            codigo = outros_ao_vivo()
-            if codigo != 0:
-                return codigo
-        elif numero < total:
+        if numero < total:
             pausar("\nEnter para a próxima etapa...")
     print("\nTodas as etapas do terminal terminaram sem erro.")
     return 0
-
-
-def outros_ao_vivo():
-    # O avaliador pode assistir a outros cenários antes de seguir.
-    if not interativo():
-        return 0
-    nomes = cenarios()
-    print("\nCenários:", ", ".join(nomes))
-    while True:
-        nome = input("Assistir outro cenário ao vivo? (nome, ou Enter para seguir) ").strip()
-        if nome == "":
-            return 0
-        if nome not in nomes:
-            print("Cenário desconhecido.")
-            continue
-        codigo = rodar("Simulação ao vivo: cenário " + nome, ["ao_vivo.py", nome])
-        if codigo != 0:
-            return codigo
-
-
-def cenarios():
-    lista = subprocess.run([sys.executable, "-X", "utf8", "ao_vivo.py", "--lista"],
-                           cwd=PASTA, capture_output=True, text=True, encoding="utf-8")
-    return lista.stdout.split()
 
 
 def caminho_painel(abrir=True):
@@ -110,7 +84,7 @@ def caminho_painel(abrir=True):
 def menu():
     print("MGPEB - Aurora Siger | Roteiro de avaliação")
     print()
-    print("  1 - Terminal: simulação ao vivo, 14 cenários e testes")
+    print("  1 - Terminal: programa principal, 14 cenários ao vivo e testes")
     print("  2 - Painel HTML: simulação animada no navegador")
     print()
     if not interativo():
