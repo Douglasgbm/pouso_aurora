@@ -6,12 +6,23 @@
 Protótipo didático para organizar a autorização e a ordem de pouso dos módulos
 da base em Marte. A implementação atual está em `mgpeb.py`.
 
+## Entrega obrigatória e extras
+
+O enunciado exige código Python, PDF técnico de 5 a 10 páginas e anexo de estruturas de dados (que pode integrar o PDF). O protótipo obrigatório é `mgpeb.py`, com exemplos em `exemplos.py`. Ambos executam sem instalar bibliotecas externas:
+
+```text
+python mgpeb.py
+python exemplos.py
+```
+
+O HTML, o exportador e o roteiro `avaliar.py` são extras de apresentação. Não são necessários para executar o código obrigatório. O núcleo e os exemplos estão conferidos; resta finalizar e aprovar o PDF, preservando o anexo da seção 2. Veja `docs/CONFERENCIA_ENTREGA.md`.
+
 ## Arquivos principais
 
 - `mgpeb.py`: cadastro, validação, fila, regras lógicas, busca, ordenação e relatório da simulação.
 - `exemplos.py`: 14 cenários para estudar as decisões do programa.
 - `test_mgpeb.py`: testes automatizados externos ao código didático (22).
-- `exportar_painel.py` e `test_exportar_painel.py`: exportação dos cenários para o painel HTML e seus testes (8).
+- `exportar_painel.py` e `test_exportar_painel.py`: exportação dos cenários para o painel HTML e seus testes (11).
 - `painel/`: painel HTML animado (`index.html`, `dados.js` gerado e a ilustração em `img/`).
 - `auditoria.py`: conferência automática da entrega (`python auditoria.py .`).
 - `STATUS_ENTREGA.md`: estado atual da entrega e pendências da equipe.

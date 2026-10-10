@@ -14,3 +14,7 @@ Atualização: 10 de outubro de 2026.
 ## PDF de apoio atualizado
 
 `RELATORIO_TECNICO.pdf` foi atualizado para servir de base à integrante responsável pelo PDF da equipe. A equipe ainda precisa aprovar a versão final de entrega. Conferir identificação, exigências do portal e limite de 5 a 10 páginas. O anexo de estruturas integra a seção 2.
+
+## Fechamento contra as exigências recebidas
+
+Conferência em `docs/CONFERENCIA_ENTREGA.md`, baseada em “PBL Aurora 2.docx”. Código obrigatório e exemplos estão prontos e independentes do HTML. O anexo tem conteúdo pronto na seção 2. Resta finalizar/aprovar o PDF técnico de 5 a 10 páginas, mantendo o anexo integrado; o HTML e o roteiro de apresentação são extras, sem pendência para a entrega obrigatória.
