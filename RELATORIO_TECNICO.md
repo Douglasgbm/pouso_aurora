@@ -7,7 +7,7 @@
 
 **Versão do protótipo:** 1.2 — outubro de 2026
 
-**Revisão documental:** 6 de outubro de 2026
+**Revisão documental:** 6 de outubro de 2026, atualizada em 10 de outubro de 2026
 
 ### Resumo
 
@@ -63,6 +63,19 @@ Um módulo já pousado fica `suspenso` se perder sensores, sistemas ou dependên
 
 O histórico também é copiado para `pilha`. Seu topo é o registro mais recente, seguindo LIFO. `ultimo_evento` consulta esse topo; `desfazer_consulta` devolve uma nova pilha sem ele. Essa operação demonstra a pilha, mas não desfaz pousos nem altera combustível.
 
+### Exemplo concreto: cenário `urgente`
+
+Energia (E, índice 0) tem 30 kg e Médico (M, índice 1) tem 13 kg; o mínimo seguro é 12 kg. Valores da execução de `exemplos.py`:
+
+```text
+0 min   fila -> espera = [0, 1]            E e M, na ordem de chegada
+0 min   aptos [0, 1] -> ordenar -> [1, 0]  M urgente: margem 1/12 = 8%
+5 min   pousados = [1]      espera = [0]
+10 min  pousados = [1, 0]   espera = []    alertas = []
+fim     topo da pilha: "10.0 min: rodada encerrada"
+        após desfazer_consulta: "M operacional"
+```
+
 ### Passos de cada ciclo
 
 1. Aplicar eventos vencidos, na ordem do horário.
@@ -88,21 +101,21 @@ D = área livre
 AUTORIZAR = C AND S AND E AND A AND D
 ```
 
-Representação da regra com símbolos de portas lógicas:
-
 ![Portas AND e NOT para autorizar ou adiar o pouso](docs/portas_logicas.svg)
 
-Figura 1. AND autoriza quando as cinco entradas são verdadeiras; NOT representa o adiamento quando a autorização é falsa. O código registra os motivos desse bloqueio, sem precisar armazenar uma variável ADIAR.
+Figura 1. Autorização como o código a escreve (`not S or not E`; por De Morgan, equivale a S AND E) e, abaixo, a ativação em solo.
 
-O protótipo ainda não verifica ângulo de entrada, coordenadas, integridade estrutural ou condição independente do paraquedas. Esses itens aparecem nas anotações do projeto e podem ser incluídos como novos sinais booleanos, com validação e cenários de teste próprios.
+Em `autorizar`, cada condição é um `if` próprio, para registrar a combinação de motivos; a decisão de pousar usa `if`/`else`, e a ativação usa `if`/`elif`/`else` por tipo de módulo.
+
+O protótipo ainda não verifica ângulo de entrada, coordenadas, integridade estrutural ou condição independente do paraquedas. Esses itens surgiram no planejamento inicial da equipe e podem ser incluídos como novos sinais booleanos, com validação e cenários de teste próprios.
 
 ### Como a fila escolhe o próximo
 
 A urgência é calculada somente depois da autorização; combustível crítico nunca libera uma descida insegura. Primeiro, calcula-se a margem relativa em relação ao mínimo seguro. Uma margem de até 25% é classificada como urgente. Entre urgentes, vence a menor margem; se empatar, vence a maior criticidade. A ordem padrão por tipo e, por fim, a prioridade numérica desempata os restantes. Sem urgência, usa-se a ordem padrão e depois a prioridade.
 
-O código usa números de prioridade de 1 a 5, em que um número maior significa maior importância, conforme a convenção deste protótipo. É importante manter essa convenção igual no relatório, no cadastro e no diagrama de decisão.
+O código usa números de prioridade de 1 a 5, em que um número maior significa maior importância, conforme a convenção deste protótipo.
 
-Os 14 cenários incluem operação normal, bloqueios, urgência, ETA futuro, dependências, clima, acidente, falha da Energia e recuperação na base. Os 21 testes conferem esses comportamentos, entradas malformadas e as 32 combinações booleanas. Uma falha durante a descida é aplicada ao final e pode impedir a ativação na base.
+Os 14 cenários incluem operação normal, bloqueios, urgência, ETA futuro, dependências, clima, acidente, falha da Energia e recuperação na base. Os 22 testes do simulador conferem esses comportamentos, entradas malformadas e as 32 combinações booleanas. Uma falha durante a descida é aplicada ao final e pode impedir a ativação na base.
 
 <!-- PAGE BREAK -->
 
@@ -210,7 +223,7 @@ Indicadores propostos incluem energia disponível para emergências, recuperaç�
 
 ## 7. Conclusão, limites e referências
 
-O protótipo demonstra a organização de módulos, a fila de chegadas, buscas, ordenação por inserção, regras AND, eventos, dependências e pilha de histórico. A função afim de consumo conecta um fenômeno operacional a uma decisão de autorização. Os testes verificam os cenários previstos e ajudam a detectar regressões.
+O protótipo demonstra a organização de módulos, a fila de chegadas, buscas, ordenação por inserção, regras AND, eventos, dependências e pilha de histórico. A função afim de consumo conecta um fenômeno operacional a uma decisão de autorização. Os testes verificam os cenários previstos e ajudam a detectar regressões. Como complemento, um painel HTML (`painel/index.html`) reproduz os 14 cenários e o padrão de forma animada; ele só exibe as decisões tomadas pelo `mgpeb.py`, exportadas por `exportar_painel.py`.
 
 O principal limite é físico: não se calculam a trajetória ou a velocidade real de pouso. Os parâmetros de consumo, duração, margem de urgência e ordem dos módulos são hipóteses da equipe. Antes de ampliar o modelo, a equipe deve escolher quais dados deseja representar, definir unidades, buscar valores justificáveis e adicionar testes para cada regra nova. Uma próxima evolução possível é incluir um modelo de temperatura interna com potência térmica e capacidade térmica, mantendo-o separado da autorização de pouso.
 

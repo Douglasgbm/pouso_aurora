@@ -10,15 +10,19 @@ da base em Marte. A implementação atual está em `mgpeb.py`.
 
 - `mgpeb.py`: cadastro, validação, fila, regras lógicas, busca, ordenação e relatório da simulação.
 - `exemplos.py`: 14 cenários para estudar as decisões do programa.
-- `test_mgpeb.py`: testes automatizados externos ao código didático.
+- `test_mgpeb.py`: testes automatizados externos ao código didático (22).
+- `exportar_painel.py` e `test_exportar_painel.py`: exportação dos cenários para o painel HTML e seus testes (8).
+- `painel/`: painel HTML animado (`index.html`, `dados.js` gerado e a ilustração em `img/`).
+- `auditoria.py`: conferência automática da entrega (`python auditoria.py .`).
+- `STATUS_ENTREGA.md`: estado atual da entrega e pendências da equipe.
 - `RELATORIO_TECNICO.pdf`: relatório da Fase 2; `RELATORIO_TECNICO.md` é sua fonte editável.
 - `docs/grafico_topico_04.svg`: gráfico vetorial do modelo de consumo.
 - `gerar_relatorio_pdf.py`: converte a fonte Markdown, tabelas e gráfico para PDF.
 - `LEIA-ME.txt`: explicação direta dos campos, regras, estruturas e comandos.
-- `docs/APRESENTACAO_ALTERACOES.md`: apresentação escrita das partes 5 e 6 e dos motivos das alterações.
+- `docs/APRESENTACAO_ALTERACOES.md`: registro histórico da apresentação das partes 5 e 6.
 - `docs/GUIA_DETALHADO.md` e `docs/GUIA_DETALHADO.pdf`: explicação metódica do projeto e das correções da versão 1.1.
-- `docs/portas_logicas.svg`: diagrama gráfico AND/NOT correspondente à autorização.
-- `docs/REVISAO_PROJETO.md`: revisão geral, evidências de testes e pendências para a entrega.
+- `docs/portas_logicas.svg`: diagrama AND, OR e NOT da autorização e da ativação em solo.
+- `docs/REVISAO_PROJETO.md`: registro histórico de uma revisão anterior.
 - `main.py`: experimento antigo de descida, mantido para comparação.
 
 ## Painel HTML 1.0
@@ -123,7 +127,8 @@ Descrição de como listas, filas e pilhas foram utilizadas no projeto, com exem
 
 Entradas malformadas são rejeitadas antes das travessias. Módulos em solo são
 reavaliados quanto a saúde e dependências, podendo ficar suspensos e recuperar
-operação após reparo. A suíte tem 17 testes e os exemplos têm 14 cenários.
+operação após reparo. Na versão 1.1 a suíte passou a 17 testes; hoje são 22
+no simulador e 8 no exportador do painel. Os exemplos têm 14 cenários.
 A saída de `exemplos_saida.txt` está em UTF-8 e corresponde a `exemplos.py`.
 
 Para reproduzir a saída de exemplos de modo independente da codificação do terminal:

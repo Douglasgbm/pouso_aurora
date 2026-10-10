@@ -3,7 +3,9 @@
 
 **Projeto:** Aurora Siger | Atividade Integradora FIAP - Fase 2
 
-**Data:** 6 de outubro de 2026
+**Data:** 6 de outubro de 2026, com nota de atualização em 10 de outubro de 2026
+
+> **Depois da versão 1.1:** eventos previstos durante uma descida passaram a ser aplicados antes do resultado do pouso (o simulador chegou a 22 testes), e foi integrado um painel HTML animado, com 8 testes no exportador. Hoje, `python -m unittest` roda 30 testes. O restante deste guia descreve a versão 1.1.
 
 ### 1. O problema que estamos resolvendo
 
@@ -38,7 +40,7 @@ Foram corrigidas a validação de entradas malformadas e a manutenção incorret
 | RELATORIO_TECNICO.md / .pdf | Documento acadêmico editável e versão de leitura |
 | gerar_relatorio_pdf.py | Converte os documentos e seus gráficos SVG para PDF |
 | main.py | Experimento anterior de descida; não é o simulador atual |
-| ROADMAP.MD | Anotações históricas e ideias; nem tudo foi implementado |
+| exportar_painel.py / painel/ | Exporta os cenários e mostra a simulação no painel HTML animado |
 
 ### Como um módulo é representado
 
@@ -354,7 +356,7 @@ Esses limites fazem parte do modelo. Não é necessário ampliar o projeto até 
 
 ### Pendências de identificação e material
 
-A capa do relatório precisa dos nomes corretos da equipe; eles não foram inventados. O arquivo ROADMAP contém ideias históricas, e main.py é um experimento anterior. Para a entrega, a equipe deve apresentar o fluxo de mgpeb.py e o relatório atual, sem atribuir a eles recursos de protótipos ou propostas que não foram integrados.
+A capa do relatório precisa dos nomes corretos da equipe; eles não foram inventados. As ideias iniciais da equipe ficam no histórico do repositório, e main.py é um experimento anterior. Para a entrega, a equipe deve apresentar o fluxo de mgpeb.py e o relatório atual, sem atribuir a eles recursos de protótipos ou propostas que não foram integrados.
 
 <!-- PAGE BREAK -->
 
@@ -366,7 +368,7 @@ Na pasta do repositório, execute `python mgpeb.py`. Procure os cinco módulos o
 
 Depois execute `python exemplos.py`. Os títulos separam 14 cenários. Compare normal, urgente, falha_energia_base e recuperacao_energia_base. Observe que a urgência muda a ordem dos pousos; a falha na base muda a operação depois deles.
 
-Para conferir a suíte, execute `python -m unittest -v`. O resultado esperado na versão 1.1 é 17 testes aprovados. Os testes ficam fora do código principal, permitindo usar ferramentas de verificação sem aumentar a complexidade do simulador estudado.
+Para conferir a suíte, execute `python -m unittest -v`. Na versão 1.1 eram 17 testes; hoje o resultado esperado é 30 testes aprovados (22 do simulador e 8 do exportador do painel). Os testes ficam fora do código principal, permitindo usar ferramentas de verificação sem aumentar a complexidade do simulador estudado.
 
 ### Reproduzir os documentos
 
