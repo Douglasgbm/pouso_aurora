@@ -4,7 +4,7 @@ Referência: documento “PBL Aurora 2.docx” fornecido pela equipe. A conferê
 
 ## Resultado
 
-Código e exemplos estão prontos nos cenários verificados. O texto do anexo já está pronto na seção 2 do relatório de apoio. A colega da equipe ainda produzirá o PDF final, incluindo esse anexo. RELATORIO_TECNICO.pdf é apenas a base de apoio, agora com a identidade do HTML. O envio no portal ainda deve ser realizado pela equipe.
+Código, exemplos e PDF da equipe conferidos. RELATORIO_FINAL_EQUIPE.pdf tem 10 páginas e inclui o anexo na página 3. A revisão por página está em REVISAO_PDF_FINAL.md. RELATORIO_TECNICO.pdf permanece como apoio. O envio no portal cabe à equipe.
 
 | Exigência | Evidência no projeto | Situação |
 |---|---|---|
@@ -13,23 +13,23 @@ Código e exemplos estão prontos nos cenários verificados. O texto do anexo j�
 | Portas e decisões booleanas | autorizar, AND/OR/NOT em docs/portas_logicas.svg; seção 3 | Atendido |
 | Protótipo Python simples e comentado | mgpeb.py, sem importações; funções de busca, ordenação e simulação | Atendido |
 | Exemplos executáveis | exemplos.py e exemplos_saida.txt, 14 cenários | Atendido |
-| Função matemática e análise | C(t)=k*m*t; F(t)=C(t)+R; unidades, parâmetros, gráfico e autorização na seção 4 | Conteúdo pronto para o PDF |
-| Evolução da computação e hardware | Seção 5 e 5.1, com consequências para programação e estruturas | Conteúdo pronto para o PDF |
-| ESG e governança | Seção 6: pouso, recursos, resíduos, energia e participação | Conteúdo pronto para o PDF |
-| Anexo com exemplos concretos | Seção 2, cenário urgente: fila/espera, aptos, pousados e pilha | Conteúdo pronto; manter no PDF final |
-| PDF de 5 a 10 páginas | Relatório de apoio atual tem 10 páginas | A colega ainda produzirá a versão final |
+| Função matemática e análise | C(t)=k*m*t; F(t)=C(t)+R; unidades, parâmetros, gráfico e autorização na seção 4 | Atendido no PDF final |
+| Evolução da computação e hardware | Seção 5 e 5.1, com consequências para programação e estruturas | Atendido no PDF final |
+| ESG e governança | Seção 6: pouso, recursos, resíduos, energia e participação | Atendido no PDF final |
+| Anexo com exemplos concretos | Seção 2, cenário urgente: fila/espera, aptos, pousados e pilha | Atendido no PDF final, página 3 |
+| PDF de 5 a 10 páginas | RELATORIO_FINAL_EQUIPE.pdf tem 10 páginas | Atendido |
 
 ## Validação nesta conferência
 
 - 46 testes aprovados (22 do simulador, 11 do exportador, 4 da transmissão e 9 do roteiro).
 - 13 verificações da auditoria aprovadas.
-- JavaScript conferido nos 15 cenários em ambos os modos, com DOM simulado; aparência no navegador ainda pendente.
+- JavaScript conferido nos 15 cenários em ambos os modos, com DOM simulado; teste pontual de visualização e navegação também realizado no site publicado.
 - PDF de apoio de 10 páginas e guia de estudo separados, renderizados para inspeção.
 - Programa principal executado sem dependências externas.
 - Os 14 exemplos reproduzem exatamente exemplos_saida.txt em UTF-8.
 - Código obrigatório também verificado isoladamente, sem HTML, exportador, testes ou geradores de documentos.
 
-## O que a responsável pelo PDF deve preservar
+## Conteúdo preservado no PDF final
 
 1. Descrição do cenário e dos módulos.
 2. Diagramas e expressão correta: NOT(NOT S OR NOT E) = S AND E.

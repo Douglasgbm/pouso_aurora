@@ -1,5 +1,11 @@
 # Missão Aurora Siger - Fase 2
 
+## Painel online
+
+**[Abrir o painel Aurora no navegador](https://mrc888.github.io/aurora-painel/)**
+
+Sem instalação. O HTML é um complemento visual do projeto. [Código da publicação](https://github.com/MRC888/aurora-painel) e [instruções de atualização](docs/PUBLICACAO_HTML.md).
+
 ## Módulo de Gerenciamento de Pouso e Estabilização de Base (MGPEB)
 
 A Fase 1 perguntou se a nave estava pronta para decolar. Agora, o problema é decidir **quem pode pousar, quem pousa primeiro e quais módulos conseguem operar na base**. A continuidade é temática; os programas das fases não trocam dados automaticamente.
@@ -66,7 +72,8 @@ Depois de alterar o simulador, regenere os dados com `python exportar_painel.py`
 
 | Arquivo | Finalidade |
 |---|---|
-| [RELATORIO_TECNICO.pdf](RELATORIO_TECNICO.pdf) | Base de apoio de 10 páginas, com anexo na seção 2; a colega da equipe produzirá o PDF final |
+| [RELATORIO_FINAL_EQUIPE.pdf](RELATORIO_FINAL_EQUIPE.pdf) | PDF da equipe revisado, 10 páginas e anexo integrado na página 3; [parecer da revisão](docs/REVISAO_PDF_FINAL.md) |
+| [RELATORIO_TECNICO.pdf](RELATORIO_TECNICO.pdf) | Base de apoio de 10 páginas; preservada para consulta, separada do PDF final |
 | [RELATORIO_TECNICO.md](RELATORIO_TECNICO.md) | Fonte editável do mesmo relatório |
 | mgpeb.py, exemplos.py | Código obrigatório e exemplos simples |
 | [GUIA_DETALHADO.pdf](docs/GUIA_DETALHADO.pdf) | Material de estudo separado do relatório acadêmico |
@@ -92,7 +99,7 @@ São 46 testes Python e 13 verificações da auditoria. ReportLab e svglib serve
 
 Para repetir a verificação de JavaScript, com Node.js instalado: `node tools/verificar_painel.cjs`. Essa ferramenta de auditoria não é dependência do simulador.
 
-A reprodução do JavaScript foi conferida com DOM simulado, nos 15 cenários, em ambos os modos. Isso não substitui uma conferência visual real do novo layout, que permanece pendente.
+A reprodução do JavaScript foi conferida com DOM simulado, nos 15 cenários, em ambos os modos. Também foi realizado um teste pontual no site publicado, com seleção do cenário urgente, navegação até seu resultado final e inspeção visual. Veja o escopo em [revisão do PDF e publicação](docs/REVISAO_PDF_FINAL.md).
 
 ## Limites e histórico
 

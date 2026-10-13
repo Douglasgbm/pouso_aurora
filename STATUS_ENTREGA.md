@@ -1,37 +1,27 @@
-# Status da Fase 2 - 13 de outubro de 2026
+# Status da Fase 2 — 13 de outubro de 2026
 
-## Resultado da revisão
+## Material de entrega
 
-Código obrigatório e exemplos aprovados nos testes executados. Não foi identificado defeito conhecido de implementação nos requisitos obrigatórios auditados. A revisão compara a organização e a clareza com a Fase 1 do GitHub; não altera o projeto da Fase 1 nem promete nota.
-
+- **[RELATORIO_FINAL_EQUIPE.pdf](RELATORIO_FINAL_EQUIPE.pdf): PDF final recebido da colega, revisado, com 10 páginas e anexo integrado na página 3.**
+- Código Python obrigatório: mgpeb.py, exemplos.py e exemplos_saida.txt.
 - Equipe: Alice Brenda, Douglas Goltz e Marcelo Santos.
-- 46 testes Python e 13 verificações da auditoria aprovados.
-- 14 exemplos reproduzem a saída salva; painel exporta 15 cenários (inclui completo).
-- JavaScript exercitado nos 15 cenários, em ambos os modos, com DOM simulado.
-- Menu contínuo e escolha terminal/HTML/cenário preservados.
-- Núcleo mgpeb.py sem bibliotecas externas. NumPy/Matplotlib não são requisitos.
-- PDF de apoio e guia atualizados, com cores e linguagem visual do HTML.
+- [Painel HTML online](https://mrc888.github.io/aurora-painel/): complemento opcional.
 
-## O PDF ainda será feito pela colega
+Não foi identificado defeito impeditivo nos requisitos obrigatórios conferidos. Falta a equipe realizar o envio no portal, observando os formatos e campos exigidos. A revisão não promete nota nem confirma submissão acadêmica.
 
-RELATORIO_TECNICO.pdf é uma **base de apoio**, com 10 páginas e anexo integrado na seção 2. A colega da equipe produzirá o PDF final de entrega. Ela pode usar este conteúdo, preservando os seis requisitos, o anexo e o limite de 5 a 10 páginas. Este arquivo não é apresentado como aprovação ou entrega final da equipe.
+## Evidências
 
-## Fechamento por critério
+A auditoria anterior aprovou 46 testes Python, 13 verificações, 14 exemplos reproduzíveis e 400 cenários adicionais. O JavaScript foi exercitado em 15 cenários nos dois modos com DOM simulado. O código não foi alterado nesta publicação.
 
-O parecer docs/PARECER_FINAL_CRITERIOS.md confere 28 itens do enunciado e entregáveis, com referências às oito unidades. Conteúdo obrigatório, código e anexo atendidos. A auditoria adicional de 400 cenários também passou. O único material obrigatório ainda a produzir é o PDF final da colega.
+O site também passou por teste pontual em navegador real: seleção do cenário urgente e avanço ao último fato, com T+10, pousados [1, 0] e dois módulos operacionais, sem erros/avisos capturados no console. Isso não representa teste completo de compatibilidade entre dispositivos.
 
-## Pontos ainda abertos
+## Documentação
 
-1. Produzir e revisar o PDF final da colega; comparar a versão recebida com código, fórmulas e anexo.
-2. Conferir visualmente o modo de leitura do HTML num navegador real. O bloqueio da ferramenta ao abrir arquivo local impediu essa etapa nesta auditoria. É um extra e não bloqueia o código obrigatório.
-3. A equipe confere as regras operacionais do portal e realiza o envio.
+- docs/REVISAO_PDF_FINAL.md: revisão do PDF recebido, requisitos por página, observações editoriais e hash do original.
+- docs/CONFERENCIA_ENTREGA.md: matriz de entrega atualizada.
+- docs/PUBLICACAO_HTML.md: hospedagem e atualização do painel.
+- RELATORIO_TECNICO.pdf: base de apoio; não confundir com RELATORIO_FINAL_EQUIPE.pdf.
+- Guias, PDFs de revisão anteriores e docs/historico/: material de estudo e registros da auditoria anterior ao recebimento do PDF final. Suas menções a PDF pendente não representam o status atual.
+- docs/hashes_validacao.json: hashes dos arquivos desta versão.
 
-## Referência atual
-
-- docs/CONFERENCIA_ENTREGA.md: matriz requisito/evidência.
-- docs/REVISAO_COMPARATIVA_2026-10-13.md e .pdf: comparação e revisão detalhadas.
-- docs/GUIA_DETALHADO.md e .pdf: explicação do funcionamento.
-- docs/PADRAO_PBL_AURORA.md: padrão reutilizável para próximos trabalhos.
-- docs/evidencias_revisao_2026-10-13.json e docs/hashes_validacao.json: evidências e arquivos auditados.
-
-Documentos em docs/historico/ registram situações anteriores. Apresentações e pastas antigas do OneDrive são históricas; a pasta “Versao atual - 2026-10-13” concentra o material desta revisão.
+A pasta “Versao atual - 2026-10-13” no OneDrive reúne o pacote atual. Gravação local nessa pasta não comprova sincronização com a nuvem.

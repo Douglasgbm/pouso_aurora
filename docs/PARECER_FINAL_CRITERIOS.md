@@ -2,13 +2,13 @@
 
 ## Conclusão objetiva
 
-**O conteúdo obrigatório da Fase 2 está atendido nos itens abaixo. Não há correção pendente identificada no código, no anexo ou no conteúdo técnico de apoio. Para concluir o material de entrega, resta a versão final do PDF que será produzida pela colega, preservando esses itens.**
+**O conteúdo obrigatório da Fase 2 está atendido nos itens abaixo. Não há correção pendente identificada no código, no anexo ou no conteúdo técnico de apoio. O PDF final da colega foi recebido e conferido: RELATORIO_FINAL_EQUIPE.pdf, com revisão em REVISAO_PDF_FINAL.md.**
 
-Este parecer amplia a revisão anterior: confronta diretamente o enunciado original, os oito capítulos fornecidos, o trabalho da Fase 1 no GitHub e a versão atual da Fase 2. Não transforma o teste visual ainda pendente do HTML em exigência acadêmica: o HTML é um extra.
+Este parecer amplia a revisão anterior: confronta diretamente o enunciado original, os oito capítulos fornecidos, o trabalho da Fase 1 no GitHub e a versão atual da Fase 2. O HTML é um extra e recebeu teste pontual de navegação no site publicado.
 
 ## Como os critérios foram interpretados
 
-O documento PBL Aurora 2.docx informa **15 pontos totais** e lista três critérios: relatório técnico em PDF, código fonte Python e anexo de estruturas. A tabela fornecida não apresenta pesos individuais nem níveis de desempenho. O checklist abaixo decompõe as exigências textuais, sem inventar pesos. “Atendido” significa que há conteúdo/implementação e evidência verificável; o PDF final da colega será uma nova versão a conferir.
+O documento PBL Aurora 2.docx informa **15 pontos totais** e lista três critérios: relatório técnico em PDF, código fonte Python e anexo de estruturas. A tabela fornecida não apresenta pesos individuais nem níveis de desempenho. O checklist abaixo decompõe as exigências textuais, sem inventar pesos. “Atendido” significa que há conteúdo/implementação e evidência verificável; o PDF final da colega também foi conferido, conforme REVISAO_PDF_FINAL.md.
 
 ## Checklist completo do enunciado
 
@@ -39,7 +39,7 @@ O documento PBL Aurora 2.docx informa **15 pontos totais** e lista três critér
 | 6.2 | Energia, resíduos e recursos | reservas críticas, produção adiável, estoques, recuperação, descarte e extração local | Atendido |
 | 6.3 | Social e governança | segurança, treinamento, representação, revisão de regras, transparência e responsabilidades | Atendido |
 | E.1 | Conteúdo do relatório técnico | cenário, portas, funções, história/hardware e ESG presentes | Atendido na base de apoio |
-| E.2 | PDF entre 5 e 10 páginas | base renderizada com 10 páginas, incluindo anexo | Atendido na base; preservar no PDF final |
+| E.2 | PDF entre 5 e 10 páginas | base renderizada com 10 páginas, incluindo anexo | Atendido no PDF final (10 páginas) |
 | E.3 | Fonte Python .py | mgpeb.py e exemplos.py incluídos no pacote obrigatório | Atendido |
 | E.4 | Anexo com exemplos concretos | §2: cadastro, FIFO, espera, aptos, pousados, alertas e pilha LIFO no cenário urgente | Atendido |
 
@@ -93,6 +93,6 @@ O segundo comando testa JavaScript com DOM simulado, nos 15 cenários em dois mo
 
 ## Situação para entrega
 
-**Implementação obrigatória, anexo e conteúdo técnico: fechados conforme o checklist.** A versão de apoio já satisfaz o conteúdo e o limite de páginas. O PDF alternativo/final da colega é o único material obrigatório ainda a ser produzido pela equipe; depois basta conferir que ele preserva os requisitos e realizar o envio.
+**Implementação obrigatória, anexo e conteúdo técnico: fechados conforme o checklist.** A versão de apoio já satisfaz o conteúdo e o limite de páginas. O PDF final da colega foi recebido, revisado e publicado; resta realizar o envio no portal.
 
 A referência da Fase 1 foi útil para clareza, organização e evidências. Não foram transplantados o limite de páginas, o notebook ou a composição da equipe anterior. A avaliação aqui é de conformidade demonstrada com o material disponível, sem inventar pesos ou uma nota atribuída pelo professor.
