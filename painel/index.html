@@ -247,9 +247,59 @@
     left: 1000px; top: 552px; width: 300px; text-align: right;
     font-size: 9px; color: var(--texto-fraco); letter-spacing: .08em;
   }
+
+  /* Modo de leitura: preserva a sala original e evita reduzir texto no celular. */
+  .modo-leitura { position: fixed; right: 12px; top: 12px; z-index: 20;
+    padding: 10px 14px; min-height: 44px; border: 1px solid var(--ciano);
+    border-radius: 8px; color: var(--texto); background: #06141cf2;
+    font: 14px var(--mono); cursor: pointer; }
+  .modo-leitura:focus-visible, .tela:focus-visible { outline: 3px solid var(--rosa); }
+  .dica { font-size: 11px; }
+  .tela.aberta { overflow: auto; }
+  .leitura { overflow: auto; }
+  .leitura .palco { position: relative; left: auto; top: auto; transform: none !important;
+    width: min(1120px, 100%); height: auto; margin: 0 auto; padding: 72px 16px 24px;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .leitura .palco > * { position: static; width: auto !important; height: auto !important; min-width: 0;
+    transform: none !important; }
+  .leitura .arte, .leitura .dica { display: none; }
+  .leitura .letreiro { grid-column: 1 / -1; order: -10; padding: 12px; }
+  .leitura #ceu { grid-column: 1 / -1; order: -9; width: 100% !important; height: auto;
+    aspect-ratio: 587 / 297; background: #0c0b1e; border-radius: 12px; }
+  .leitura .controles { grid-column: 1 / -1; order: -8; flex-wrap: wrap; gap: 10px; font-size: 14px; }
+  .leitura .controles label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+  .leitura select, .leitura .controles button { min-height: 44px; min-width: 44px; font-size: 16px; max-width: 100%; }
+  .leitura .linha-tempo { grid-column: 1 / -1; order: -7; font-size: 14px; }
+  .leitura .linha-tempo input { min-width: 0; min-height: 44px; }
+  .leitura .tela { padding: 16px; font-size: 18px; cursor: default; overflow: visible; }
+  .leitura .tela::after { display: none; }
+  .leitura .tela h2 { font-size: 16px; flex-wrap: wrap; gap: 6px; }
+  .leitura #t-crt { font-size: 18px; min-height: 130px; }
+  .leitura .hud { padding: 12px; font-size: 16px; text-align: left !important; }
+  .leitura .hud .grande { font-size: 17px; }
+  .leitura .telemetria { grid-column: 1 / -1; padding: 16px; font-size: 15px; line-height: 1.6; }
+  .leitura .telemetria div, .leitura .raciocinio .l, .leitura .raciocinio .expr,
+  .leitura .estruturas .linha, .leitura .estruturas .valor { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+  .leitura .logica { grid-column: 1 / -1; padding: 16px; font-size: 15px; line-height: 1.6;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .leitura .logica h3 { font-size: 14px; flex-wrap: wrap; gap: 6px; }
+  .leitura .estruturas .linha { grid-template-columns: 90px minmax(0, 1fr); }
+  .leitura .raciocinio .expr { font-size: 17px; }
+  @media (max-width: 600px) {
+    .leitura .palco { grid-template-columns: minmax(0, 1fr); padding-inline: 12px; }
+    .leitura .logica { grid-template-columns: minmax(0, 1fr); }
+    .leitura .estruturas { border-right: 0; border-bottom: 1px solid var(--ciano-fraco); padding-bottom: 12px; }
+    .leitura .letreiro b { font-size: 18px; }
+    .leitura .letreiro span { font-size: 12px; letter-spacing: .04em; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tela { transition: none; }
+    #t-crt .agora::after { animation: none; }
+  }
 </style>
 </head>
 <body>
+<button class="modo-leitura" id="modo-leitura" aria-pressed="false">Modo de leitura</button>
 <div class="palco" id="palco">
   <canvas id="ceu"></canvas>
   <img class="arte" src="img/sala.png" alt="">
@@ -923,7 +973,7 @@ function rotulo(x, y, texto, cor) {
 }
 
 function desenharCeu(q, t, k) {
-  const escala = escalaAtual * (window.devicePixelRatio || 1);
+  const escala = (document.body.classList.contains("leitura") ? ceu.clientWidth / VIDRO.w : escalaAtual) * (window.devicePixelRatio || 1);
   ceu.width = Math.round(VIDRO.w * escala);
   ceu.height = Math.round(VIDRO.h * escala);
   ctx.setTransform(escala, 0, 0, escala, 0, 0);
@@ -1057,6 +1107,9 @@ function ajustarPalco() {
   escalaAtual = Math.min(window.innerWidth / ARTE.w, window.innerHeight / ARTE.h);
   const palco = $("palco");
   palco.style.transform = `scale(${escalaAtual}) translate(-50%, -50%)`;
+  if (!document.body.classList.contains("leitura")) {
+    for (const id in QUADROS) if (id !== telaAberta) encaixar($(id), QUADROS[id]);
+  }
   if (roteiro) desenhar();
 }
 
@@ -1128,6 +1181,7 @@ function escolher(nome, inicio) {
 /* ---------- Tela ampliada ---------- */
 let telaAberta = null;
 function abrirTela(id) {
+  if (document.body.classList.contains("leitura") || !QUADROS[id]) return;
   fecharTela();
   const e = $(id);
   const esc = Math.min(560 / e.offsetWidth, 290 / e.offsetHeight);
@@ -1150,7 +1204,26 @@ function iniciar() {
     document.body.textContent = "dados.js não encontrado. Rode: python3 exportar_painel.py";
     return;
   }
+  const compacto = window.matchMedia("(max-width: 1000px), (max-height: 650px)");
+  function definirLeitura(ativa) {
+    fecharTela();
+    document.body.classList.toggle("leitura", ativa);
+    $("modo-leitura").setAttribute("aria-pressed", String(ativa));
+    $("modo-leitura").textContent = ativa ? "Ver sala de controle" : "Modo de leitura";
+    for (const id in QUADROS) {
+      $(id).tabIndex = ativa ? -1 : 0;
+      $(id).setAttribute("aria-label", $(id).dataset.titulo + (ativa ? "" : ": Enter para ampliar"));
+    }
+    ajustarPalco();
+  }
+  for (const id in QUADROS) $(id).dataset.titulo = $(id).textContent.trim().replace(/\s+/g, " ");
+  $("modo-leitura").addEventListener("click", () => definirLeitura(!document.body.classList.contains("leitura")));
+  compacto.addEventListener("change", e => definirLeitura(e.matches));
+  definirLeitura(compacto.matches);
   for (const id in QUADROS) {
+    $(id).addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); telaAberta === id ? fecharTela() : abrirTela(id); }
+    });
     encaixar($(id), QUADROS[id]);
     $(id).addEventListener("click", () => telaAberta === id ? fecharTela() : abrirTela(id));
   }
@@ -1170,7 +1243,7 @@ function iniciar() {
   $("velocidade").addEventListener("change", (e) => { velocidade = Number(e.target.value); });
   $("barra-tempo").addEventListener("input", (e) => { pausar(); irPara(e.target.value / 1000 * roteiro.duracao); });
   document.addEventListener("keydown", (e) => {
-    if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
+    if (["SELECT", "INPUT", "BUTTON"].includes(e.target.tagName)) return;
     if (e.key === " ") { e.preventDefault(); tocando ? pausar() : tocar(); }
     else if (e.key === "ArrowRight") proximoFato();
     else if (e.key === "Escape") fecharTela();
