@@ -140,7 +140,7 @@
       "paginas": 14
     },
     "docs/REVISAO_COMPARATIVA_2026-10-13.pdf": {
-      "paginas": 6
+      "paginas": 7
     }
   },
   "inspecao_pdf": "Páginas renderizadas e inspecionadas; capa, tabelas, gráficos e paginação conferidos.",
@@ -148,5 +148,19 @@
     "PDF final da colega e conferência de sua versão",
     "Conferência visual do modo de leitura HTML em navegador real",
     "Envio pela equipe no portal"
-  ]
+  ],
+  "auditoria_adicional": {
+    "seed": 20261013,
+    "cenarios": 400,
+    "descidas": 152,
+    "resultado": "aprovado",
+    "escopo": "Conservação, determinismo, combustível, reserva, unicidade, dependências, pilha e relógio."
+  },
+  "requisitos": {
+    "itens": 28,
+    "parecer": "docs/PARECER_FINAL_CRITERIOS.md",
+    "unidades_conferidas": 8,
+    "nota_total_informada": 15,
+    "pesos_individuais_disponiveis": false
+  }
 }

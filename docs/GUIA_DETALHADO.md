@@ -328,7 +328,7 @@ O teste de conservação agora percorre os 14 cenários: a entrada original cont
 
 ### O que os testes não demonstram
 
-Eles não validam física de pouso, esterilização, hardware tolerante à radiação ou segurança de uma nave real. O teste AST verifica convenções didáticas herdadas do projeto, como manter o simulador sem classes ou bibliotecas externas; não comprova que a FIAP proíba esses recursos. A correspondência entre cada trecho e páginas específicas das apostilas ainda depende de consulta ao material original.
+Eles não validam física de pouso, esterilização, hardware tolerante à radiação ou segurança de uma nave real. O teste AST verifica convenções didáticas herdadas do projeto, como manter o simulador sem classes ou bibliotecas externas; não comprova que a FIAP proíba esses recursos. A correspondência com as páginas das oito unidades foi conferida e está documentada em PARECER_FINAL_CRITERIOS.md.
 
 A base de apoio ao PDF acadêmico permanece com dez páginas. O guia é independente, e ambos são gerados a partir dos respectivos arquivos Markdown.
 

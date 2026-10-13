@@ -16,6 +16,10 @@ Código obrigatório e exemplos aprovados nos testes executados. Não foi identi
 
 RELATORIO_TECNICO.pdf é uma **base de apoio**, com 10 páginas e anexo integrado na seção 2. A colega da equipe produzirá o PDF final de entrega. Ela pode usar este conteúdo, preservando os seis requisitos, o anexo e o limite de 5 a 10 páginas. Este arquivo não é apresentado como aprovação ou entrega final da equipe.
 
+## Fechamento por critério
+
+O parecer docs/PARECER_FINAL_CRITERIOS.md confere 28 itens do enunciado e entregáveis, com referências às oito unidades. Conteúdo obrigatório, código e anexo atendidos. A auditoria adicional de 400 cenários também passou. O único material obrigatório ainda a produzir é o PDF final da colega.
+
 ## Pontos ainda abertos
 
 1. Produzir e revisar o PDF final da colega; comparar a versão recebida com código, fórmulas e anexo.

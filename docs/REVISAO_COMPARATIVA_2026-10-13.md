@@ -179,3 +179,15 @@ O conjunto obrigatório verificado está coerente para servir de base ao fechame
 
 A revisão visual do HTML permanece aberta: a ferramenta bloqueou a abertura do arquivo local, e testes com DOM simulado não avaliam CSS, legibilidade, recortes ou comportamento real de foco. Não se declarou essa etapa concluída. O extra pode ser conferido abrindo o painel no computador da equipe.
 
+
+<!-- PAGE BREAK -->
+
+## 6. Fechamento final por critérios e unidades
+
+A revisão complementar confrontou o enunciado com as oito unidades fornecidas. O documento PARECER_FINAL_CRITERIOS.md reúne 28 verificações de requisitos e entregáveis, as evidências correspondentes e as páginas das aulas. Os itens obrigatórios de conteúdo, implementação e anexo estão atendidos. A versão de apoio já tem dez páginas; a colega ainda produzirá o PDF final.
+
+A tabela oficial disponível informa 15 pontos totais e os três entregáveis, sem pesos individuais. Nenhuma distribuição de nota foi inventada. Cadastro em listas, fila de chegada com seleção por prioridade, pilha de consulta e consumo operacional foram confrontados com o texto do enunciado. Não há obrigação de formulário, notebook, NumPy ou Matplotlib nesta fase.
+
+Foram exercitados mais 400 cenários determinísticos, com zero a 12 módulos, combinações de chegadas, falhas, reparos, acidentes e bloqueios, totalizando 152 descidas. Conservação das entradas, repetibilidade, combustível, reserva, unicidade, dependências, pilha e relógio passaram. A reprodução está em tools/verificar_invariantes.py.
+
+**Parecer:** conteúdo obrigatório, código e anexo fechados conforme as exigências conferidas. O único material obrigatório ainda a produzir é o PDF final da colega. A conferência visual do novo modo de leitura permanece uma verificação do extra HTML, sem ser apresentada como exigência de entrega.

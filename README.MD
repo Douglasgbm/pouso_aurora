@@ -76,6 +76,8 @@ Depois de alterar o simulador, regenere os dados com `python exportar_painel.py`
 
 HTML e roteiro de apresentação são extras. O enunciado da Fase 2 exige PDF de 5 a 10 páginas, fonte Python e anexo de estruturas; não exige notebook, NumPy ou Matplotlib. O notebook obrigatório da Fase 1 não deve ser confundido com requisito desta fase.
 
+O [parecer final por critério](docs/PARECER_FINAL_CRITERIOS.md) relaciona cada exigência ao código, ao relatório e às páginas das unidades. A conferência adicional de 400 cenários está em `tools/verificar_invariantes.py`.
+
 ## Evidências e reprodução
 
 ```text
