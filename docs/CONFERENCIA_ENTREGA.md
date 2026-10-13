@@ -1,10 +1,10 @@
-# Conferência da entrega obrigatória — 10 de outubro de 2026
+# Conferência da entrega obrigatória — 13 de outubro de 2026
 
 Referência: documento “PBL Aurora 2.docx” fornecido pela equipe. A conferência trata o HTML como extra, conforme orientação de Marcelo.
 
 ## Resultado
 
-Código e exemplos estão prontos nos cenários verificados. O texto do anexo já está pronto na seção 2 do relatório de apoio. A única pendência de preparação é finalizar e aprovar o PDF técnico da equipe, incluindo esse anexo. O envio no portal ainda deve ser realizado pela equipe.
+Código e exemplos estão prontos nos cenários verificados. O texto do anexo já está pronto na seção 2 do relatório de apoio. A colega da equipe ainda produzirá o PDF final, incluindo esse anexo. RELATORIO_TECNICO.pdf é apenas a base de apoio, agora com a identidade do HTML. O envio no portal ainda deve ser realizado pela equipe.
 
 | Exigência | Evidência no projeto | Situação |
 |---|---|---|
@@ -17,12 +17,14 @@ Código e exemplos estão prontos nos cenários verificados. O texto do anexo j�
 | Evolução da computação e hardware | Seção 5 e 5.1, com consequências para programação e estruturas | Conteúdo pronto para o PDF |
 | ESG e governança | Seção 6: pouso, recursos, resíduos, energia e participação | Conteúdo pronto para o PDF |
 | Anexo com exemplos concretos | Seção 2, cenário urgente: fila/espera, aptos, pousados e pilha | Conteúdo pronto; manter no PDF final |
-| PDF de 5 a 10 páginas | Relatório de apoio atual tem 10 páginas | Falta aprovação/finalização pela equipe |
+| PDF de 5 a 10 páginas | Relatório de apoio atual tem 10 páginas | A colega ainda produzirá a versão final |
 
 ## Validação nesta conferência
 
 - 46 testes aprovados (22 do simulador, 11 do exportador, 4 da transmissão e 9 do roteiro).
 - 13 verificações da auditoria aprovadas.
+- JavaScript conferido nos 15 cenários em ambos os modos, com DOM simulado; aparência no navegador ainda pendente.
+- PDF de apoio de 10 páginas e guia de estudo separados, renderizados para inspeção.
 - Programa principal executado sem dependências externas.
 - Os 14 exemplos reproduzem exatamente exemplos_saida.txt em UTF-8.
 - Código obrigatório também verificado isoladamente, sem HTML, exportador, testes ou geradores de documentos.

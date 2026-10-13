@@ -1,0 +1,152 @@
+{
+  "data": "2026-10-13",
+  "fase1_commit": "e29672498086ae3018909fbddf1c60e9cfa0699b",
+  "base_fase2_douglas": "1ea80a59e93d3a87c80aae9b2dc172811fa1e096",
+  "escopo": "Arquivos identificados por docs/hashes_validacao.json; base histórica não é o commit final desta revisão.",
+  "equipe": [
+    "Alice Brenda RM574916",
+    "Douglas Goltz RM574439",
+    "Marcelo Santos RM576131"
+  ],
+  "suite_python": {
+    "aprovados": 46,
+    "falhas": 0,
+    "log": "test_1_transmite_exatamente_o_historico (test_ao_vivo.TestAoVivo.test_1_transmite_exatamente_o_historico) ... ok\ntest_2_relogio_nunca_volta (test_ao_vivo.TestAoVivo.test_2_relogio_nunca_volta) ... ok\ntest_3_sem_cores_quando_pedido (test_ao_vivo.TestAoVivo.test_3_sem_cores_quando_pedido) ... ok\ntest_4_todos_os_cenarios_reproduzem_exemplos_saida (test_ao_vivo.TestAoVivo.test_4_todos_os_cenarios_reproduzem_exemplos_saida) ... ok\ntest_automacao_nao_entra_no_menu (test_avaliar.TestRoteiro.test_automacao_nao_entra_no_menu) ... ok\ntest_cenario_volta_ao_menu_e_pode_repetir (test_avaliar.TestRoteiro.test_cenario_volta_ao_menu_e_pode_repetir) ... ok\ntest_comando_interativo_volta_ao_menu (test_avaliar.TestRoteiro.test_comando_interativo_volta_ao_menu) ... ok\ntest_entrada_fechada_sai_sem_loop (test_avaliar.TestRoteiro.test_entrada_fechada_sai_sem_loop) ... ok\ntest_falha_nao_e_mascarada (test_avaliar.TestRoteiro.test_falha_nao_e_mascarada) ... ok\ntest_menu_repete_terminal_e_painel (test_avaliar.TestRoteiro.test_menu_repete_terminal_e_painel) ... ok\ntest_opcao_invalida_nao_encerra (test_avaliar.TestRoteiro.test_opcao_invalida_nao_encerra) ... ok\ntest_velocidade_invalida (test_avaliar.TestRoteiro.test_velocidade_invalida) ... ok\ntest_zero_permite_execucao_sem_espera (test_avaliar.TestRoteiro.test_zero_permite_execucao_sem_espera) ... ok\ntest_1_escuta_nao_altera_o_resultado (test_exportar_painel.TestExportarPainel.test_1_escuta_nao_altera_o_resultado) ... ok\ntest_1b_funcoes_originais_restauradas (test_exportar_painel.TestExportarPainel.test_1b_funcoes_originais_restauradas) ... ok\ntest_2_historico_completo_e_na_ordem (test_exportar_painel.TestExportarPainel.test_2_historico_completo_e_na_ordem) ... ok\ntest_2b_horario_nunca_volta (test_exportar_painel.TestExportarPainel.test_2b_horario_nunca_volta) ... ok\ntest_3_estado_final_bate (test_exportar_painel.TestExportarPainel.test_3_estado_final_bate) ... ok\ntest_4_checagem_traz_o_motivo_do_autorizar (test_exportar_painel.TestExportarPainel.test_4_checagem_traz_o_motivo_do_autorizar) ... ok\ntest_4b_descida_vem_depois_da_ordenacao (test_exportar_painel.TestExportarPainel.test_4b_descida_vem_depois_da_ordenacao) ... ok\ntest_6_foto_durante_a_descida (test_exportar_painel.TestExportarPainel.test_6_foto_durante_a_descida) ... ok\ntest_7_criterio_da_ordem_concorda_com_vem_antes (test_exportar_painel.TestExportarPainel.test_7_criterio_da_ordem_concorda_com_vem_antes) ... ok\ntest_7b_justificativa_exata_de_cada_criterio (test_exportar_painel.TestExportarPainel.test_7b_justificativa_exata_de_cada_criterio) ... ok\ntest_8_expressao_booleana_da_checagem (test_exportar_painel.TestExportarPainel.test_8_expressao_booleana_da_checagem) ... ok\ntest_acidente_nao_e_recuperado_com_evento_sistemas (test_mgpeb.TestMGPEB.test_acidente_nao_e_recuperado_com_evento_sistemas) ... ok\ntest_buscas_e_validacao (test_mgpeb.TestMGPEB.test_buscas_e_validacao) ... ok\ntest_campos_e_alvos_invalidos (test_mgpeb.TestMGPEB.test_campos_e_alvos_invalidos) ... ok\ntest_conservacao_consultas_e_sem_repeticao (test_mgpeb.TestMGPEB.test_conservacao_consultas_e_sem_repeticao) ... ok\ntest_dependencias_ordem_inversa_e_redundancia (test_mgpeb.TestMGPEB.test_dependencias_ordem_inversa_e_redundancia) ... ok\ntest_entradas_malformadas (test_mgpeb.TestMGPEB.test_entradas_malformadas) ... ok\ntest_eta_e_ponto_fixo (test_mgpeb.TestMGPEB.test_eta_e_ponto_fixo) ... ok\ntest_evento_durante_descida_respeita_ordem_do_tempo (test_mgpeb.TestMGPEB.test_evento_durante_descida_respeita_ordem_do_tempo) ... ok\ntest_eventos_e_acidente (test_mgpeb.TestMGPEB.test_eventos_e_acidente) ... ok\ntest_eventos_empatados_respeitam_cadastro (test_mgpeb.TestMGPEB.test_eventos_empatados_respeitam_cadastro) ... ok\ntest_falha_base_e_propagacao (test_mgpeb.TestMGPEB.test_falha_base_e_propagacao) ... ok\ntest_falha_durante_descida_impede_ativacao (test_mgpeb.TestMGPEB.test_falha_durante_descida_impede_ativacao) ... ok\ntest_falha_habitacao_isola_dependencia_laboratorio (test_mgpeb.TestMGPEB.test_falha_habitacao_isola_dependencia_laboratorio) ... ok\ntest_impedimentos_obrigatorios (test_mgpeb.TestMGPEB.test_impedimentos_obrigatorios) ... ok\ntest_limites_combustivel (test_mgpeb.TestMGPEB.test_limites_combustivel) ... ok\ntest_normal (test_mgpeb.TestMGPEB.test_normal) ... ok\ntest_recuperacao_sem_novo_pouso (test_mgpeb.TestMGPEB.test_recuperacao_sem_novo_pouso) ... ok\ntest_recursos_do_codigo_estudantil (test_mgpeb.TestMGPEB.test_recursos_do_codigo_estudantil) ... ok\ntest_simulacao_e_pilha_vazias (test_mgpeb.TestMGPEB.test_simulacao_e_pilha_vazias) ... ok\ntest_tabela_verdade_completa (test_mgpeb.TestMGPEB.test_tabela_verdade_completa) ... ok\ntest_todas_permutacoes_candidatos (test_mgpeb.TestMGPEB.test_todas_permutacoes_candidatos) ... ok\ntest_urgencia_comparavel_e_desempates (test_mgpeb.TestMGPEB.test_urgencia_comparavel_e_desempates) ... ok\n\n----------------------------------------------------------------------\nRan 46 tests in 0.039s\n\nOK\n"
+  },
+  "auditoria": [
+    {
+      "nome": "32 combinações de autorização",
+      "aprovado": true,
+      "evidencia": "Apenas todas as condições verdadeiras autorizam."
+    },
+    {
+      "nome": "4 fronteiras de combustível",
+      "aprovado": true,
+      "evidencia": "11.999 bloqueado; 12 e 15 urgentes; 15.001 não urgente."
+    },
+    {
+      "nome": "contêiner inválido",
+      "aprovado": true,
+      "evidencia": "[]"
+    },
+    {
+      "nome": "linha de módulo inválida",
+      "aprovado": true,
+      "evidencia": "[]"
+    },
+    {
+      "nome": "linha de evento inválida",
+      "aprovado": true,
+      "evidencia": "[]"
+    },
+    {
+      "nome": "falha própria após pouso",
+      "aprovado": true,
+      "evidencia": {
+        "estado": "suspenso",
+        "sistemas": false
+      }
+    },
+    {
+      "nome": "propagação da falha de Energia",
+      "aprovado": true,
+      "evidencia": [
+        [
+          "E",
+          "suspenso",
+          false
+        ],
+        [
+          "H",
+          "suspenso",
+          true
+        ]
+      ]
+    },
+    {
+      "nome": "ativação com falha ao fim da descida",
+      "aprovado": true,
+      "evidencia": {
+        "estado": "suspenso",
+        "sensores": false,
+        "historico": [
+          "0.0 min: E chegou",
+          "0.0 min: E iniciou descida",
+          "5.0 min: evento sensores = False | ID: E | previsto: 3 min",
+          "5.0 min: E pousado",
+          "E suspenso: Sensores/sistemas falhos na base",
+          "5.0 min: rodada encerrada"
+        ]
+      }
+    },
+    {
+      "nome": "acidente preservado",
+      "aprovado": true,
+      "evidencia": "acidente"
+    },
+    {
+      "nome": "pousos sequenciais",
+      "aprovado": true,
+      "evidencia": {
+        "tempo": 10.0,
+        "pousados": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "nome": "120 permutações de ordenação",
+      "aprovado": true,
+      "evidencia": "Resultado L, M, E, H, G para margens e tipos escolhidos."
+    },
+    {
+      "nome": "saída salva UTF-8 e atual",
+      "aprovado": true,
+      "evidencia": {
+        "utf8": true,
+        "igual_execucao": true,
+        "cenarios_executados": 14
+      }
+    },
+    {
+      "nome": "URL integral no gerador",
+      "aprovado": true,
+      "evidencia": "<link href=\"https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/\" color=\"#176B87\">https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/</link>"
+    }
+  ],
+  "javascript": {
+    "cenarios": 15,
+    "modos": 2,
+    "resultado": "aprovado",
+    "reproduzir": "node tools/verificar_painel.cjs",
+    "limite": "DOM simulado; não valida renderização CSS ou comportamento real do navegador"
+  },
+  "isolamento": {
+    "arquivos": [
+      "mgpeb.py",
+      "exemplos.py",
+      "exemplos_saida.txt"
+    ],
+    "python_sem_site_packages": true,
+    "saida_exemplos_identica": true
+  },
+  "pdfs": {
+    "RELATORIO_TECNICO.pdf": {
+      "paginas": 10,
+      "finalidade": "apoio para colega produzir PDF final"
+    },
+    "docs/GUIA_DETALHADO.pdf": {
+      "paginas": 14
+    },
+    "docs/REVISAO_COMPARATIVA_2026-10-13.pdf": {
+      "paginas": 6
+    }
+  },
+  "inspecao_pdf": "Páginas renderizadas e inspecionadas; capa, tabelas, gráficos e paginação conferidos.",
+  "pendencias": [
+    "PDF final da colega e conferência de sua versão",
+    "Conferência visual do modo de leitura HTML em navegador real",
+    "Envio pela equipe no portal"
+  ]
+}

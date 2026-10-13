@@ -133,3 +133,11 @@ O relatório acadêmico e o guia detalhado estão disponíveis em Markdown e PDF
 MENU CONTÍNUO
 python avaliar.py mantém as opções 1 (terminal) e 2 (HTML), acrescenta
 3 (um cenário) e 0 (sair), e retorna ao menu ao concluir cada execução.
+
+REFERÊNCIA ATUAL - 13/10/2026
+RELATORIO_TECNICO.pdf é apoio para a colega produzir o PDF final, não a entrega
+final aprovada. A base tem 10 páginas e anexo na seção 2. O visual segue o HTML.
+Equipe: Alice Brenda, Douglas Goltz e Marcelo Santos.
+Consulte STATUS_ENTREGA.md e docs/REVISAO_COMPARATIVA_2026-10-13.md.
+Arquivos antigos estão em docs/historico/. A aparência do modo de leitura
+no navegador real ainda precisa de conferência; os testes JS usam DOM simulado.

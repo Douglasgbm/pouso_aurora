@@ -1,190 +1,99 @@
-> Integração do painel HTML: 46 testes automatizados (22 do simulador, 11 do exportador, 4 da transmissão e 9 do roteiro).
-> Consulte `STATUS_ENTREGA.md` para o estado atual; revisões anteriores em `docs/` são históricas.
+# Missão Aurora Siger - Fase 2
 
-# MGPEB — Aurora Siger
+## Módulo de Gerenciamento de Pouso e Estabilização de Base (MGPEB)
 
-Protótipo didático para organizar a autorização e a ordem de pouso dos módulos
-da base em Marte. A implementação atual está em `mgpeb.py`.
+A Fase 1 perguntou se a nave estava pronta para decolar. Agora, o problema é decidir **quem pode pousar, quem pousa primeiro e quais módulos conseguem operar na base**. A continuidade é temática; os programas das fases não trocam dados automaticamente.
 
-## Entrega obrigatória e extras
+**Equipe:** Alice Brenda (RM 574916), Douglas Goltz (RM 574439) e Marcelo Santos (RM 576131). Ciência da Computação, FIAP, 2026.
 
-O enunciado exige código Python, PDF técnico de 5 a 10 páginas e anexo de estruturas de dados (que pode integrar o PDF). O protótipo obrigatório é `mgpeb.py`, com exemplos em `exemplos.py`. Ambos executam sem instalar bibliotecas externas:
+**Versão de referência:** núcleo 1.2; documentação e interface revisadas em 13/10/2026. Consulte [o status](STATUS_ENTREGA.md) antes de usar um relatório antigo.
+
+## Como funciona
+
+1. Cadastra módulos Energia, Habitação, Logística, Médico e Laboratório.
+2. Recebe as chegadas em uma fila FIFO e mantém candidatos em espera.
+3. Autoriza somente quem atende combustível, sensores, sistemas, atmosfera e área.
+4. Ordena apenas os autorizados por urgência e critérios de desempate.
+5. Reserva a área e representa uma descida por vez, com consumo estimado.
+6. Reavalia dependências na base e registra histórico, alertas e pousados.
+
+**Segurança antes da prioridade:** um módulo com 13 kg pode ter urgência; com 11 kg, ele fica bloqueado. No cenário padrão, o mínimo é 12 kg, calculado por `F(t) = k*m*t + R`. O consumo é `C(t) = k*m*t`: 10 kg para 1000 kg de massa e cinco minutos. A reserva de 2 kg permanece.
+
+A busca é sequencial, a ordenação é por inserção e as estruturas são listas com índices explícitos. O núcleo foi mantido simples e comentado, sem bibliotecas externas. A pilha permite consultar/remover o último registro de uma cópia do histórico; não desfaz um pouso real.
+
+## Executar o código obrigatório
+
+É necessário Python 3. Não há dependências externas para o simulador.
 
 ```text
 python mgpeb.py
 python exemplos.py
 ```
 
-O HTML, o exportador e o roteiro `avaliar.py` são extras de apresentação. Não são necessários para executar o código obrigatório. O núcleo e os exemplos estão conferidos; resta finalizar e aprovar o PDF, preservando o anexo da seção 2. Veja `docs/CONFERENCIA_ENTREGA.md`.
+No macOS, se necessário, use `python3` no lugar de `python`. Execute os comandos dentro da pasta extraída do projeto.
 
-## Arquivos principais
+O cenário padrão termina com E, H, G, M e L operacionais, 25 minutos simulados e 20 kg por módulo. `exemplos.py` executa 14 cenários e sua saída deve corresponder a `exemplos_saida.txt`.
 
-- `mgpeb.py`: cadastro, validação, fila, regras lógicas, busca, ordenação e relatório da simulação.
-- `exemplos.py`: 14 cenários para estudar as decisões do programa.
-- `test_mgpeb.py`: testes automatizados externos ao código didático (22).
-- `exportar_painel.py` e `test_exportar_painel.py`: exportação dos cenários para o painel HTML e seus testes (11).
-- `painel/`: painel HTML animado (`index.html`, `dados.js` gerado e a ilustração em `img/`).
-- `auditoria.py`: conferência automática da entrega (`python auditoria.py .`).
-- `STATUS_ENTREGA.md`: estado atual da entrega e pendências da equipe.
-- `RELATORIO_TECNICO.pdf`: relatório da Fase 2; `RELATORIO_TECNICO.md` é sua fonte editável.
-- `docs/grafico_topico_04.svg`: gráfico vetorial do modelo de consumo.
-- `gerar_relatorio_pdf.py`: converte a fonte Markdown, tabelas e gráfico para PDF.
-- `LEIA-ME.txt`: explicação direta dos campos, regras, estruturas e comandos.
-- `docs/APRESENTACAO_ALTERACOES.md`: registro histórico da apresentação das partes 5 e 6.
-- `docs/GUIA_DETALHADO.md` e `docs/GUIA_DETALHADO.pdf`: explicação metódica do projeto e das correções da versão 1.1.
-- `docs/portas_logicas.svg`: diagrama AND, OR e NOT da autorização e da ativação em solo.
-- `docs/REVISAO_PROJETO.md`: registro histórico de uma revisão anterior.
-- `main.py`: experimento antigo de descida, mantido para comparação.
-
-## Painel HTML 1.0
-
-Abra `painel/index.html` no navegador. Funciona localmente, sem servidor.
-O painel reproduz os resultados do Python em 15 cenários (padrão + 14 exemplos).
-Para atualizar os dados após alterar o simulador, execute `python exportar_painel.py`.
-O HTML é um complemento visual; as decisões continuam no simulador Python.
-
-## Executar
-
-### Para avaliar: um comando, dois caminhos
+## Apresentar: terminal ou HTML
 
 ```text
 python avaliar.py
 ```
 
-O menu oferece:
+| Opção | Resultado |
+|---|---|
+| 1 | Programa principal, 14 cenários ao vivo e testes |
+| 2 | Regenera dados e abre o painel HTML |
+| 3 | Executa um cenário individual |
+| 0 | Encerra |
 
-- **1 - Terminal:** roda o programa principal (`mgpeb.py`, com as buscas), depois
-  transmite os 14 cenários ao vivo (`ao_vivo.py --todos`: chegadas, checagens,
-  ordenação e descidas no ritmo do tempo simulado) e por fim os testes. Cada
-  transmissão é conferida contra o histórico do simulador, e os relatórios
-  transmitidos são comparados com `exemplos_saida.txt`. Um cenário avulso:
-  `python ao_vivo.py urgente`.
-- **2 - Painel HTML:** regenera os dados a partir do simulador
-  (`exportar_painel.py`) e abre `painel/index.html` no navegador.
-
-Também é possível ir direto: `python avaliar.py terminal` ou
-`python avaliar.py painel`. O roteiro usa só a biblioteca padrão e para no
-primeiro erro.
-
-### Comandos individuais
+Após uma execução interativa, o menu volta. Com saída redirecionada, comandos diretos terminam sem perguntar. Falhas não são escondidas pelo loop.
 
 ```text
-python mgpeb.py
-python exemplos.py
+python avaliar.py painel
+python ao_vivo.py urgente 0
+```
+
+O zero remove as esperas da transmissão. Também é possível abrir `painel/index.html` diretamente: mantenha `dados.js` e `img/` junto dele. O painel reproduz os 15 cenários exportados, sem recalcular decisões em um servidor.
+
+### Leitura da interface
+
+A sala de controle original permanece no computador. O botão **Modo de leitura** organiza informações com textos maiores, quebras de linha e controles de toque. Esse modo inicia automaticamente em janelas pequenas; pode ser alternado manualmente. Clique ou pressione Enter em uma tela da sala para ampliar; Escape fecha. Espaço reproduz/pausa e seta direita avança um fato quando o foco não está num controle de formulário.
+
+Depois de alterar o simulador, regenere os dados com `python exportar_painel.py`.
+
+## Entrega acadêmica e materiais de estudo
+
+| Arquivo | Finalidade |
+|---|---|
+| [RELATORIO_TECNICO.pdf](RELATORIO_TECNICO.pdf) | Base de apoio de 10 páginas, com anexo na seção 2; a colega da equipe produzirá o PDF final |
+| [RELATORIO_TECNICO.md](RELATORIO_TECNICO.md) | Fonte editável do mesmo relatório |
+| mgpeb.py, exemplos.py | Código obrigatório e exemplos simples |
+| [GUIA_DETALHADO.pdf](docs/GUIA_DETALHADO.pdf) | Material de estudo separado do relatório acadêmico |
+| [Conferência da entrega](docs/CONFERENCIA_ENTREGA.md) | Requisito, evidência e situação |
+| [Revisão comparativa](docs/REVISAO_COMPARATIVA_2026-10-13.md) | Fases 1 e 2 lado a lado e auditoria atual |
+| [Padrão dos próximos PBLs](docs/PADRAO_PBL_AURORA.md) | Base reutilizável de apresentação e fechamento |
+
+HTML e roteiro de apresentação são extras. O enunciado da Fase 2 exige PDF de 5 a 10 páginas, fonte Python e anexo de estruturas; não exige notebook, NumPy ou Matplotlib. O notebook obrigatório da Fase 1 não deve ser confundido com requisito desta fase.
+
+## Evidências e reprodução
+
+```text
 python -m unittest -v
-```
-
-O programa principal e os exemplos usam somente a biblioteca padrão do Python.
-Para regenerar o PDF, instale `requirements-relatorio.txt`; ReportLab e svglib
-são dependências opcionais apenas do gerador de documentos.
-O simulador atual trata autorização, fila e consumo estimado; não calcula uma
-trajetória ou velocidade física de pouso.
-
-Para gerar o relatório, use o mesmo ambiente Python nos dois comandos:
-
-```text
 python -m pip install -r requirements-relatorio.txt
+python auditoria.py .
 python gerar_relatorio_pdf.py
-```
-
-A revisão documental de 6 de outubro de 2026 integra os itens 5 (evolução da
-computação e hardware) e 6 (ESG) do enunciado. O PDF tem 10 páginas, e a seção 2
-contém o anexo integrado de estruturas de dados. A combinação documental foi
-verificada com Python 3.12, ReportLab 4.4.9 e svglib 2.3.0.
-
----
-
-## Enunciado da atividade
-
-Atividade Integradora: Módulo de Gerenciamento de Pouso e Estabilização de Base (MGPEB)
-Requisitos da Equipe
-Cada equipe deverá:
-
-01. Modelar o cenário de pouso e fila de módulos
-
-Definir um conjunto de módulos de pouso (ex: habitação, energia, laboratório científico, logística e suporte médico);
-Descrever atributos básicos para cada módulo: prioridade de pouso, nível de combustível, massa, criticidade da carga e horário estimado de chegada à órbita;
-Organizar os módulos em estruturas de dados lineares: uma fila (queue) principal para autorização de pouso e listas auxiliares para módulos já pousados, em espera ou em alerta.
-
-02. Definir e representar regras de decisão usando portas lógicas
-
-Especificar condições críticas para autorizar ou bloquear o pouso (combustível, condições atmosféricas, disponibilidade da área e integridade dos sensores);
-Traduzir essas condições em expressões booleanas e representá-las via diagramas de portas lógicas (AND, OR, NOT, etc.), detalhando o processo de decisão do sistema.
-
-03. Implementar, em Python, um protótipo do MGPEB
-Desenvolver um script em Python que:
-
-Cadastre os módulos definidos pela equipe em estruturas lineares (listas, filas e pilhas);
-Implemente algoritmos de busca para localizar rapidamente módulos com determinada característica (por exemplo: menor combustível, maior prioridade e determinado tipo de carga);
-Aplique algoritmos de ordenação para reorganizar a fila de pouso conforme os critérios escolhidos;
-Simule a autorização de pouso com base nas regras lógicas definidas, utilizando estruturas condicionais (IF, ELIF e ELSE) que reflitam as funções booleanas modeladas anteriormente.
-O código deve ser simples, bem comentado e coerente com os conteúdos vistos até o momento, sem utilização de bibliotecas avançadas além das necessárias para entrada, saída e manipulação básica de dados.
-
-04. Modelar funções matemáticas aplicadas ao pouso ou estabilização da base
-Escolha do Fenômeno: Escolher pelo menos um fenômeno físico ou operacional relevante para o pouso ou para a estabilização da base (ex: altura em função do tempo de descida, variação da temperatura externa com o tempo, consumo de combustível em função da velocidade ou geração de energia solar ao longo do dia);
-Representação Matemática: Representar esse fenômeno por meio de funções matemáticas compatíveis com o conteúdo da disciplina (função linear, quadrática, exponencial etc.), indicando a fórmula utilizada, o significado dos parâmetros e uma análise qualitativa do gráfico (incluindo o que acontece quando as variáveis aumentam ou diminuem);
-Relação com a Engenharia: Relacionar essa modelagem às decisões de engenharia do MGPEB, argumentando, por exemplo, como a função auxilia na definição do melhor momento para acionar retrofoguetes, abrir paraquedas ou limitar a quantidade de módulos pousando ao mesmo tempo.
-
-05. Contextualizar o MGPEB à luz da evolução da computação
-Histórico e Evolução: Produzir uma seção textual relacionando o sistema projetado com a história e evolução dos computadores, destacando como os primeiros computadores de propósito geral abriram caminho para sistemas embarcados de alta confiabilidade;
-Limitações de Hardware: Analisar quais limitações de hardware seriam típicas de uma missão em Marte (memória, processamento, consumo de energia, tolerância à radiação etc.);
-Impacto nas Escolhas Técnicas: Discutir de que forma essas limitações influenciam as escolhas de algoritmos, estruturas de dados e estratégias de programação adotadas pela equipe.
-Objetivos de Aprendizagem do PBL
-Ao concluir o PBL, o aluno deverá ser capaz de:
-
-Integração de Conhecimentos: Compreender e explicar, em linguagem técnica, como o processo de pouso de uma missão interplanetária exige a integração de múltiplas camadas de ciência da computação e áreas correlatas.
-Lógica e Implementação: Reconhecer o papel das portas lógicas e funções booleanas na definição de regras de decisão embarcadas, relacionando-as à implementação de algoritmos em Python (condições, laços e funções).
-Domínio de DSA: Demonstrar domínio prático no uso de estruturas lineares e algoritmos básicos de busca e ordenação para organizar dados de telemetria, módulos de pouso, alarmes e recursos, justificando as escolhas por critérios de desempenho e clareza.
-Modelagem Matemática: Construir e analisar modelos de funções matemáticas aplicadas a fenômenos da missão, interpretando gráficos e conectando resultados a decisões de engenharia (estimativas de tempo, energia ou risco operacional).
-Visão de Hardware e Governança: Desenvolver uma visão crítica sobre as arquiteturas de hardware que tornam esse tipo de sistema possível e incorporar princípios ESG à concepção de soluções tecnológicas.
-
-Entregáveis da Fase 2
-
-01. Relatório técnico em PDF (5 a 10 páginas), contendo:
-
-Descrição do cenário de pouso e dos módulos definidos;
-Diagrama(s) de portas lógicas com as principais regras de decisão;
-Modelagem das funções matemáticas escolhidas, com explicações e análises;
-Seção de contextualização histórica/arquitetural do sistema;
-Seção de reflexão sobre ESG e governança na base Aurora Siger.
-
-02. Código fonte em Python (.py):
-
-Protótipo do MGPEB organizado, comentado e executável com exemplos simples.
-
-03. Anexo de estruturas de dados:
-
-Descrição de como listas, filas e pilhas foram utilizadas no projeto, com exemplos concretos 
-(pode ser parte do relatório).
-
-## Correções da versão 1.1
-
-Entradas malformadas são rejeitadas antes das travessias. Módulos em solo são
-reavaliados quanto a saúde e dependências, podendo ficar suspensos e recuperar
-operação após reparo. Na versão 1.1 a suíte passou a 17 testes; hoje são 22
-no simulador, 11 no exportador, 4 na transmissão e 9 no roteiro. Os exemplos têm 14 cenários.
-A saída de `exemplos_saida.txt` está em UTF-8 e corresponde a `exemplos.py`.
-
-Para reproduzir a saída de exemplos de modo independente da codificação do terminal:
-
-```text
-python -X utf8 exemplos.py > exemplos_saida.txt
-```
-
-Para gerar o guia detalhado separado do relatório acadêmico:
-
-```text
 python gerar_relatorio_pdf.py --fonte docs/GUIA_DETALHADO.md --destino docs/GUIA_DETALHADO.pdf --titulo "MGPEB - Guia detalhado"
 ```
 
-## Menu contínuo e bibliotecas
+São 46 testes Python e 13 verificações da auditoria. ReportLab e svglib servem apenas aos PDFs e à verificação do gerador; não são dependências do núcleo. O manifesto `docs/hashes_validacao.json` identifica os arquivos da versão auditada.
 
-Execute `python avaliar.py`: 1 mantém o roteiro do terminal, 2 mantém o painel HTML,
-3 permite escolher um cenário e 0 encerra. Ao concluir, o menu retorna para uma nova
-execução. Comandos diretos também retornam ao menu quando usados num terminal
-interativo; com saída redirecionada, terminam sem perguntar.
+Para repetir a verificação de JavaScript, com Node.js instalado: `node tools/verificar_painel.cjs`. Essa ferramenta de auditoria não é dependência do simulador.
 
-A velocidade de `ao_vivo.py` deve ser finita e não negativa; 0 remove as esperas.
-O simulador usa operações básicas do Python, sem NumPy. O gráfico vetorial do
-relatório já está em `docs/grafico_topico_04.svg`; o gerador usa ReportLab e svglib,
-sem Matplotlib. Essas bibliotecas de estudo não são obrigatórias para a fórmula atual.
+A reprodução do JavaScript foi conferida com DOM simulado, nos 15 cenários, em ambos os modos. Isso não substitui uma conferência visual real do novo layout, que permanece pendente.
+
+## Limites e histórico
+
+Este é um protótipo acadêmico de decisão. Não calcula trajetória, altitude, arrasto, velocidade física, radiação ou geração elétrica. Eventos durante a descida são processados ao fim dela, antes do resultado; não há controle contínuo de voo. Alertas guardam histórico, não apenas falhas atualmente ativas.
+
+`main.py` é um experimento anterior, identificado como histórico. O programa entregue é `mgpeb.py`. Revisões antigas e suas contagens de testes foram reunidas em `docs/historico/`. A Fase 1 está em https://github.com/MRC888/Aurora-PBL-FIAP ; foi preservada sem alterações.

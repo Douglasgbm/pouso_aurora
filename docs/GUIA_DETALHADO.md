@@ -1,11 +1,11 @@
 # Entendendo o MGPEB
-## Guia metódico do projeto e das correções da versão 1.1
+## Guia metódico do projeto e da versão atual
 
 **Projeto:** Aurora Siger | Atividade Integradora FIAP - Fase 2
 
-**Data:** 6 de outubro de 2026, com nota de atualização em 10 de outubro de 2026
+**Atualização:** 13 de outubro de 2026
 
-> **Depois da versão 1.1:** eventos previstos durante uma descida passaram a ser aplicados antes do resultado do pouso (o simulador chegou a 22 testes), e foi integrado um painel HTML animado, com 11 testes no exportador, 4 da transmissão e 9 do roteiro. Hoje, `python -m unittest` roda 46 testes. O restante deste guia descreve a versão 1.1.
+Este guia descreve o núcleo 1.2 e os complementos disponíveis em 13/10/2026. A suíte tem 46 testes Python: 22 do simulador, 11 do exportador, 4 da transmissão e 9 do roteiro. As correções históricas são identificadas como evolução, sem substituir as regras atuais.
 
 ### 1. O problema que estamos resolvendo
 
@@ -19,11 +19,11 @@ Este é um protótipo didático. Ele simula decisões com listas e condições, 
 
 A sequência acompanha o funcionamento do programa: dados de entrada, validação, fluxo, lógica, matemática, prioridade, estruturas, operação da base e testes. Os exemplos usam os parâmetros existentes, para que você possa executar e comparar. As últimas partes explicam as correções e a relação com o trabalho acadêmico.
 
-O relatório técnico principal é o documento de entrega, limitado a 5 a 10 páginas. Este guia é um material de estudo separado, mais detalhado, e não deve ser somado automaticamente ao PDF acadêmico.
+O relatório técnico disponível é uma base de apoio para a colega responsável pelo PDF final, que deve ter de 5 a 10 páginas. Este guia é um material de estudo separado, mais detalhado, e não deve ser somado automaticamente ao PDF acadêmico.
 
-### O que mudou nesta rodada
+### Correções anteriores preservadas
 
-Foram corrigidas a validação de entradas malformadas e a manutenção incorreta do estado operacional após falhas. Também foram atualizados os exemplos salvos, acrescentados testes e substituído o esquema textual por um diagrama gráfico de portas. As regras de prioridade e a fórmula de combustível foram preservadas.
+Nas revisões anteriores, foram corrigidas a validação de entradas malformadas e a manutenção incorreta do estado operacional após falhas. Também foram atualizados os exemplos salvos, acrescentados testes e substituído o esquema textual por um diagrama gráfico de portas. As regras de prioridade e a fórmula de combustível foram preservadas.
 
 <!-- PAGE BREAK -->
 
@@ -146,7 +146,7 @@ O trecho `not m[SENSORES] or not m[SISTEMAS]` detecta que pelo menos um desses c
 
 ### O que o novo desenho acrescenta
 
-O esquema anterior usava apenas caracteres de texto. O novo SVG mostra o símbolo curvo da porta AND e o triângulo com círculo da porta NOT, além das entradas e saídas. O arquivo é vetorial, preservando legibilidade ao ampliar o PDF. Ele representa a mesma regra do código, sem criar uma condição nova.
+O esquema anterior usava apenas caracteres de texto. O SVG apresenta AND, OR e NOT e a equivalência de De Morgan, além das entradas e saídas. O arquivo é vetorial, preservando legibilidade ao ampliar o PDF. Ele representa a mesma regra do código, sem criar uma condição nova.
 
 As cinco entradas geram 32 combinações possíveis. A suíte testa todas: somente a combinação em que as cinco são verdadeiras autoriza o pouso.
 
@@ -315,12 +315,12 @@ A função `relatorio` apenas imprime essa estrutura. Ela não muda decisões. P
 | Sistemas falhos podiam coexistir com estado operacional | Saúde e dependências são reavaliadas | Manter estados coerentes com os dados |
 | Perda de Energia não suspendia os dependentes ativos | Suspensão e recuperação se propagam pelas dependências | Representar a estabilização da base |
 | Saída salva antiga e com codificação incompatível | Saída atual dos 14 cenários em UTF-8 | Permitir comparação reproduzível |
-| Diagrama apenas em caracteres | SVG com AND e NOT | Mostrar visualmente a expressão booleana |
+| Diagrama apenas em caracteres | SVG com AND, OR e NOT | Mostrar visualmente a expressão booleana |
 | Eventos sem alvo e valor no histórico | Registro inclui tipo, valor, ID e horário previsto | Explicar a causa de uma mudança |
 
 ### Como foram testadas
 
-A suíte passou de oito para 17 testes. Um teste pode conter vários casos: a tabela-verdade, por exemplo, percorre 32 combinações. Os testes anteriores continuam aprovados, incluindo ordem normal, urgência, consumo, preservação do cadastro e acidente que obstrui a área.
+Na revisão atual, a suíte completa tem 46 testes; 22 verificam diretamente o núcleo. Um teste pode conter vários casos: a tabela-verdade, por exemplo, percorre 32 combinações. Os testes anteriores continuam aprovados, incluindo ordem normal, urgência, consumo, preservação do cadastro e acidente que obstrui a área.
 
 Os testes novos verificam entradas malformadas nos quatro argumentos e nas linhas, tipos dos campos e alvos de eventos. Conferem os limites de combustível, suspensão por falha da Energia, recuperação sem novo pouso, falha durante a descida, dependências em ordem inversa, ausência de registros repetidos e um módulo Energia alternativo. Também verificam que um acidente não é recuperado por um simples evento de sistemas.
 
@@ -330,7 +330,7 @@ O teste de conservação agora percorre os 14 cenários: a entrada original cont
 
 Eles não validam física de pouso, esterilização, hardware tolerante à radiação ou segurança de uma nave real. O teste AST verifica convenções didáticas herdadas do projeto, como manter o simulador sem classes ou bibliotecas externas; não comprova que a FIAP proíba esses recursos. A correspondência entre cada trecho e páginas específicas das apostilas ainda depende de consulta ao material original.
 
-O PDF acadêmico permanece com dez páginas. O guia é independente, e ambos são gerados a partir dos respectivos arquivos Markdown.
+A base de apoio ao PDF acadêmico permanece com dez páginas. O guia é independente, e ambos são gerados a partir dos respectivos arquivos Markdown.
 
 <!-- PAGE BREAK -->
 
@@ -354,15 +354,15 @@ A lista padrão dos tipos é uma escolha do cenário. Segurança vem antes de ur
 
 Esses limites fazem parte do modelo. Não é necessário ampliar o projeto até representar todas as condições de uma missão real; é necessário que relatório, diagrama, código e exemplos contem a mesma história.
 
-### Pendências de identificação e material
+### Identificação e material de referência
 
-A capa do relatório traz os nomes da equipe: Douglas, Marcelo e Alice. As ideias iniciais da equipe ficam no histórico do repositório, e main.py é um experimento anterior. Para a entrega, a equipe deve apresentar o fluxo de mgpeb.py e o relatório atual, sem atribuir a eles recursos de protótipos ou propostas que não foram integrados.
+A equipe confirmada da Fase 2 é Alice Brenda (RM 574916), Douglas Goltz (RM 574439) e Marcelo Santos (RM 576131). A Fase 1 teve cinco integrantes; sua composição não deve ser copiada para esta fase. As ideias iniciais da equipe ficam no histórico do repositório, e main.py é um experimento anterior. Para a entrega, a equipe deve apresentar o fluxo de mgpeb.py e o relatório atual, sem atribuir a eles recursos de protótipos ou propostas que não foram integrados.
 
 <!-- PAGE BREAK -->
 
-O roteiro `python avaliar.py` agora oferece terminal, painel HTML e cenário individual, retornando ao menu ao concluir. Use 0 para sair. Os comandos redirecionados continuam sem interação. A fórmula usa Python básico; NumPy e Matplotlib não são dependências.
-
 ## 13. Roteiro para você executar e estudar
+
+O roteiro `python avaliar.py` agora oferece terminal, painel HTML e cenário individual, retornando ao menu ao concluir. Use 0 para sair. Os comandos redirecionados continuam sem interação. A fórmula usa Python básico; NumPy e Matplotlib não são dependências.
 
 ### Primeira execução
 
@@ -386,7 +386,7 @@ python gerar_relatorio_pdf.py --fonte docs/GUIA_DETALHADO.md \
   --destino docs/GUIA_DETALHADO.pdf --titulo "MGPEB - Guia detalhado"
 ```
 
-O README também mantém o comando completo em uma única linha. O simulador não precisa instalar ReportLab ou svglib; essas dependências servem para os PDFs. A combinação usada na validação foi Python 3.12, ReportLab 4.4.9 e svglib 2.3.0.
+O README também mantém o comando completo em uma única linha. O simulador não precisa instalar ReportLab ou svglib; essas dependências servem para os PDFs. A combinação usada na validação foi Python 3.13.15, ReportLab 4.5.1 e svglib 2.3.0.
 
 ### Exercícios para conferir sua compreensão
 
@@ -397,3 +397,25 @@ O README também mantém o comando completo em uma única linha. O simulador nã
 5. Coloque um evento durante a descida. Compare o horário previsto com o instante em que ele foi aplicado.
 
 Esses exercícios podem ser feitos alterando cópias dos cenários. Mantenha os exemplos padrão disponíveis para comparar seus resultados. O objetivo é conseguir explicar uma decisão usando os dados, a condição ou o critério que a produziu.
+
+
+<!-- PAGE BREAK -->
+
+## 14. Interface e continuidade entre as fases
+
+A Fase 1 verifica pré-decolagem; a Fase 2 começa com módulos em órbita e organiza pouso e estabilização. A continuidade é temática e didática: não existe importação automática da telemetria ou do resultado da Fase 1. Não apresentar os dois programas como um sistema integrado de ponta a ponta.
+
+O painel reproduz 15 cenários exportados: o cadastro padrão e os 14 exemplos. `python avaliar.py` permite escolher terminal, painel ou cenário individual. A interface mantém a sala de controle de Douglas e oferece um botão de modo de leitura. Em janelas de até 1000 px de largura ou 650 px de altura, o modo de leitura inicia automaticamente; abaixo de 600 px, os painéis ficam em uma coluna. O usuário pode alternar a apresentação. As telas da sala podem ser ampliadas por clique ou Enter e fechadas por Escape.
+
+O modo de leitura usa textos maiores, quebra das explicações e controles de no mínimo 44 px. A lógica e o conjunto de dados são os mesmos nos dois modos. A revisão atual validou execução JavaScript com DOM simulado, mas não realizou uma nova inspeção visual interativa no navegador. Portanto, verificar legibilidade e interação no equipamento da apresentação continua sendo uma etapa aberta.
+
+### Ordem recomendada para a apresentação
+
+1. Explicar o problema: autorização, prioridade e operação são decisões diferentes.
+2. Executar o cenário normal e observar o resultado esperado.
+3. Executar urgente e insuficiente para distinguir prioridade de segurança.
+4. Demonstrar falha e recuperação da Energia, sem um segundo pouso.
+5. Usar os painéis para explicar estruturas, portas e combustível.
+6. Encerrar com hipóteses, limites físicos e governança.
+
+O padrão reutilizável está em PADRAO_PBL_AURORA.md. O relatório técnico é o documento acadêmico de até dez páginas; este guia é material de estudo e não deve ser usado no lugar dele.

@@ -1,3 +1,7 @@
+"""EXPERIMENTO HISTÓRICO: não integra o protótipo entregue da Fase 2.
+Execute mgpeb.py para o núcleo atual ou avaliar.py para o menu de apresentação.
+Este arquivo foi preservado para consulta; não representa física de voo validada.
+"""
 # RASCUNHO ANTERIOR: experimento de descida física, não usado pelo MGPEB atual.
 # Seus parâmetros são didáticos e não representam uma trajetória validada.
 # Para estudar fila, autorização e dependências, execute mgpeb.py.

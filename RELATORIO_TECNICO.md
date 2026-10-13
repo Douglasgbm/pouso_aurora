@@ -1,13 +1,13 @@
 # MGPEB — Módulo de Gerenciamento de Pouso e Estabilização de Base
-## Relatório técnico — Aurora Siger
+## Base de apoio ao relatório técnico — Aurora Siger
 
-**Atividade Integradora — Fase 2**
+**Atividade Integradora — Fase 2 | Material de apoio para a equipe**
 
-**Equipe:** Douglas, Marcelo e Alice
+**Equipe:** Alice Brenda (RM 574916), Douglas Goltz (RM 574439) e Marcelo Santos (RM 576131)
 
-**Versão do protótipo:** 1.2 — outubro de 2026
+**Versão:** núcleo 1.2 | documentação e painel revisados em 13/10/2026
 
-**Revisão documental:** 6 de outubro de 2026, atualizada em 10 de outubro de 2026
+**Curso:** Ciência da Computação | FIAP | 2026
 
 ### Resumo
 
@@ -223,18 +223,22 @@ Indicadores propostos incluem energia disponível para emergências, recuperaç�
 
 ## 7. Conclusão, limites e referências
 
-O protótipo demonstra a organização de módulos, a fila de chegadas, buscas, ordenação por inserção, regras AND, eventos, dependências e pilha de histórico. A função afim do combustível mínimo com reserva conecta um fenômeno operacional a uma decisão de autorização. Os testes verificam os cenários previstos e ajudam a detectar regressões. O roteiro `avaliar.py` permite escolher terminal ou painel e voltar ao menu após cada execução, com opção de sair. Como complemento, um painel HTML (`painel/index.html`) reproduz os 14 cenários e o padrão de forma animada; ele só exibe as decisões tomadas pelo `mgpeb.py`, exportadas por `exportar_painel.py`.
+O protótipo demonstra a organização de módulos, a fila de chegadas, buscas, ordenação por inserção, regras AND, eventos, dependências e pilha de histórico. A função afim do combustível mínimo com reserva conecta um fenômeno operacional a uma decisão de autorização. Os testes verificam os cenários previstos e ajudam a detectar regressões. O roteiro `avaliar.py` permite escolher terminal ou painel e voltar ao menu após cada execução, com opção de sair. Como complemento, um painel HTML (`painel/index.html`) reproduz os 14 cenários e o padrão de forma animada; ele só exibe as decisões tomadas pelo `mgpeb.py`, exportadas por `exportar_painel.py`. O modo de leitura organiza painéis e textos em telas menores; a sala de controle original permanece disponível. A interface é um extra, sem alterar os requisitos do código acadêmico.
 
 O principal limite é físico: não se calculam a trajetória ou a velocidade real de pouso. Os parâmetros de consumo, duração, margem de urgência e ordem dos módulos são hipóteses da equipe. Antes de ampliar o modelo, a equipe deve escolher quais dados deseja representar, definir unidades, buscar valores justificáveis e adicionar testes para cada regra nova. Uma próxima evolução possível é incluir um modelo de temperatura interna com potência térmica e capacidade térmica, mantendo-o separado da autorização de pouso.
 
+### Validação e entrega
+
+A conferência de 13/10/2026 executou 46 testes Python e 13 verificações de auditoria. Os 14 exemplos reproduzem a saída salva. A integridade desses arquivos e a reprodução do PDF são verificáveis pelo manifesto da versão. A revisão visual interativa do novo modo de leitura permanece pendente; isso não altera os testes do núcleo. A equipe deve aprovar este PDF antes do envio.
+
 ### Referências
 
-[1] COMPUTER HISTORY MUSEUM. **ENIAC**. Disponível em: https://www.computerhistory.org/revolution/story/78 . Acesso em: 6 out. 2026.
+[1] COMPUTER HISTORY MUSEUM. **ENIAC**. Disponível em: https://www.computerhistory.org/revolution/story/78 . Acesso em: 13 out. 2026.
 
-[2] NASA. **High Performance Spaceflight Computing**. Disponível em: https://www.nasa.gov/directorates/stmd/nasa-industry-advance-high-performance-spaceflight-computing/ . Acesso em: 6 out. 2026.
+[2] NASA. **High Performance Spaceflight Computing**. Disponível em: https://www.nasa.gov/directorates/stmd/nasa-industry-advance-high-performance-spaceflight-computing/ . Acesso em: 13 out. 2026.
 
-[3] NASA. **Perseverance Rover Components**. Disponível em: https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/ . Acesso em: 6 out. 2026.
+[3] NASA. **Perseverance Rover Components**. Disponível em: https://science.nasa.gov/mission/mars-2020-perseverance/rover-components/ . Acesso em: 13 out. 2026.
 
-[4] NASA/JPL. **Planetary Protection**. Disponível em: https://planetaryprotection.jpl.nasa.gov/ . Acesso em: 6 out. 2026.
+[4] NASA/JPL. **Planetary Protection**. Disponível em: https://planetaryprotection.jpl.nasa.gov/ . Acesso em: 13 out. 2026.
 
 **Observação:** as fontes sustentam os exemplos históricos e espaciais. As regras do simulador e as propostas de gestão da base são hipóteses didáticas da equipe. A seção 2 constitui o anexo de estruturas de dados integrado ao relatório.
