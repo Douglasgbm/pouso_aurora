@@ -15,9 +15,9 @@ A auditoria anterior aprovou 46 testes Python, 13 verificações, 14 exemplos re
 
 O site também passou por verificação dos 15 cenários até o resultado final em navegador real, conferência da sala de controle e do modo de leitura, reinício, avanço e reprodução, sem erros/avisos capturados no console. Isso não representa teste completo de compatibilidade entre dispositivos.
 
-## Identificação do PDF final
+## PDF final corrigido
 
-O PDF encontrado na Área de Trabalho é idêntico ao publicado. Caso exista uma versão posterior enviada pela Alice, ela ainda precisa ser identificada. A revisão atual aponta dois detalhes editoriais nas páginas 3 e 9; veja o parecer de 14/10 antes de escolher o arquivo para entrega.
+As duas observações editoriais foram resolvidas em 14/10/2026: página 3 explicita antes/depois da transferência FIFO; página 9 registra a verificação real do HTML. A versão corrigida preserva 10 páginas, identidade visual e links. O arquivo para entrega é RELATORIO_FINAL_EQUIPE.pdf. Os originais da Alice em Downloads e na Área de Trabalho permanecem preservados.
 
 ## Documentação
 

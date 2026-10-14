@@ -72,7 +72,7 @@ Depois de alterar o simulador, regenere os dados com `python exportar_painel.py`
 
 | Arquivo | Finalidade |
 |---|---|
-| [RELATORIO_FINAL_EQUIPE.pdf](RELATORIO_FINAL_EQUIPE.pdf) | PDF da equipe revisado, 10 páginas e anexo integrado na página 3; [parecer da revisão](docs/REVISAO_PDF_FINAL.md) |
+| [RELATORIO_FINAL_EQUIPE.pdf](RELATORIO_FINAL_EQUIPE.pdf) | PDF da equipe revisado e corrigido em 14/10, 10 páginas e anexo integrado na página 3; [parecer da revisão](docs/REVISAO_PDF_FINAL.md) |
 | [RELATORIO_TECNICO.pdf](RELATORIO_TECNICO.pdf) | Base de apoio de 10 páginas; preservada para consulta, separada do PDF final |
 | [RELATORIO_TECNICO.md](RELATORIO_TECNICO.md) | Fonte editável do mesmo relatório |
 | mgpeb.py, exemplos.py | Código obrigatório e exemplos simples |

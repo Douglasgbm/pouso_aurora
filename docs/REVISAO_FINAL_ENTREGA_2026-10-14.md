@@ -1,5 +1,14 @@
 # Revisão final de entrega - 14/10/2026
 
+## Fechamento dos ajustes - 14/10/2026
+
+Os dois ajustes editoriais foram aplicados ao PDF de entrega: página 3 distingue “Antes: fila” e “Depois: espera”; página 9 registra a conferência dos 15 cenários no navegador e a inspeção dos modos de apresentação. O PDF continua com 10 páginas e os links originais. As outras oito páginas foram comparadas por renderização e permanecem visualmente idênticas. Código e HTML não foram alterados. Não há pendência editorial conhecida nos itens apontados nesta revisão.
+
+SHA-256 da versão corrigida: `f47facce2709aca65f7f964f236743b7fc49742d011f1b66f3ecb83a70fea4ea`. O original recebido da Alice foi preservado em Downloads e na Área de Trabalho; para entrega, usar RELATORIO_FINAL_EQUIPE.pdf do repositório ou da pasta atual do OneDrive.
+
+O conteúdo abaixo registra a revisão anterior à correção; suas observações sobre os dois ajustes já foram resolvidas.
+
+
 ## Resultado e versão examinada
 
 A revisão não encontrou falha impeditiva no código obrigatório ou divergência dos resultados entre Python e HTML. O relatório disponível cobre os seis tópicos e os três entregáveis do enunciado. Foram repetidas as validações e ampliada a inspeção do painel em navegador real.
