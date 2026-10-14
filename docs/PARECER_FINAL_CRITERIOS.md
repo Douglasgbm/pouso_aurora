@@ -10,6 +10,8 @@ Este parecer amplia a revisão anterior: confronta diretamente o enunciado origi
 
 O documento PBL Aurora 2.docx informa **15 pontos totais** e lista três critérios: relatório técnico em PDF, código fonte Python e anexo de estruturas. A tabela fornecida não apresenta pesos individuais nem níveis de desempenho. O checklist abaixo decompõe as exigências textuais, sem inventar pesos. “Atendido” significa que há conteúdo/implementação e evidência verificável; o PDF final da colega também foi conferido, conforme REVISAO_PDF_FINAL.md.
 
+As referências § abaixo correspondem à base RELATORIO_TECNICO.md. A correspondência com as páginas do PDF da equipe está na revisão de 14/10.
+
 ## Checklist completo do enunciado
 
 | ID | Exigência | Evidência conferida | Resultado |
@@ -38,8 +40,8 @@ O documento PBL Aurora 2.docx informa **15 pontos totais** e lista três critér
 | 6.1 | Impactos da área de pouso | terreno, poeira, instalações, interesse científico e proteção planetária; §6 | Atendido |
 | 6.2 | Energia, resíduos e recursos | reservas críticas, produção adiável, estoques, recuperação, descarte e extração local | Atendido |
 | 6.3 | Social e governança | segurança, treinamento, representação, revisão de regras, transparência e responsabilidades | Atendido |
-| E.1 | Conteúdo do relatório técnico | cenário, portas, funções, história/hardware e ESG presentes | Atendido na base de apoio |
-| E.2 | PDF entre 5 e 10 páginas | base renderizada com 10 páginas, incluindo anexo | Atendido no PDF final (10 páginas) |
+| E.1 | Conteúdo do relatório técnico | cenário, portas, funções, história/hardware e ESG presentes | Atendido no PDF da equipe, pp. 2–8 |
+| E.2 | PDF entre 5 e 10 páginas | PDF da equipe com 10 páginas, incluindo anexo na p. 3 | Atendido no PDF final (10 páginas) |
 | E.3 | Fonte Python .py | mgpeb.py e exemplos.py incluídos no pacote obrigatório | Atendido |
 | E.4 | Anexo com exemplos concretos | §2: cadastro, FIFO, espera, aptos, pousados, alertas e pilha LIFO no cenário urgente | Atendido |
 
@@ -89,7 +91,7 @@ python tools/verificar_invariantes.py
 node tools/verificar_painel.cjs
 ```
 
-O segundo comando testa JavaScript com DOM simulado, nos 15 cenários em dois modos; não renderiza CSS. A aparência do modo de leitura ainda requer navegador real. Esta limitação pertence ao extra HTML e não altera o atendimento dos 28 itens obrigatórios acima.
+O segundo comando testa JavaScript com DOM simulado, nos 15 cenários em dois modos; não renderiza CSS. Em 14/10, a sala de controle e o modo de leitura também foram inspecionados em navegador real, com os 15 cenários navegados até o resultado final. Consulte REVISAO_FINAL_ENTREGA_2026-10-14.md para o escopo e os detalhes editoriais do PDF.
 
 ## Situação para entrega
 

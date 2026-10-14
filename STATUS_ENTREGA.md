@@ -1,4 +1,4 @@
-# Status da Fase 2 — 13 de outubro de 2026
+# Status da Fase 2 — 14 de outubro de 2026
 
 ## Material de entrega
 
@@ -13,10 +13,15 @@ Não foi identificado defeito impeditivo nos requisitos obrigatórios conferidos
 
 A auditoria anterior aprovou 46 testes Python, 13 verificações, 14 exemplos reproduzíveis e 400 cenários adicionais. O JavaScript foi exercitado em 15 cenários nos dois modos com DOM simulado. O código não foi alterado nesta publicação.
 
-O site também passou por teste pontual em navegador real: seleção do cenário urgente e avanço ao último fato, com T+10, pousados [1, 0] e dois módulos operacionais, sem erros/avisos capturados no console. Isso não representa teste completo de compatibilidade entre dispositivos.
+O site também passou por verificação dos 15 cenários até o resultado final em navegador real, conferência da sala de controle e do modo de leitura, reinício, avanço e reprodução, sem erros/avisos capturados no console. Isso não representa teste completo de compatibilidade entre dispositivos.
+
+## Identificação do PDF final
+
+O PDF encontrado na Área de Trabalho é idêntico ao publicado. Caso exista uma versão posterior enviada pela Alice, ela ainda precisa ser identificada. A revisão atual aponta dois detalhes editoriais nas páginas 3 e 9; veja o parecer de 14/10 antes de escolher o arquivo para entrega.
 
 ## Documentação
 
+- docs/REVISAO_FINAL_ENTREGA_2026-10-14.md: nova revisão cruzada, testes repetidos e identificação do PDF disponível.
 - docs/REVISAO_PDF_FINAL.md: revisão do PDF recebido, requisitos por página, observações editoriais e hash do original.
 - docs/CONFERENCIA_ENTREGA.md: matriz de entrega atualizada.
 - docs/PUBLICACAO_HTML.md: hospedagem e atualização do painel.

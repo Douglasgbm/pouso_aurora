@@ -12,7 +12,7 @@ A Fase 1 perguntou se a nave estava pronta para decolar. Agora, o problema é de
 
 **Equipe:** Alice Brenda (RM 574916), Douglas Goltz (RM 574439) e Marcelo Santos (RM 576131). Ciência da Computação, FIAP, 2026.
 
-**Versão de referência:** núcleo 1.2; documentação e interface revisadas em 13/10/2026. Consulte [o status](STATUS_ENTREGA.md) antes de usar um relatório antigo.
+**Versão de referência:** núcleo 1.2; documentação e interface revisadas em 13/10/2026. Revisão final repetida em 14/10/2026: [resultado detalhado](docs/REVISAO_FINAL_ENTREGA_2026-10-14.md). Consulte [o status](STATUS_ENTREGA.md) antes de usar um relatório antigo.
 
 ## Como funciona
 
@@ -99,7 +99,7 @@ São 46 testes Python e 13 verificações da auditoria. ReportLab e svglib serve
 
 Para repetir a verificação de JavaScript, com Node.js instalado: `node tools/verificar_painel.cjs`. Essa ferramenta de auditoria não é dependência do simulador.
 
-A reprodução do JavaScript foi conferida com DOM simulado, nos 15 cenários, em ambos os modos. Também foi realizado um teste pontual no site publicado, com seleção do cenário urgente, navegação até seu resultado final e inspeção visual. Veja o escopo em [revisão do PDF e publicação](docs/REVISAO_PDF_FINAL.md).
+A reprodução do JavaScript foi conferida com DOM simulado, nos 15 cenários, em ambos os modos. Em 14/10, os 15 cenários também foram navegados até o resultado final no site publicado; sala de controle, modo de leitura e controles foram inspecionados. Veja o escopo em [revisão do PDF e publicação](docs/REVISAO_PDF_FINAL.md).
 
 ## Limites e histórico
 
